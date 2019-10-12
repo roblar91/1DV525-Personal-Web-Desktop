@@ -1,1 +1,1 @@
-import './rl-pwd/rl-pwd.js'
+import '../custom-elements/rl-pwd/rl-pwd.js'
