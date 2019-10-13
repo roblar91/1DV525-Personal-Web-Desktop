@@ -4,6 +4,8 @@ const RlPwdHtml = /* html */ `
 <main>
     <rl-pwd-window></rl-pwd-window>
 </main>
+<div id="taskbar">
+</div>
 `
 
 export default RlPwdHtml

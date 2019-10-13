@@ -1,6 +1,7 @@
 const RlPwdWindowCss = /* css */ `
 :host {
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
     position: absolute;
     width: 30rem;
     height: 24rem;
@@ -22,7 +23,6 @@ header {
     cursor: grab;
     padding: 0.2rem;
     box-sizing: border-box;
-    overflow: hidden;
 }
 
 header button {
@@ -57,9 +57,10 @@ header button:hover {
 }
 
 main {
-    display: block;
+    display: flex;
+    flex: 1;
     width: 100%;
-    background-color: black;
+    background-color: yellow;
     cursor: default;
 }
 `
