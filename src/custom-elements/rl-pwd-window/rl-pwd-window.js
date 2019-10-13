@@ -41,9 +41,6 @@ class RlPwdWindow extends window.HTMLElement {
 
   mousedown (event) {
     console.log('mousedown')
-    console.log(event)
-    console.log(event.offsetX)
-    console.log(this.clientWidth)
 
     switch (event.originalTarget) {
       case this.header:
@@ -57,14 +54,18 @@ class RlPwdWindow extends window.HTMLElement {
         this.isResizing = true
 
         // Determine which side was clicked
+        this.sideClicked = []
         if (event.offsetX < 0) {
-          this.sideClicked = 'left'
-        } else if (event.offsetX > this.clientWidth) {
-          this.sideClicked = 'right'
-        } else if (event.offsetY < 0) {
-          this.sideClicked = 'top'
-        } else if (event.offsetY > this.clientHeight) {
-          this.sideClicked = 'bottom'
+          this.sideClicked.push('left')
+        }
+        if (event.offsetX > this.clientWidth) {
+          this.sideClicked.push('right')
+        }
+        if (event.offsetY < 0) {
+          this.sideClicked.push('top')
+        }
+        if (event.offsetY > this.clientHeight) {
+          this.sideClicked.push('bottom')
         }
         break
     }
@@ -117,22 +118,24 @@ class RlPwdWindow extends window.HTMLElement {
     const dY = event.clientY - this.prevClientY
 
     // Resize based on which side was clicked
-    switch (this.sideClicked) {
-      case 'top':
-        this.setTop(this.offsetTop + dY)
-        this.setHeight(this.offsetHeight - dY)
-        break
-      case 'bottom':
-        this.setHeight(this.offsetHeight + dY)
-        break
-      case 'right':
-        this.setWidth(this.offsetWidth + dX)
-        break
-      case 'left':
-        this.setLeft(this.offsetLeft + dX)
-        this.setWidth(this.offsetWidth - dX)
-        break
-    }
+    this.sideClicked.forEach(side => {
+      switch (side) {
+        case 'top':
+          this.setTop(this.offsetTop + dY)
+          this.setHeight(this.offsetHeight - dY)
+          break
+        case 'bottom':
+          this.setHeight(this.offsetHeight + dY)
+          break
+        case 'right':
+          this.setWidth(this.offsetWidth + dX)
+          break
+        case 'left':
+          this.setLeft(this.offsetLeft + dX)
+          this.setWidth(this.offsetWidth - dX)
+          break
+      }
+    })
 
     this.prevClientX = event.clientX
     this.prevClientY = event.clientY
