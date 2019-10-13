@@ -43,6 +43,8 @@ class RlPwdWindow extends window.HTMLElement {
 
   mousedown (event) {
     console.log('mousedown')
+    console.log(this.offsetWidth)
+    console.log(this.parentElement.offsetWidth)
 
     switch (event.originalTarget) {
       case this.header:
@@ -104,13 +106,14 @@ class RlPwdWindow extends window.HTMLElement {
     const dX = event.clientX - this.prevClientX
 
     // Make sure the window does not go outside their parent element
-    let newPosX = Math.min(dX + this.offsetLeft, this.parentElement.offsetWidth - this.clientWidth)
+    let newPosX = Math.min(dX + this.offsetLeft, this.parentElement.offsetWidth + this.parentElement.offsetLeft - this.offsetWidth)
     newPosX = Math.max(newPosX, this.parentElement.offsetLeft)
+
     this.setLeft(newPosX)
     this.prevClientX = event.clientX
 
     const dY = event.clientY - this.prevClientY
-    let newPosY = Math.min(dY + this.offsetTop, this.parentElement.offsetHeight - this.clientHeight)
+    let newPosY = Math.min(dY + this.offsetTop, this.parentElement.offsetHeight + this.parentElement.offsetTop - this.offsetHeight)
     newPosY = Math.max(newPosY, this.parentElement.offsetTop)
     this.setTop(newPosY)
     this.prevClientY = event.clientY
