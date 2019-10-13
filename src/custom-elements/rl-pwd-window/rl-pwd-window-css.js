@@ -13,11 +13,31 @@ const RlPwdWindowCss = /* css */ `
 }
 
 header {
-    display: block;
+    user-select: none;
+    display: table;
     width: 100%;
     height: 1.5rem;
     background-color: red;
     cursor: grab;
+    padding: 0.2rem;
+    box-sizing: border-box;
+}
+
+header p {
+    display: table-cell;
+    margin: 0;
+    height: 1.1rem;
+}
+
+header button {
+    display: table-cell;
+    height: 1.1rem;
+    width: 1.1rem;
+    padding: 0;
+}
+
+#window-buttons {
+    text-align: right;
 }
 
 main {
