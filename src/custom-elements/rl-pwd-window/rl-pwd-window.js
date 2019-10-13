@@ -40,7 +40,8 @@ class RlPwdWindow extends window.HTMLElement {
   }
 
   mousedown (event) {
-    switch (event.originalTarget) {
+    // Get the original target (probably does not work in Edge)
+    switch (event.composedPath()[0]) {
       case this.header:
       case this.windowTitle:
       case this.windowButtons:
