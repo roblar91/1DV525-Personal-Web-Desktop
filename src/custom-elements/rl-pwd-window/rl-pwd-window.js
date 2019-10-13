@@ -29,6 +29,8 @@ class RlPwdWindow extends window.HTMLElement {
     this.setTop(this.parentElement.offsetTop)
     this.setLeft(this.parentElement.offsetLeft)
 
+    this.updateMainHeight()
+
     this.addEventListener('mousedown', this.mousedownHandler)
 
     // These event handlers are added to the parent in order to improve the move and resize functionality
@@ -95,6 +97,8 @@ class RlPwdWindow extends window.HTMLElement {
       const dY = event.clientY - this.prevClientY
       this.setHeight(this.offsetHeight + dY)
       this.prevClientY = event.clientY
+
+      this.updateMainHeight()
     }
   }
 
@@ -112,6 +116,13 @@ class RlPwdWindow extends window.HTMLElement {
 
   setHeight (integer) {
     this.style.height = integer + 'px'
+  }
+
+  // This function updates the size of the main content
+  // This has to be done manually since the window bar has a fixed size
+  updateMainHeight () {
+    const h = this.clientHeight - this.header.clientHeight
+    this.main.style.height = h + 'px'
   }
 }
 
