@@ -1,10 +1,10 @@
 const RlPwdWindowHtml = /* html */ `
 <header>
-    <p id="window-title">Window Title</p>
+    <div id="window-title">Window Title</div>
     <div id="window-buttons">
-        <button>m</button>
-        <button>b</button>
-        <button>x</button>
+        <button title="Minimize">m</button>
+        <button title="Enlarge">E</button>
+        <button title="Close">X</button>
     </div>
 </header>
 <main></main>

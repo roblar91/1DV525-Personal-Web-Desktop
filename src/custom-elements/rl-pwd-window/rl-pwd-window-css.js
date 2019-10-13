@@ -4,10 +4,10 @@ const RlPwdWindowCss = /* css */ `
     position: absolute;
     width: 30rem;
     height: 24rem;
-    min-width: 4rem;
-    min-height: 4rem;
+    min-width: 5rem;
+    min-height: 5rem;
     background-color: black;
-    border: double 0.5rem darkgrey;
+    border: double 0.4rem darkgrey;
     box-sizing: border-box;
     cursor: move;
 }
@@ -17,33 +17,49 @@ header {
     display: table;
     width: 100%;
     height: 1.5rem;
-    background-color: red;
+    color: white;
+    background-color: #1e1f21;
     cursor: grab;
     padding: 0.2rem;
     box-sizing: border-box;
-}
-
-header p {
-    display: table-cell;
-    margin: 0;
-    height: 1.1rem;
+    overflow: hidden;
 }
 
 header button {
-    display: table-cell;
+    display: inline-block;
     height: 1.1rem;
     width: 1.1rem;
-    padding: 0;
+    padding: 0.2rem;
+    font-size: 0.5rem;
+    color: white;
+    background-color: #1e1f21;
+    border: 0.1rem darkgrey inset;
+}
+
+header button:hover {
+    color: #1e1f21;
+    background-color: lightgrey;
+}
+
+#window-title {
+    display: table-cell;
+    height: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
 }
 
 #window-buttons {
+    display: table-cell;
+    height: 100%;
     text-align: right;
+    min-width: 5rem;
 }
 
 main {
     display: block;
     width: 100%;
-    background-color: yellow;
+    background-color: black;
     cursor: default;
 }
 `

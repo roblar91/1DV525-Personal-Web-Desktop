@@ -25,6 +25,7 @@ class RlPwdWindow extends window.HTMLElement {
     this.header = this.shadowRoot.querySelector('header')
     this.main = this.shadowRoot.querySelector('main')
     this.windowTitle = this.shadowRoot.querySelector('#window-title')
+    this.windowButtons = this.shadowRoot.querySelector('#window-buttons')
 
     // These values should be updated after creation by the parent to handle overlapping windows
     this.setTop(this.parentElement.offsetTop)
@@ -46,6 +47,7 @@ class RlPwdWindow extends window.HTMLElement {
     switch (event.originalTarget) {
       case this.header:
       case this.windowTitle:
+      case this.windowButtons:
         this.prevClientX = event.clientX
         this.prevClientY = event.clientY
         this.isMoving = true
