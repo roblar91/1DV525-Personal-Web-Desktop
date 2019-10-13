@@ -8,7 +8,7 @@ const rlPwdCss = /* css */ `
     background-image: url('/resources/rl-pwd/background.jpg');
     background-repeat: no-repeat;
     background-size: cover;
-    border: 0.5rem ridge #784212;
+    border: 0.3rem ridge #9da6a5;
     box-sizing: border-box;
     width: 100%;
     height: 100%;
@@ -24,7 +24,8 @@ main {
     display: flex;
     width: 100%;
     height: 2rem;
-    background-color: yellow;
+    background-color: black;
+    border-top: 0.3rem ridge #9da6a5;
 }
 `
 

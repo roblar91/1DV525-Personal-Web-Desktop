@@ -1,5 +1,6 @@
 const RlPwdWindowCss = /* css */ `
 :host {
+    user-select: none;
     display: flex;
     flex-direction: column;
     position: absolute;
@@ -8,14 +9,14 @@ const RlPwdWindowCss = /* css */ `
     min-width: 5rem;
     min-height: 5rem;
     background-color: black;
-    border: double 0.4rem darkgrey;
+    border: double 0.4rem #9da6a5;
     box-sizing: border-box;
     cursor: move;
 }
 
 header {
-    user-select: none;
-    display: table;
+    display: flex;
+    flex-direction: row;
     width: 100%;
     height: 1.5rem;
     color: white;
@@ -23,6 +24,26 @@ header {
     cursor: grab;
     padding: 0.2rem;
     box-sizing: border-box;
+    border-bottom: solid 0.1rem #9da6a5;
+}
+
+#window-title {
+    flex: 1;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+}
+
+#window-buttons {
+    display: flex;
+    height: 100%;
+    width: min-content;
+    align-items: center;
+    justify-content: right;
 }
 
 header button {
@@ -33,7 +54,8 @@ header button {
     font-size: 0.5rem;
     color: white;
     background-color: #1e1f21;
-    border: 0.1rem darkgrey inset;
+    border: 0.1rem #9da6a5 inset;
+    margin-left: 0.2rem;
 }
 
 header button:hover {
@@ -41,26 +63,11 @@ header button:hover {
     background-color: lightgrey;
 }
 
-#window-title {
-    display: table-cell;
-    height: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: clip;
-}
-
-#window-buttons {
-    display: table-cell;
-    height: 100%;
-    text-align: right;
-    min-width: 5rem;
-}
-
 main {
     display: flex;
     flex: 1;
     width: 100%;
-    background-color: yellow;
+    background-color: black;
     cursor: default;
 }
 `

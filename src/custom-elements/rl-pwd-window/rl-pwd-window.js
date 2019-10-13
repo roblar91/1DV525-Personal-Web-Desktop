@@ -40,8 +40,6 @@ class RlPwdWindow extends window.HTMLElement {
   }
 
   mousedown (event) {
-    console.log('mousedown')
-
     switch (event.originalTarget) {
       case this.header:
       case this.windowTitle:
@@ -74,22 +72,16 @@ class RlPwdWindow extends window.HTMLElement {
   }
 
   mouseup (event) {
-    console.log('mouseup')
-
     this.isMoving = false
     this.isResizing = false
   }
 
   mouseleave (event) {
-    console.log('mouseleave')
-
     this.isMoving = false
     this.isResizing = false
   }
 
   mousemove (event) {
-    console.log('mousemove')
-
     if (this.isMoving) {
       this.moveWindow(event)
     } else if (this.isResizing) {
