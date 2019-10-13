@@ -26,13 +26,15 @@ class RlPwdWindow extends window.HTMLElement {
     this.main = this.shadowRoot.querySelector('main')
     this.windowTitle = this.shadowRoot.querySelector('#window-title')
     this.windowButtons = this.shadowRoot.querySelector('#window-buttons')
+    this.buttonMinimize = this.shadowRoot.querySelector('#button-minimize')
+    this.buttonEnlarge = this.shadowRoot.querySelector('#button-enlarge')
+    this.buttonClose = this.shadowRoot.querySelector('#button-close')
 
     // These values should be updated after creation by the parent to handle overlapping windows
     this.setTop(this.parentElement.offsetTop)
     this.setLeft(this.parentElement.offsetLeft)
 
     this.addEventListener('mousedown', this.mousedownHandler)
-
     // These event handlers are added to the parent in order to improve the move and resize functionality
     this.parentElement.addEventListener('mouseup', this.mouseupHandler)
     this.parentElement.addEventListener('mouseleave', this.mouseleaveHandler)
@@ -42,6 +44,13 @@ class RlPwdWindow extends window.HTMLElement {
   mousedown (event) {
     // Get the original target (probably does not work in Edge)
     switch (event.composedPath()[0]) {
+      case this.buttonMinimize:
+        break
+      case this.buttonEnlarge:
+        break
+      case this.buttonClose:
+        this.parentElement.removeChild(this)
+        break
       case this.header:
       case this.windowTitle:
       case this.windowButtons:
