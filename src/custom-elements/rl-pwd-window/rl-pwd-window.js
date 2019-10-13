@@ -22,26 +22,36 @@ class RlPwdWindow extends window.HTMLElement {
       ${html}
     `
 
-    // todo: should be set in parent
-    this.setTop(40)
-    this.setLeft(40)
+    this.header = this.shadowRoot.querySelector('header')
+    this.main = this.shadowRoot.querySelector('main')
+
+    // These values should be updated after creation by the parent to handle overlapping windows
+    this.setTop(this.parentElement.offsetTop)
+    this.setLeft(this.parentElement.offsetLeft)
 
     this.addEventListener('mousedown', this.mousedownHandler)
-    this.addEventListener('mouseup', this.mouseupHandler)
-    this.addEventListener('mouseleave', this.mouseleaveHandler)
-    this.addEventListener('mousemove', this.mousemoveHandler)
+
+    // These event handlers are added to the parent in order to improve the move and resize functionality
+    this.parentElement.addEventListener('mouseup', this.mouseupHandler)
+    this.parentElement.addEventListener('mouseleave', this.mouseleaveHandler)
+    this.parentElement.addEventListener('mousemove', this.mousemoveHandler)
   }
 
   mousedown (event) {
     console.log('mousedown')
-    console.log(this.parentElement.parentElement)
-    console.log(this.parentElement)
-    console.log(this)
 
-    // todo: check if border or header was clicked
-    this.prevClientX = event.clientX
-    this.prevClientY = event.clientY
-    this.isMoving = true
+    switch (event.originalTarget) {
+      case this.header:
+        this.prevClientX = event.clientX
+        this.prevClientY = event.clientY
+        this.isMoving = true
+        break
+      case this:
+        this.prevClientX = event.clientX
+        this.prevClientY = event.clientY
+        this.isResizing = true
+        break
+    }
   }
 
   mouseup (event) {
@@ -61,24 +71,29 @@ class RlPwdWindow extends window.HTMLElement {
   mousemove (event) {
     console.log('mousemove')
 
-    if (this.isResizing) {
-
-    } else if (this.isMoving) {
+    if (this.isMoving) {
       // Calculate how much the pointer has moved since last event and move window accordingly
       const dX = event.clientX - this.prevClientX
-      const wX = parseInt(this.style.left, 10)
 
       // Make sure the window does not go outside their parent element
-      let newPosX = Math.min(wX + dX, this.parentElement.offsetWidth - this.clientWidth)
+      let newPosX = Math.min(dX + this.offsetLeft, this.parentElement.offsetWidth - this.clientWidth)
       newPosX = Math.max(newPosX, this.parentElement.offsetLeft)
       this.setLeft(newPosX)
       this.prevClientX = event.clientX
 
       const dY = event.clientY - this.prevClientY
-      const wY = parseInt(this.style.top, 10)
-      let newPosY = Math.min(wY + dY, this.parentElement.offsetHeight - this.clientHeight)
+      let newPosY = Math.min(dY + this.offsetTop, this.parentElement.offsetHeight - this.clientHeight)
       newPosY = Math.max(newPosY, this.parentElement.offsetTop)
       this.setTop(newPosY)
+      this.prevClientY = event.clientY
+    } else if (this.isResizing) {
+      // Calculate how much the pointer has moved since last event and resize window accordingly
+      const dX = event.clientX - this.prevClientX
+      this.setWidth(this.offsetWidth + dX)
+      this.prevClientX = event.clientX
+
+      const dY = event.clientY - this.prevClientY
+      this.setHeight(this.offsetHeight + dY)
       this.prevClientY = event.clientY
     }
   }
@@ -89,6 +104,14 @@ class RlPwdWindow extends window.HTMLElement {
 
   setTop (integer) {
     this.style.top = integer + 'px'
+  }
+
+  setWidth (integer) {
+    this.style.width = integer + 'px'
+  }
+
+  setHeight (integer) {
+    this.style.height = integer + 'px'
   }
 }
 
