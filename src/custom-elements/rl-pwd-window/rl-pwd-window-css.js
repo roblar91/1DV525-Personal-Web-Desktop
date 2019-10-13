@@ -1,6 +1,7 @@
 const RlPwdWindowCss = /* css */ `
 :host {
     display: inline-block;
+    position: absolute;
     width: 30rem;
     height: 24rem;
     background-color: black;
