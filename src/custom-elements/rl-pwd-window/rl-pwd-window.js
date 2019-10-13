@@ -34,6 +34,9 @@ class RlPwdWindow extends window.HTMLElement {
 
   mousedown (event) {
     console.log('mousedown')
+    console.log(this.parentElement.parentElement)
+    console.log(this.parentElement)
+    console.log(this)
 
     // todo: check if border or header was clicked
     this.prevClientX = event.clientX
@@ -64,12 +67,16 @@ class RlPwdWindow extends window.HTMLElement {
       // Calculate how much the pointer has moved since last event and move window accordingly
       const dX = event.clientX - this.prevClientX
       const wX = parseInt(this.style.left, 10)
-      this.setLeft(wX + dX)
+      let newPosX = Math.max(wX + dX, this.parentElement.offsetLeft)
+      newPosX = Math.min(newPosX, this.parentElement.offsetWidth - this.clientWidth)
+      this.setLeft(newPosX)
       this.prevClientX = event.clientX
 
       const dY = event.clientY - this.prevClientY
       const wY = parseInt(this.style.top, 10)
-      this.setTop(wY + dY)
+      let newPosY = Math.max(wY + dY, this.parentElement.offsetTop)
+      newPosY = Math.min(newPosY, this.parentElement.offsetHeight - this.clientHeight)
+      this.setTop(newPosY)
       this.prevClientY = event.clientY
     }
   }
