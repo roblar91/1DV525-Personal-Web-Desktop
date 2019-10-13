@@ -5,7 +5,7 @@ const RlPwdWindowCss = /* css */ `
     width: 30rem;
     height: 24rem;
     background-color: black;
-    border: double 0.2rem darkgrey;
+    border: double 0.4rem darkgrey;
     box-sizing: border-box;
 }
 
@@ -14,6 +14,7 @@ header {
     width: 100%;
     height: 1.5rem;
     background-color: red;
+    cursor: move;
 }
 
 main {

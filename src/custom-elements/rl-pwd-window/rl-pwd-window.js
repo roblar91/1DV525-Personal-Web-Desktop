@@ -41,6 +41,9 @@ class RlPwdWindow extends window.HTMLElement {
 
   mousedown (event) {
     console.log('mousedown')
+    console.log(event)
+    console.log(event.offsetX)
+    console.log(this.clientWidth)
 
     switch (event.originalTarget) {
       case this.header:
@@ -52,6 +55,17 @@ class RlPwdWindow extends window.HTMLElement {
         this.prevClientX = event.clientX
         this.prevClientY = event.clientY
         this.isResizing = true
+
+        // Determine which side was clicked
+        if (event.offsetX < 0) {
+          this.sideClicked = 'left'
+        } else if (event.offsetX > this.clientWidth) {
+          this.sideClicked = 'right'
+        } else if (event.offsetY < 0) {
+          this.sideClicked = 'top'
+        } else if (event.offsetY > this.clientHeight) {
+          this.sideClicked = 'bottom'
+        }
         break
     }
   }
@@ -74,32 +88,55 @@ class RlPwdWindow extends window.HTMLElement {
     console.log('mousemove')
 
     if (this.isMoving) {
-      // Calculate how much the pointer has moved since last event and move window accordingly
-      const dX = event.clientX - this.prevClientX
-
-      // Make sure the window does not go outside their parent element
-      let newPosX = Math.min(dX + this.offsetLeft, this.parentElement.offsetWidth - this.clientWidth)
-      newPosX = Math.max(newPosX, this.parentElement.offsetLeft)
-      this.setLeft(newPosX)
-      this.prevClientX = event.clientX
-
-      const dY = event.clientY - this.prevClientY
-      let newPosY = Math.min(dY + this.offsetTop, this.parentElement.offsetHeight - this.clientHeight)
-      newPosY = Math.max(newPosY, this.parentElement.offsetTop)
-      this.setTop(newPosY)
-      this.prevClientY = event.clientY
+      this.moveWindow(event)
     } else if (this.isResizing) {
-      // Calculate how much the pointer has moved since last event and resize window accordingly
-      const dX = event.clientX - this.prevClientX
-      this.setWidth(this.offsetWidth + dX)
-      this.prevClientX = event.clientX
-
-      const dY = event.clientY - this.prevClientY
-      this.setHeight(this.offsetHeight + dY)
-      this.prevClientY = event.clientY
-
-      this.updateMainHeight()
+      this.resizeWindow(event)
     }
+  }
+
+  moveWindow (event) {
+    // Calculate how much the pointer has moved since last event and move window accordingly
+    const dX = event.clientX - this.prevClientX
+
+    // Make sure the window does not go outside their parent element
+    let newPosX = Math.min(dX + this.offsetLeft, this.parentElement.offsetWidth - this.clientWidth)
+    newPosX = Math.max(newPosX, this.parentElement.offsetLeft)
+    this.setLeft(newPosX)
+    this.prevClientX = event.clientX
+
+    const dY = event.clientY - this.prevClientY
+    let newPosY = Math.min(dY + this.offsetTop, this.parentElement.offsetHeight - this.clientHeight)
+    newPosY = Math.max(newPosY, this.parentElement.offsetTop)
+    this.setTop(newPosY)
+    this.prevClientY = event.clientY
+  }
+
+  resizeWindow (event) {
+    // Calculate how much the pointer has moved since last event
+    const dX = event.clientX - this.prevClientX
+    const dY = event.clientY - this.prevClientY
+
+    // Resize based on which side was clicked
+    switch (this.sideClicked) {
+      case 'top':
+        this.setTop(this.offsetTop + dY)
+        this.setHeight(this.offsetHeight - dY)
+        break
+      case 'bottom':
+        this.setHeight(this.offsetHeight + dY)
+        break
+      case 'right':
+        this.setWidth(this.offsetWidth + dX)
+        break
+      case 'left':
+        this.setLeft(this.offsetLeft + dX)
+        this.setWidth(this.offsetWidth - dX)
+        break
+    }
+
+    this.prevClientX = event.clientX
+    this.prevClientY = event.clientY
+    this.updateMainHeight()
   }
 
   setLeft (integer) {
