@@ -1,5 +1,6 @@
 const rlPwdCss = /* css */ `
 :host {
+    user-select: none;
     display: flex;
     flex-direction: column;
     font-size: 100%;
@@ -22,21 +23,28 @@ main {
 
 #taskbar {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
-    align-items: left;
     width: 100%;
     height: 2rem;
     background-color: black;
     border-top: 0.3rem ridge #9da6a5;
 }
 
-#menu-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+.align-left {
     flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+.align-right {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+
+#menu-button {
     width: 4rem;
     padding: 0.2rem;
     margin: 0.1rem;
@@ -53,6 +61,13 @@ main {
 
 #menu-button:active {
     background-color: white;
+}
+
+rl-clock {
+    color: white;
+    text-align: center;
+    padding: 0.2rem;
+    font-size: 0.8rem;
 }
 
 `

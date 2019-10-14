@@ -5,7 +5,12 @@ const RlPwdHtml = /* html */ `
     <rl-pwd-window></rl-pwd-window>
 </main>
 <div id="taskbar">
-    <button id="menu-button">Menu</button>
+    <div class="align-left">
+        <button id="menu-button">Menu</button>
+    </div>
+    <div class="align-right">
+        <rl-clock></rl-clock>
+    </div>
 </div>
 `
 
