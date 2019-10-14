@@ -18,7 +18,7 @@ export class RlClock extends window.HTMLElement {
     this.innerHTML = /* html */ `
     ${hours}:${minutes}
     <br>
-    ${date.getFullYear()}/${date.getMonth()}/${date.getDay()}
+    ${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}
     `
     setTimeout(() => this.updateTime(), 1000)
   }
