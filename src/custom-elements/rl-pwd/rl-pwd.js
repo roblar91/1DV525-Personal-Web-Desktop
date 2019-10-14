@@ -40,6 +40,7 @@ class RlPwd extends window.HTMLElement {
         this.apps.forEach(app => {
           if (app === event.composedPath()[0]) {
             this.runApp(app)
+            this.hideMainMenu()
           }
         })
     }
@@ -75,10 +76,6 @@ class RlPwd extends window.HTMLElement {
     this.mainElement.appendChild(window)
     window.setTitle(element.getAttribute('data-app-title'))
     window.setContent(app)
-  }
-
-  // todo: remove
-  runQuiz () {
   }
 }
 

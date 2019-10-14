@@ -31,8 +31,8 @@ class RlPwdWindow extends window.HTMLElement {
     this.buttonClose = this.shadowRoot.querySelector('#button-close')
 
     // These values should be updated after creation by the parent to handle overlapping windows
-    this.setTop(this.parentElement.offsetTop)
-    this.setLeft(this.parentElement.offsetLeft)
+    this.setTopPixels(this.parentElement.offsetTop)
+    this.setLeftPixels(this.parentElement.offsetLeft)
 
     this.addEventListener('mousedown', this.mousedownHandler)
     // These event handlers are added to the parent in order to improve the move and resize functionality
@@ -107,13 +107,13 @@ class RlPwdWindow extends window.HTMLElement {
     let newPosX = Math.min(dX + this.offsetLeft, this.parentElement.offsetWidth + this.parentElement.offsetLeft - this.offsetWidth)
     newPosX = Math.max(newPosX, this.parentElement.offsetLeft)
 
-    this.setLeft(newPosX)
+    this.setLeftPixels(newPosX)
     this.prevClientX = event.clientX
 
     const dY = event.clientY - this.prevClientY
     let newPosY = Math.min(dY + this.offsetTop, this.parentElement.offsetHeight + this.parentElement.offsetTop - this.offsetHeight)
     newPosY = Math.max(newPosY, this.parentElement.offsetTop)
-    this.setTop(newPosY)
+    this.setTopPixels(newPosY)
     this.prevClientY = event.clientY
   }
 
@@ -126,18 +126,18 @@ class RlPwdWindow extends window.HTMLElement {
     this.sideClicked.forEach(side => {
       switch (side) {
         case 'top':
-          this.setTop(this.offsetTop + dY)
-          this.setHeight(this.offsetHeight - dY)
+          this.setTopPixels(this.offsetTop + dY)
+          this.setHeightPixels(this.offsetHeight - dY)
           break
         case 'bottom':
-          this.setHeight(this.offsetHeight + dY)
+          this.setHeightPixels(this.offsetHeight + dY)
           break
         case 'right':
-          this.setWidth(this.offsetWidth + dX)
+          this.setWidthPixels(this.offsetWidth + dX)
           break
         case 'left':
-          this.setLeft(this.offsetLeft + dX)
-          this.setWidth(this.offsetWidth - dX)
+          this.setLeftPixels(this.offsetLeft + dX)
+          this.setWidthPixels(this.offsetWidth - dX)
           break
       }
     })
@@ -146,19 +146,19 @@ class RlPwdWindow extends window.HTMLElement {
     this.prevClientY = event.clientY
   }
 
-  setLeft (integer) {
+  setLeftPixels (integer) {
     this.style.left = integer + 'px'
   }
 
-  setTop (integer) {
+  setTopPixels (integer) {
     this.style.top = integer + 'px'
   }
 
-  setWidth (integer) {
+  setWidthPixels (integer) {
     this.style.width = integer + 'px'
   }
 
-  setHeight (integer) {
+  setHeightPixels (integer) {
     this.style.height = integer + 'px'
   }
 
@@ -168,6 +168,16 @@ class RlPwdWindow extends window.HTMLElement {
 
   setContent (element) {
     this.main.appendChild(element)
+
+    const prefferedWidth = element.getAttribute('data-preffered-width')
+    if (prefferedWidth) {
+      this.style.width = prefferedWidth
+    }
+
+    const prefferedHeight = element.getAttribute('data-preffered-height')
+    if (prefferedHeight) {
+      this.style.height = prefferedHeight
+    }
   }
 }
 
