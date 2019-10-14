@@ -31,6 +31,25 @@ main {
     border-top: 0.3rem ridge #9da6a5;
 }
 
+#main-menu {
+    flex-direction: column;
+    display: none;
+    width: 10rem;
+    background-color: yellow;
+    position: absolute;
+    bottom: 2.6rem;
+    left: 0.3rem;
+}
+
+.main-menu-item {
+    display: flex;
+    height: 2rem;
+    margin: 0.2rem;
+    background-color: green;
+    align-items: center;
+    justify-content: center;
+}
+
 .align-left {
     flex: 1;
     display: flex;
@@ -44,7 +63,7 @@ main {
     justify-content: right;
 }
 
-#menu-button {
+#main-menu-button {
     width: 4rem;
     padding: 0.2rem;
     margin: 0.1rem;
@@ -54,7 +73,7 @@ main {
     border: 0.1rem #9da6a5 inset;
 }
 
-#menu-button:hover {
+#main-menu-button:hover {
     color: #1e1f21;
     background-color: lightgrey;
 }

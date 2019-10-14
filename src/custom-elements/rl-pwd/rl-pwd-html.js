@@ -4,8 +4,10 @@ const RlPwdHtml = /* html */ `
 <main>
 </main>
 <div id="taskbar">
+    <div id="main-menu">
+    </div>
     <div class="align-left">
-        <button id="menu-button">Menu</button>
+        <button id="main-menu-button">Menu</button>
     </div>
     <div class="align-right">
         <rl-clock></rl-clock>
