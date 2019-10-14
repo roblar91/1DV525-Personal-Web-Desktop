@@ -3,6 +3,7 @@ const RlPwdWindowCss = /* css */ `
     user-select: none;
     display: flex;
     flex-direction: column;
+    flex: 1;
     position: absolute;
     width: 30rem;
     height: 24rem;

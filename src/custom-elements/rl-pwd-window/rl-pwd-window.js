@@ -47,9 +47,10 @@ class RlPwdWindow extends window.HTMLElement {
       case this.buttonMinimize:
         break
       case this.buttonEnlarge:
+        this.toggleEnlarge()
         break
       case this.buttonClose:
-        this.parentElement.removeChild(this)
+        this.closeWindow()
         break
       case this.header:
       case this.windowTitle:
@@ -59,6 +60,7 @@ class RlPwdWindow extends window.HTMLElement {
         this.isMoving = true
         break
       case this:
+        // Border was clicked
         this.prevClientX = event.clientX
         this.prevClientY = event.clientY
         this.isResizing = true
@@ -146,6 +148,32 @@ class RlPwdWindow extends window.HTMLElement {
     this.prevClientY = event.clientY
   }
 
+  toggleEnlarge () {
+    if (this.previousPosition) {
+      this.setTopPixels(this.previousPosition.top)
+      this.setLeftPixels(this.previousPosition.left)
+      this.setWidthPixels(this.previousPosition.width)
+      this.setHeightPixels(this.previousPosition.height)
+      this.previousPosition = null
+    } else {
+      this.previousPosition = {
+        top: this.offsetTop,
+        left: this.offsetLeft,
+        width: this.offsetWidth,
+        height: this.offsetHeight
+      }
+
+      this.setTopPixels(this.parentElement.offsetTop)
+      this.setLeftPixels(this.parentElement.offsetLeft)
+      this.setWidthPixels(this.parentElement.clientWidth)
+      this.setHeightPixels(this.parentElement.clientHeight)
+    }
+  }
+
+  closeWindow () {
+    this.parentElement.removeChild(this)
+  }
+
   setLeftPixels (integer) {
     this.style.left = integer + 'px'
   }
@@ -169,6 +197,8 @@ class RlPwdWindow extends window.HTMLElement {
   setContent (element) {
     this.main.appendChild(element)
 
+    // Bug: this sets the windows size, not the actual content size
+    // Setting the content size does not work with current css rules
     const prefferedWidth = element.getAttribute('data-preffered-width')
     if (prefferedWidth) {
       this.style.width = prefferedWidth
