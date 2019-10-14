@@ -161,6 +161,10 @@ class RlPwdWindow extends window.HTMLElement {
   setHeight (integer) {
     this.style.height = integer + 'px'
   }
+
+  setContent (element) {
+    this.main.appendChild(element)
+  }
 }
 
 window.customElements.define('rl-pwd-window', RlPwdWindow)
