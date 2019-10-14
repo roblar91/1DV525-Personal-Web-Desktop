@@ -56,6 +56,7 @@ label {
     padding-right: 10%;
     background: lightgrey;
     border: inset 0.5rem black;
+    overflow: hidden;
 }
 
 #radio-container {

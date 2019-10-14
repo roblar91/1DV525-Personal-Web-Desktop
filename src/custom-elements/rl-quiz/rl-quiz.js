@@ -1,7 +1,7 @@
 import css from './rl-quiz-css.js'
 import html from './rl-quiz-html.js'
 
-export class RlQuiz extends window.HTMLElement {
+class RlQuiz extends window.HTMLElement {
   constructor () {
     super()
     this.attachShadow({ mode: 'open' })

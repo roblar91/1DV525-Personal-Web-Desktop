@@ -1,4 +1,4 @@
-export class RlClock extends window.HTMLElement {
+class RlClock extends window.HTMLElement {
   connectedCallback () {
     this.updateTime()
   }
