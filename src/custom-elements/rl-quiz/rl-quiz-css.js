@@ -4,7 +4,9 @@ const RlQuizCss = /* css */ `
     font-size: 100%;
     font-family: "Lucida Console", monospace;
     background: darkgrey;
-    border: 0.5rem solid black;
+    width: 100%;
+    height: 100%;
+    min-width: 20rem;
 }
 
 header {

@@ -162,6 +162,10 @@ class RlPwdWindow extends window.HTMLElement {
     this.style.height = integer + 'px'
   }
 
+  setTitle (title) {
+    this.windowTitle.textContent = title
+  }
+
   setContent (element) {
     this.main.appendChild(element)
   }

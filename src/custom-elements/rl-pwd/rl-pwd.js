@@ -23,6 +23,7 @@ class RlPwd extends window.HTMLElement {
     const quiz = document.createElement('rl-quiz')
     quiz.setAttribute('src', 'http://vhost3.lnu.se:20080/question/1')
     this.mainElement.appendChild(window)
+    window.setTitle('Rl Quiz')
     window.setContent(quiz)
   }
 }
