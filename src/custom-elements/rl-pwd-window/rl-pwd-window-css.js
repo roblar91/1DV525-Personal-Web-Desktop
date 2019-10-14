@@ -63,6 +63,10 @@ header button:hover {
     background-color: lightgrey;
 }
 
+header button:active {
+    background-color: white;
+}
+
 main {
     display: flex;
     flex: 1;

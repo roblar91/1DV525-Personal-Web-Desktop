@@ -5,6 +5,7 @@ const RlPwdHtml = /* html */ `
     <rl-pwd-window></rl-pwd-window>
 </main>
 <div id="taskbar">
+    <button id="menu-button">Menu</button>
 </div>
 `
 
