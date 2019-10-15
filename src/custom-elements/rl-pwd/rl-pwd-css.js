@@ -58,6 +58,13 @@ main {
     padding-right: 0.5rem;
 }
 
+.main-menu-item img {
+    display: inline-block;
+    margin-right: 1rem;
+    border-radius: 0.2rem;
+    height: 80%;
+}
+
 .align-left {
     flex: 1;
     display: flex;

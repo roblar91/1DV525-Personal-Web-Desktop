@@ -24,6 +24,7 @@ class RlPwdWindow extends window.HTMLElement {
 
     this.header = this.shadowRoot.querySelector('header')
     this.main = this.shadowRoot.querySelector('main')
+    this.windowIcon = this.shadowRoot.querySelector('#window-icon')
     this.windowTitle = this.shadowRoot.querySelector('#window-title')
     this.windowButtons = this.shadowRoot.querySelector('#window-buttons')
     this.buttonMinimize = this.shadowRoot.querySelector('#button-minimize')
@@ -53,6 +54,7 @@ class RlPwdWindow extends window.HTMLElement {
         this.closeWindow()
         break
       case this.header:
+      case this.windowIcon:
       case this.windowTitle:
       case this.windowButtons:
         this.prevClientX = event.clientX
@@ -190,6 +192,10 @@ class RlPwdWindow extends window.HTMLElement {
 
   setHeightPixels (integer) {
     this.style.height = integer + 'px'
+  }
+
+  setIcon (url) {
+    this.windowIcon.setAttribute('src', url)
   }
 
   setTitle (title) {

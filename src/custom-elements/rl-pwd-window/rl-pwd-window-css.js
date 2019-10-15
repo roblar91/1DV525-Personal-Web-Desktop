@@ -26,6 +26,14 @@ header {
     padding: 0.2rem;
     box-sizing: border-box;
     border-bottom: solid 0.1rem #9da6a5;
+    align-items: center;
+}
+
+#window-icon {
+    display: inline-block;
+    margin-right: 0.5rem;
+    border-radius: 0.2rem;
+    height: 80%;
 }
 
 #window-title {

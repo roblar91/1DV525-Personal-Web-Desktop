@@ -28,8 +28,8 @@ class RlPwd extends window.HTMLElement {
 
     this.addEventListener('click', this.mouseclickHandler)
 
-    this.registerApp('rl-quiz', 'RL Quiz', '')
-    this.registerApp('rl-memory', 'RL Memory', '')
+    this.registerApp('rl-quiz', 'Quiz', '/resources/rl-quiz/icon.png')
+    this.registerApp('rl-memory', 'Memory', '/resources/rl-memory/icon.png')
   }
 
   mouseclick (event) {
@@ -66,7 +66,15 @@ class RlPwd extends window.HTMLElement {
     app.setAttribute('data-element-name', elementName)
     app.setAttribute('data-app-title', appTitle)
     app.setAttribute('data-icon-url', iconUrl)
-    app.textContent = appTitle
+
+    const icon = document.createElement('img')
+    icon.setAttribute('src', iconUrl)
+    icon.setAttribute('alt', '')
+    app.appendChild(icon)
+
+    const text = document.createElement('p')
+    text.textContent = appTitle
+    app.appendChild(text)
 
     this.mainMenu.appendChild(app)
     this.apps.push(app)
@@ -76,6 +84,7 @@ class RlPwd extends window.HTMLElement {
     const window = document.createElement('rl-pwd-window')
     const app = document.createElement(element.getAttribute('data-element-name'))
     this.mainElement.appendChild(window)
+    window.setIcon(element.getAttribute('data-icon-url'))
     window.setTitle(element.getAttribute('data-app-title'))
     window.setContent(app)
   }
