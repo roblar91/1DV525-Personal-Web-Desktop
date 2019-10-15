@@ -12,14 +12,28 @@ cardFronts.push('/resources/rl-memory/7.png')
 cardFronts.push('/resources/rl-memory/8.png')
 
 const boardStyleHtml = /* css */ `
+:host {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  background-color: white;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
 header p {
   display: inline;
   margin-right: 2em;
 }
+
+game-card {
+  width: 6rem;
+  height: 6rem;
+}
 `
 const boardHeaderHtml = /* html */ `
 <h1>
-<p>RL Memory</p>
 <p>Hits: <span id="hits"></span></p>
 <p>Misses: <span id="misses"></span></p>
 <button id="resetbutton">Reset</button>
@@ -37,6 +51,8 @@ class RlMemory extends window.HTMLElement {
   }
 
   connectedCallback () {
+    this.setAttribute('data-preffered-width', '34rem')
+    this.setAttribute('data-preffered-height', '34rem')
     this.initializeBoard()
 
     this.addEventListener('click', this.clicked)
@@ -47,12 +63,12 @@ class RlMemory extends window.HTMLElement {
   }
 
   clicked (event) {
-    // todo:
+    const originalTarget = event.composedPath()[0]
     try {
-      if (event.originalTarget === this.shadowRoot.querySelector('#resetbutton')) {
+      if (originalTarget === this.shadowRoot.querySelector('#resetbutton')) {
         this.initializeBoard()
-      } else if (event.originalTarget.parentNode.host.nodeName === 'GAME-CARD') {
-        this.cardClicked(event.originalTarget.parentNode.host)
+      } else if (originalTarget.parentNode.host.nodeName === 'GAME-CARD') {
+        this.cardClicked(originalTarget.parentNode.host)
       }
     } catch (e) {
       // Catch TypeErrors

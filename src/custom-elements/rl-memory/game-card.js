@@ -5,6 +5,19 @@ class GameCard extends window.HTMLElement {
   }
 
   connectedCallback () {
+    this.shadowRoot.innerHTML = /* html */ `
+    <style>
+    :host {
+      display: inline-block;
+    }
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+    </style>
+    `
+
     this.shadowRoot.appendChild(document.createElement('img'))
     this.revealed = false
     this.updateImage()
