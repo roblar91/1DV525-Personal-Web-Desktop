@@ -40,9 +40,13 @@ class RlPwdWindow extends window.HTMLElement {
     this.parentElement.addEventListener('mouseup', this.mouseupHandler)
     this.parentElement.addEventListener('mouseleave', this.mouseleaveHandler)
     this.parentElement.addEventListener('mousemove', this.mousemoveHandler)
+
+    this.bringToFront()
   }
 
   mousedown (event) {
+    this.bringToFront()
+
     // Get the original target (probably does not work in Edge)
     switch (event.composedPath()[0]) {
       case this.buttonMinimize:
@@ -172,6 +176,16 @@ class RlPwdWindow extends window.HTMLElement {
       this.setWidthPixels(this.parentElement.clientWidth)
       this.setHeightPixels(this.parentElement.clientHeight)
     }
+  }
+
+  bringToFront () {
+    // Bring this window to the forefront and focus
+    const windows = this.parentElement.children
+    Object.keys(windows).forEach(key => {
+      windows[key].style.zIndex = 1
+    })
+    this.style.zIndex = 2
+    this.focus()
   }
 
   closeWindow () {
