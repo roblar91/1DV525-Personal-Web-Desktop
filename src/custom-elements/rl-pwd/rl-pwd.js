@@ -27,7 +27,7 @@ class RlPwd extends window.HTMLElement {
 
     this.addEventListener('click', this.mouseclickHandler)
 
-    this.registerApp('rl-quiz', 'Rl Quiz', '')
+    this.registerApp('rl-quiz', 'RL Quiz', '')
   }
 
   mouseclick (event) {
@@ -37,10 +37,10 @@ class RlPwd extends window.HTMLElement {
         this.toggleMainMenu()
         break
       default:
+        this.hideMainMenu()
         this.apps.forEach(app => {
           if (app === event.composedPath()[0]) {
             this.runApp(app)
-            this.hideMainMenu()
           }
         })
     }

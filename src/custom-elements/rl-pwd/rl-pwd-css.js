@@ -34,20 +34,28 @@ main {
 #main-menu {
     flex-direction: column;
     display: none;
-    width: 10rem;
-    background-color: yellow;
+    width: 12rem;
+    background-color: black;
     position: absolute;
     bottom: 2.6rem;
     left: 0.3rem;
+    box-sizing: content-box;
+    border: 0.3rem ridge #9da6a5;
+    padding: 0.5rem 0.5rem 0.2rem 0.5rem;
 }
 
 .main-menu-item {
     display: flex;
     height: 2rem;
-    margin: 0.2rem;
-    background-color: green;
+    color: white;
+    background-color: #1e1f21;
     align-items: center;
-    justify-content: center;
+    justify-content: left;
+    border: 0.1rem solid #9da6a5;
+    overflow: hidden;
+    margin-bottom: 0.3rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 }
 
 .align-left {
@@ -73,12 +81,12 @@ main {
     border: 0.1rem #9da6a5 inset;
 }
 
-#main-menu-button:hover {
+#main-menu-button:hover, .main-menu-item:hover {
     color: #1e1f21;
-    background-color: lightgrey;
+    background-color: darkgrey;
 }
 
-#menu-button:active {
+#main-menu-button:active, .main-menu-item:active {
     background-color: white;
 }
 

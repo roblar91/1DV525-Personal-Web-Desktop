@@ -74,7 +74,6 @@ main {
     width: 100%;
     background-color: black;
     cursor: default;
-    
     overflow: hidden;
 }
 `

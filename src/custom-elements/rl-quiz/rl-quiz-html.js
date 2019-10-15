@@ -1,6 +1,6 @@
 const RlQuizHtml = /* html */ `
 <header>
-    <div id="title">Rl Quiz</div>
+    <div id="title">RL Quiz</div>
     <table id="name-time-table">
         <tbody>
             <tr>
