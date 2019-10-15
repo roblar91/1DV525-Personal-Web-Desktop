@@ -120,6 +120,8 @@ class RlPwdWindow extends window.HTMLElement {
   }
 
   resizeWindow (event) {
+    this.previousPosition = null
+
     // Calculate how much the pointer has moved since last event
     const dX = event.clientX - this.prevClientX
     const dY = event.clientY - this.prevClientY

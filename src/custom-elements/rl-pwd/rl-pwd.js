@@ -3,6 +3,7 @@ import html from './rl-pwd-html.js'
 import '../rl-clock/rl-clock.js'
 import '../rl-pwd-window/rl-pwd-window.js'
 import '../rl-quiz/rl-quiz.js'
+import '../rl-memory/rl-memory.js'
 
 class RlPwd extends window.HTMLElement {
   constructor () {
@@ -28,6 +29,7 @@ class RlPwd extends window.HTMLElement {
     this.addEventListener('click', this.mouseclickHandler)
 
     this.registerApp('rl-quiz', 'RL Quiz', '')
+    this.registerApp('rl-memory', 'RL Memory', '')
   }
 
   mouseclick (event) {
