@@ -40,11 +40,6 @@ class RlPwd extends window.HTMLElement {
         break
       default:
         this.hideMainMenu()
-        this.apps.forEach(app => {
-          if (app === event.composedPath()[0]) {
-            this.runApp(app)
-          }
-        })
     }
   }
 
@@ -66,6 +61,9 @@ class RlPwd extends window.HTMLElement {
     app.setAttribute('data-element-name', elementName)
     app.setAttribute('data-app-title', appTitle)
     app.setAttribute('data-icon-url', iconUrl)
+    app.addEventListener('click', event => {
+      this.runApp(app)
+    })
 
     const icon = document.createElement('img')
     icon.setAttribute('src', iconUrl)

@@ -9,6 +9,7 @@ const rlPwdCss = /* css */ `
     background-image: url('/resources/rl-pwd/background.jpg');
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center center;
     border: 0.3rem ridge #9da6a5;
     box-sizing: border-box;
     width: 100%;
