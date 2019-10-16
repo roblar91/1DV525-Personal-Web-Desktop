@@ -8,6 +8,8 @@ const RlPwdHtml = /* html */ `
     </div>
     <div class="align-left">
         <button id="main-menu-button">Menu</button>
+        <div id="running-app-container">
+        </div>
     </div>
     <div class="align-right">
         <rl-clock></rl-clock>

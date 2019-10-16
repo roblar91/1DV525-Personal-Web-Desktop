@@ -34,6 +34,7 @@ class RlPwdWindow extends window.HTMLElement {
     // These values should be updated after creation by the parent to handle overlapping windows
     this.setTopPixels(this.parentElement.offsetTop)
     this.setLeftPixels(this.parentElement.offsetLeft)
+    this.style.zIndex = this.parentElement.children.length
 
     this.addEventListener('mousedown', this.mousedownHandler)
     // These event handlers are added to the parent in order to improve the move and resize functionality
@@ -50,6 +51,7 @@ class RlPwdWindow extends window.HTMLElement {
     // Get the original target (probably does not work in Edge)
     switch (event.composedPath()[0]) {
       case this.buttonMinimize:
+        this.minimize()
         break
       case this.buttonEnlarge:
         this.toggleEnlarge()
@@ -178,12 +180,17 @@ class RlPwdWindow extends window.HTMLElement {
     }
   }
 
-  bringToFront () {
-    const windows = this.parentElement.children
-    const currentZ = this.style.zIndex || windows.length
+  minimize () {
+    this.style.visibility = 'hidden'
+  }
 
-    // The foremost window should have a z-index equal to the number of windows
-    if (currentZ !== windows.length) {
+  bringToFront () {
+    this.style.visibility = 'visible'
+
+    const windows = this.parentElement.children
+    const currentZ = this.style.zIndex
+
+    if (!this.isInFront()) {
       Object.keys(windows).forEach(key => {
         if (windows[key].style.zIndex >= currentZ) {
           windows[key].style.zIndex -= 1
@@ -195,8 +202,17 @@ class RlPwdWindow extends window.HTMLElement {
     this.focus()
   }
 
+  isInFront () {
+    // The foremost window should have a z-index equal to the number of windows
+    return parseInt(this.style.zIndex, 10) === this.parentElement.children.length
+  }
+
+  isVisible () {
+    return this.style.visibility !== 'hidden'
+  }
+
   closeWindow () {
-    this.parentElement.removeChild(this)
+    this.dispatchEvent(new window.CustomEvent('closewindow', { bubble: true, composed: true }))
   }
 
   setLeftPixels (integer) {

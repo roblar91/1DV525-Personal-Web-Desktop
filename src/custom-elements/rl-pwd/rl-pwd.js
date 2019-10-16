@@ -10,7 +10,9 @@ class RlPwd extends window.HTMLElement {
     super()
     this.attachShadow({ mode: 'open' })
     this.apps = []
+    this.runningApps = []
     this.mouseclickHandler = this.mouseclick.bind(this)
+    this.closewindowHandler = this.closewindow.bind(this)
   }
 
   connectedCallback () {
@@ -24,9 +26,11 @@ class RlPwd extends window.HTMLElement {
     this.mainElement = this.shadowRoot.querySelector('main')
     this.mainMenu = this.shadowRoot.querySelector('#main-menu')
     this.mainMenuButton = this.shadowRoot.querySelector('#main-menu-button')
+    this.runningAppContainer = this.shadowRoot.querySelector('#running-app-container')
     this.hideMainMenu()
 
     this.addEventListener('click', this.mouseclickHandler)
+    this.addEventListener('closewindow', this.closewindowHandler)
 
     this.registerApp('rl-quiz', 'Quiz', '/resources/rl-quiz/icon.png')
     this.registerApp('rl-memory', 'Memory', '/resources/rl-memory/icon.png')
@@ -43,6 +47,20 @@ class RlPwd extends window.HTMLElement {
     }
   }
 
+  closewindow (event) {
+    const originalTarget = event.composedPath()[0]
+
+    this.runningApps.forEach((app, index) => {
+      if (app.window === originalTarget) {
+        this.runningAppContainer.removeChild(app.taskbarHandle)
+        this.mainElement.removeChild(app.window)
+        this.runningApps.splice(index, 1)
+      }
+    })
+
+    console.log(this.runningApps)
+  }
+
   hideMainMenu () {
     this.mainMenu.style.display = 'none'
   }
@@ -52,6 +70,16 @@ class RlPwd extends window.HTMLElement {
       this.mainMenu.style.display = 'flex'
     } else {
       this.mainMenu.style.display = 'none'
+    }
+  }
+
+  toggleVisibility (window) {
+    if (!window.isVisible()) {
+      window.bringToFront()
+    } else if (!window.isInFront()) {
+      window.bringToFront()
+    } else {
+      window.minimize()
     }
   }
 
@@ -79,12 +107,45 @@ class RlPwd extends window.HTMLElement {
   }
 
   runApp (element) {
+    const windowElement = this.createWindow(element)
+    const taskbarHandleElement = this.createTaskbarHandle(element)
+    const app = {
+      window: windowElement,
+      taskbarHandle: taskbarHandleElement
+    }
+
+    this.runningApps.push(app)
+
+    taskbarHandleElement.addEventListener('click', event => {
+      this.toggleVisibility(windowElement)
+    })
+  }
+
+  createWindow (element) {
     const window = document.createElement('rl-pwd-window')
     const app = document.createElement(element.getAttribute('data-element-name'))
     this.mainElement.appendChild(window)
     window.setIcon(element.getAttribute('data-icon-url'))
     window.setTitle(element.getAttribute('data-app-title'))
     window.setContent(app)
+    return window
+  }
+
+  createTaskbarHandle (element) {
+    const taskbarHandle = document.createElement('div')
+    taskbarHandle.setAttribute('class', 'running-app-item')
+    this.runningAppContainer.appendChild(taskbarHandle)
+
+    const icon = document.createElement('img')
+    icon.setAttribute('src', element.getAttribute('data-icon-url'))
+    icon.setAttribute('alt', '')
+    taskbarHandle.appendChild(icon)
+
+    const text = document.createElement('p')
+    text.textContent = element.getAttribute('data-app-title')
+    taskbarHandle.appendChild(text)
+
+    return taskbarHandle
   }
 }
 
