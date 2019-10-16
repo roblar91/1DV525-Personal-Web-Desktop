@@ -66,6 +66,7 @@ main {
     margin-right: 1rem;
     border-radius: 0.2rem;
     height: 80%;
+    pointer-events: none;
 }
 
 .align-left {

@@ -57,8 +57,6 @@ class RlPwd extends window.HTMLElement {
         this.runningApps.splice(index, 1)
       }
     })
-
-    console.log(this.runningApps)
   }
 
   hideMainMenu () {

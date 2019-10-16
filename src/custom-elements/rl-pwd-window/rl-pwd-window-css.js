@@ -7,8 +7,8 @@ const RlPwdWindowCss = /* css */ `
     position: absolute;
     width: 30rem;
     height: 24rem;
-    min-width: 5rem;
-    min-height: 5rem;
+    min-width: 7rem;
+    min-height: 7rem;
     background-color: black;
     border: double 0.4rem #9da6a5;
     box-sizing: border-box;
@@ -30,10 +30,13 @@ header {
 }
 
 #window-icon {
-    display: inline-block;
-    margin-right: 0.5rem;
+    display: flex;
+    flex: 0 1 auto;
     border-radius: 0.2rem;
     height: 80%;
+    min-width: 0;
+    margin-right: 0.5rem;
+    pointer-events: none;
 }
 
 #window-title {
@@ -49,8 +52,8 @@ header {
 
 #window-buttons {
     display: flex;
+    flex: 0 0 auto;
     height: 100%;
-    width: min-content;
     align-items: center;
     justify-content: right;
 }
