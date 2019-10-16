@@ -179,12 +179,19 @@ class RlPwdWindow extends window.HTMLElement {
   }
 
   bringToFront () {
-    // Bring this window to the forefront and focus
     const windows = this.parentElement.children
-    Object.keys(windows).forEach(key => {
-      windows[key].style.zIndex = 1
-    })
-    this.style.zIndex = 2
+    const currentZ = this.style.zIndex || windows.length
+
+    // The foremost window should have a z-index equal to the number of windows
+    if (currentZ !== windows.length) {
+      Object.keys(windows).forEach(key => {
+        if (windows[key].style.zIndex >= currentZ) {
+          windows[key].style.zIndex -= 1
+        }
+      })
+    }
+
+    this.style.zIndex = windows.length
     this.focus()
   }
 
