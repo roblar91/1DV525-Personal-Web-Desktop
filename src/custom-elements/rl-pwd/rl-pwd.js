@@ -63,6 +63,8 @@ class RlPwd extends window.HTMLElement {
         this.runningApps.splice(index, 1)
       }
     })
+
+    this.focusForemostWindow()
   }
 
   minimizewindow (event) {
