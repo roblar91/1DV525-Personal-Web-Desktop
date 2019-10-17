@@ -46,7 +46,7 @@ class RlPwdWindow extends window.HTMLElement {
     // Get the original target (probably does not work in Edge)
     switch (event.composedPath()[0]) {
       case this.buttonMinimize:
-        this.minimize()
+        this.minimizeWindow()
         break
       case this.buttonEnlarge:
         this.toggleEnlarge()
@@ -175,22 +175,24 @@ class RlPwdWindow extends window.HTMLElement {
     }
   }
 
-  minimize () {
+  hide () {
     this.style.visibility = 'hidden'
-    this.sendToBack()
+    this.header.classList.remove('active-window')
+    this.taskbarHandle.classList.remove('active-window')
   }
 
   bringToFront () {
     this.style.visibility = 'visible'
 
     const windows = this.parentElement.children
-    const currentZ = this.style.zIndex
+    const currentZ = parseInt(this.style.zIndex, 10)
 
     Object.keys(windows).forEach(key => {
       windows[key].header.classList.remove('active-window')
       windows[key].taskbarHandle.classList.remove('active-window')
-      if (windows[key].style.zIndex >= currentZ) {
-        windows[key].style.zIndex -= 1
+      const otherZ = parseInt(windows[key].style.zIndex, 10)
+      if (otherZ >= currentZ) {
+        windows[key].style.zIndex = otherZ - 1
       }
     })
 
@@ -198,26 +200,6 @@ class RlPwdWindow extends window.HTMLElement {
     this.taskbarHandle.classList.add('active-window')
     this.style.zIndex = windows.length
     this.focus()
-  }
-
-  sendToBack () {
-    this.classList.remove('active-window')
-    this.taskbarHandle.classList.remove('active-window')
-
-    const windows = this.parentElement.children
-    const currentZ = this.style.zIndex
-
-    Object.keys(windows).forEach(key => {
-      if (windows[key].style.zIndex < currentZ) {
-        windows[key].style.zIndex = parseInt(windows[key].style.zIndex, 10) + 1
-      }
-
-      if (windows[key].style.zIndex === windows.length) {
-        windows[key].bringToFront()
-      }
-    })
-
-    this.style.zIndex = 1
   }
 
   isInFront () {
@@ -231,6 +213,10 @@ class RlPwdWindow extends window.HTMLElement {
 
   closeWindow () {
     this.dispatchEvent(new window.CustomEvent('closewindow', { bubble: true, composed: true }))
+  }
+
+  minimizeWindow () {
+    this.dispatchEvent(new window.CustomEvent('minimizewindow', { bubble: true, composed: true }))
   }
 
   setLeftPixels (integer) {

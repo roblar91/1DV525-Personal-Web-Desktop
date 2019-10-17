@@ -17,6 +17,7 @@ class RlPwd extends window.HTMLElement {
     this.runningApps = []
     this.mouseclickHandler = this.mouseclick.bind(this)
     this.closewindowHandler = this.closewindow.bind(this)
+    this.minimizewindowHandler = this.minimizewindow.bind(this)
   }
 
   connectedCallback () {
@@ -35,6 +36,7 @@ class RlPwd extends window.HTMLElement {
 
     this.addEventListener('click', this.mouseclickHandler)
     this.addEventListener('closewindow', this.closewindowHandler)
+    this.addEventListener('minimizewindow', this.minimizewindowHandler)
 
     this.registerApp('rl-quiz', 'Quiz', '/resources/rl-quiz/icon.png')
     this.registerApp('rl-memory', 'Memory', '/resources/rl-memory/icon.png')
@@ -63,6 +65,12 @@ class RlPwd extends window.HTMLElement {
     })
   }
 
+  minimizewindow (event) {
+    console.log('aaa')
+    event.composedPath()[0].hide()
+    this.focusForemostWindow()
+  }
+
   hideMainMenu () {
     this.mainMenu.style.display = 'none'
   }
@@ -81,22 +89,25 @@ class RlPwd extends window.HTMLElement {
     } else if (!window.isInFront()) {
       window.bringToFront()
     } else {
-      window.minimize()
+      window.hide()
+      this.focusForemostWindow()
+    }
+  }
 
-      // Focus the next window
-      const windows = this.mainElement.children
-      let maxZ = 0
-      let nextFocusTarget
-      for (let i = 0; i < windows.length; i++) {
-        if (windows[i].style.zIndex > maxZ && windows[i].isVisible()) {
-          maxZ = windows[i].style.zIndex
-          nextFocusTarget = windows[i]
-        }
+  focusForemostWindow () {
+    const windows = this.mainElement.children
+    let maxZ = 0
+    let nextFocusTarget
+    for (let i = 0; i < windows.length; i++) {
+      const currentZ = windows[i].style.zIndex
+      if (currentZ > maxZ && windows[i].isVisible()) {
+        maxZ = currentZ
+        nextFocusTarget = windows[i]
       }
+    }
 
-      if (nextFocusTarget) {
-        nextFocusTarget.bringToFront()
-      }
+    if (nextFocusTarget) {
+      nextFocusTarget.bringToFront()
     }
   }
 
@@ -173,6 +184,7 @@ class RlPwd extends window.HTMLElement {
   positionWindowAutomatically (window) {
     let offsetX = this.windowOffset.dX
     let offsetY = this.windowOffset.dY
+    let currentVerticalLoop = 1
 
     const windows = this.mainElement.children
 
@@ -186,7 +198,8 @@ class RlPwd extends window.HTMLElement {
       })
 
       if (offsetY + window.offsetHeight > this.mainElement.clientHeight) {
-        offsetX += this.windowOffset.dX
+        currentVerticalLoop++
+        offsetX = this.windowOffset.dX * currentVerticalLoop
         offsetY = this.windowOffset.dY
       }
 
