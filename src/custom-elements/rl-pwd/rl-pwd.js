@@ -9,6 +9,10 @@ class RlPwd extends window.HTMLElement {
   constructor () {
     super()
     this.attachShadow({ mode: 'open' })
+    this.windowOffset = {
+      dX: 50,
+      dY: 50
+    }
     this.apps = []
     this.runningApps = []
     this.mouseclickHandler = this.mouseclick.bind(this)
@@ -126,6 +130,8 @@ class RlPwd extends window.HTMLElement {
     window.setIcon(element.getAttribute('data-icon-url'))
     window.setTitle(element.getAttribute('data-app-title'))
     window.setContent(app)
+
+    this.positionWindowAutomatically(window)
     return window
   }
 
@@ -144,6 +150,32 @@ class RlPwd extends window.HTMLElement {
     taskbarHandle.appendChild(text)
 
     return taskbarHandle
+  }
+
+  positionWindowAutomatically (window) {
+    let offsetX = this.windowOffset.dX
+    let offsetY = this.windowOffset.dY
+
+    const windows = this.mainElement.children
+
+    for (let i = 0; i < windows.length; i++) {
+      Object.keys(windows).some(key => {
+        if (windows[key].offsetTop === offsetY && windows[key].offsetLeft === offsetX) {
+          offsetX += this.windowOffset.dX
+          offsetY += this.windowOffset.dY
+          return true
+        }
+      })
+
+      if (offsetY + window.offsetHeight > this.mainElement.clientHeight) {
+        offsetX += this.windowOffset.dX
+        offsetY = this.windowOffset.dY
+      }
+    }
+
+    window.setLeftPixels(offsetX)
+    window.setTopPixels(offsetY)
+    console.log(window.offsetHeight)
   }
 }
 
