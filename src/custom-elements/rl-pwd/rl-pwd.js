@@ -171,6 +171,13 @@ class RlPwd extends window.HTMLElement {
         offsetX += this.windowOffset.dX
         offsetY = this.windowOffset.dY
       }
+
+      if (offsetX + window.offsetWidth > this.mainElement.clientWidth) {
+        // Just place the window in top corner
+        offsetX = 0
+        offsetY = 0
+        break
+      }
     }
 
     window.setLeftPixels(offsetX)
