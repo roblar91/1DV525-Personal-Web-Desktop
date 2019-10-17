@@ -18,6 +18,7 @@ class RlPwd extends window.HTMLElement {
     this.mouseclickHandler = this.mouseclick.bind(this)
     this.closewindowHandler = this.closewindow.bind(this)
     this.minimizewindowHandler = this.minimizewindow.bind(this)
+    this.resizeHandler = this.resize.bind(this)
   }
 
   connectedCallback () {
@@ -32,11 +33,18 @@ class RlPwd extends window.HTMLElement {
     this.mainMenu = this.shadowRoot.querySelector('#main-menu')
     this.mainMenuButton = this.shadowRoot.querySelector('#main-menu-button')
     this.runningAppContainer = this.shadowRoot.querySelector('#running-app-container')
+    this.overflowContainer = this.shadowRoot.querySelector('#overflow-container')
+    this.overflowButton = this.shadowRoot.querySelector('#overflow-button')
     this.hideMainMenu()
+    this.hideOverflowContainer()
+    this.hideOverflowButton()
 
     this.addEventListener('click', this.mouseclickHandler)
     this.addEventListener('closewindow', this.closewindowHandler)
     this.addEventListener('minimizewindow', this.minimizewindowHandler)
+
+    // Resize event is only ever sent to the window
+    window.addEventListener('resize', this.resizeHandler)
 
     this.registerApp('rl-quiz', 'Quiz', '/resources/rl-quiz/icon.png')
     this.registerApp('rl-memory', 'Memory', '/resources/rl-memory/icon.png')
@@ -47,9 +55,15 @@ class RlPwd extends window.HTMLElement {
     switch (event.composedPath()[0]) {
       case this.mainMenuButton:
         this.toggleMainMenu()
+        this.hideOverflowContainer()
+        break
+      case this.overflowButton:
+        this.toggleOverflowContainer()
+        this.hideMainMenu()
         break
       default:
         this.hideMainMenu()
+        this.hideOverflowContainer()
     }
   }
 
@@ -58,30 +72,66 @@ class RlPwd extends window.HTMLElement {
 
     this.runningApps.forEach((app, index) => {
       if (app.window === originalTarget) {
-        this.runningAppContainer.removeChild(app.taskbarHandle)
+        try {
+          this.runningAppContainer.removeChild(app.taskbarHandle)
+        } catch {
+          this.overflowContainer.removeChild(app.taskbarHandle)
+        }
         this.mainElement.removeChild(app.window)
         this.runningApps.splice(index, 1)
       }
     })
 
+    this.updateTaskbar()
     this.focusForemostWindow()
   }
 
   minimizewindow (event) {
-    console.log('aaa')
     event.composedPath()[0].hide()
     this.focusForemostWindow()
+  }
+
+  resize (event) {
+    this.updateTaskbar()
   }
 
   hideMainMenu () {
     this.mainMenu.style.display = 'none'
   }
 
+  showMainMenu () {
+    this.mainMenu.style.display = 'flex'
+  }
+
+  hideOverflowContainer () {
+    this.overflowContainer.style.display = 'none'
+  }
+
+  showOverflowContainer () {
+    this.overflowContainer.style.display = 'flex'
+  }
+
+  hideOverflowButton () {
+    this.overflowButton.style.visibility = 'hidden'
+  }
+
+  showOverflowButton () {
+    this.overflowButton.style.visibility = 'visible'
+  }
+
   toggleMainMenu () {
     if (this.mainMenu.style.display === 'none') {
-      this.mainMenu.style.display = 'flex'
+      this.showMainMenu()
     } else {
-      this.mainMenu.style.display = 'none'
+      this.hideMainMenu()
+    }
+  }
+
+  toggleOverflowContainer () {
+    if (this.overflowContainer.style.display === 'none') {
+      this.showOverflowContainer()
+    } else {
+      this.hideOverflowContainer()
     }
   }
 
@@ -141,6 +191,8 @@ class RlPwd extends window.HTMLElement {
     const taskbarHandleElement = this.createTaskbarHandle(element)
     windowElement.setTaskbarHandle(taskbarHandleElement)
     windowElement.bringToFront()
+    this.updateTaskbar()
+    this.positionWindowAutomatically(windowElement)
 
     const app = {
       window: windowElement,
@@ -162,7 +214,6 @@ class RlPwd extends window.HTMLElement {
     window.setTitle(element.getAttribute('data-app-title'))
     window.setContent(app)
 
-    this.positionWindowAutomatically(window)
     return window
   }
 
@@ -190,6 +241,7 @@ class RlPwd extends window.HTMLElement {
 
     const windows = this.mainElement.children
 
+    // Make sure the newly created window is not placed on an occupied position
     for (let i = 0; i < windows.length; i++) {
       Object.keys(windows).some(key => {
         if (windows[key].offsetTop === offsetY && windows[key].offsetLeft === offsetX) {
@@ -215,6 +267,38 @@ class RlPwd extends window.HTMLElement {
 
     window.setLeftPixels(offsetX)
     window.setTopPixels(offsetY)
+  }
+
+  updateTaskbar () {
+    this.hideOverflowButton()
+
+    while (this.overflowContainer.lastElementChild) {
+      const element = this.overflowContainer.lastElementChild
+      this.overflowContainer.removeChild(element)
+      this.runningAppContainer.appendChild(element)
+    }
+    while (this.isTaskbarOverflowing()) {
+      const element = this.runningAppContainer.lastElementChild
+      this.runningAppContainer.removeChild(element)
+      this.overflowContainer.appendChild(element)
+
+      this.showOverflowButton()
+    }
+  }
+
+  isTaskbarOverflowing () {
+    if (this.runningAppContainer.children.length === 0) {
+      return false
+    }
+
+    // Hack to see if taskbar is overflown
+    const currentWidth = this.runningAppContainer.clientWidth
+    const element = this.runningAppContainer.lastElementChild
+    this.runningAppContainer.removeChild(element)
+    const previousWidth = this.runningAppContainer.clientWidth
+    this.runningAppContainer.appendChild(element)
+
+    return currentWidth !== previousWidth
   }
 }
 

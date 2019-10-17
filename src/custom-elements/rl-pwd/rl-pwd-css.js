@@ -44,6 +44,7 @@ main {
     box-sizing: content-box;
     border: 0.3rem ridge #9da6a5;
     padding: 0.5rem 0.5rem 0.2rem 0.5rem;
+    z-index: 10000;
 }
 
 .main-menu-item {
@@ -67,6 +68,33 @@ main {
     border-radius: 0.2rem;
     height: 80%;
     pointer-events: none;
+}
+
+#overflow-container {
+    flex-direction: column;
+    display: flex;
+    flex: 0 1;
+    background-color: black;
+    position: absolute;
+    bottom: 2.6rem;
+    right: 0.3rem;
+    box-sizing: content-box;
+    border: 0.3rem ridge #9da6a5;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem 0.2rem 0.2rem 0;
+    z-index: 10000;
+}
+
+#overflow-button {
+    height: 80%;
+    width: 2rem;
+    font-size: 1rem;
+    color: white;
+    background-color: #1e1f21;
+    border: 0.1rem #9da6a5 inset;
+    margin-left: 0.2rem;
+    box-sizing: content-box;
 }
 
 .align-left {
@@ -96,12 +124,12 @@ main {
     box-sizing: content-box;
 }
 
-#main-menu-button:hover, .main-menu-item:hover, .running-app-item:hover {
+#main-menu-button:hover, .main-menu-item:hover, .running-app-item:hover, #overflow-button:hover {
     color: #1e1f21;
     background-color: darkgrey;
 }
 
-#main-menu-button:active, .main-menu-item:active, .running-app-item:active {
+#main-menu-button:active, .main-menu-item:active, .running-app-item:active, #overflow-button:active {
     background-color: white;
 }
 
@@ -117,8 +145,8 @@ main {
     display: flex;
     font-size: 0.8rem;
     margin-left: 0.2rem;
-    flex: 0 1 8rem;
-    height: 80%;
+    height: 1.5rem;
+    width: 7rem;
     color: white;
     background-color: #1e1f21;
     align-items: center;
