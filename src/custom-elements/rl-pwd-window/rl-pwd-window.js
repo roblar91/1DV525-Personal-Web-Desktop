@@ -182,6 +182,8 @@ class RlPwdWindow extends window.HTMLElement {
 
   minimize () {
     this.style.visibility = 'hidden'
+
+    this.sendToBack()
   }
 
   bringToFront () {
@@ -200,6 +202,23 @@ class RlPwdWindow extends window.HTMLElement {
 
     this.style.zIndex = windows.length
     this.focus()
+  }
+
+  sendToBack () {
+    const windows = this.parentElement.children
+    const currentZ = this.style.zIndex
+
+    Object.keys(windows).forEach(key => {
+      if (windows[key].style.zIndex < currentZ) {
+        windows[key].style.zIndex = parseInt(windows[key].style.zIndex, 10) + 1
+      }
+
+      if (windows[key].style.zIndex === windows.length) {
+        windows[key].focus()
+      }
+    })
+
+    this.style.zIndex = 1
   }
 
   isInFront () {
