@@ -187,14 +187,14 @@ class RlPwdWindow extends window.HTMLElement {
     const currentZ = this.style.zIndex
 
     Object.keys(windows).forEach(key => {
-      windows[key].classList.remove('active-window')
+      windows[key].header.classList.remove('active-window')
       windows[key].taskbarHandle.classList.remove('active-window')
       if (windows[key].style.zIndex >= currentZ) {
         windows[key].style.zIndex -= 1
       }
     })
 
-    this.classList.add('active-window')
+    this.header.classList.add('active-window')
     this.taskbarHandle.classList.add('active-window')
     this.style.zIndex = windows.length
     this.focus()

@@ -21,7 +21,7 @@ header {
     width: 100%;
     height: 1.5rem;
     color: white;
-    background-color: #1e1f21;
+    background-color: grey;
     cursor: grab;
     padding: 0.2rem;
     box-sizing: border-box;
@@ -86,6 +86,10 @@ main {
     background-color: black;
     cursor: default;
     overflow: hidden;
+}
+
+.active-window {
+    background-color: #1e1f21 !important;
 }
 `
 

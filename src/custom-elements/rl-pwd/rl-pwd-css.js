@@ -128,7 +128,7 @@ main {
     box-sizing: content-box;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
-    opacity: 0.7;
+    opacity: 0.5;
 }
 
 rl-clock {
@@ -137,10 +137,6 @@ rl-clock {
     text-align: center;
     padding: 0.2rem;
     font-size: 0.8rem;
-}
-
-rl-pwd-window {
-    opacity: 0.7;
 }
 
 .active-window {
