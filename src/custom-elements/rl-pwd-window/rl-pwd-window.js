@@ -12,6 +12,7 @@ class RlPwdWindow extends window.HTMLElement {
 
     this.isMoving = false
     this.isResizing = false
+    this.isActive = false
   }
 
   connectedCallback () {
@@ -31,9 +32,6 @@ class RlPwdWindow extends window.HTMLElement {
     this.buttonEnlarge = this.shadowRoot.querySelector('#button-enlarge')
     this.buttonClose = this.shadowRoot.querySelector('#button-close')
 
-    // These values should be updated after creation by the parent to handle overlapping windows
-    this.setTopPixels(this.parentElement.offsetTop)
-    this.setLeftPixels(this.parentElement.offsetLeft)
     this.style.zIndex = this.parentElement.children.length
 
     this.addEventListener('mousedown', this.mousedownHandler)
@@ -182,12 +180,12 @@ class RlPwdWindow extends window.HTMLElement {
 
   minimize () {
     this.style.visibility = 'hidden'
-
     this.sendToBack()
   }
 
   bringToFront () {
     this.style.visibility = 'visible'
+    this.isActive = true
 
     const windows = this.parentElement.children
     const currentZ = this.style.zIndex
@@ -205,6 +203,8 @@ class RlPwdWindow extends window.HTMLElement {
   }
 
   sendToBack () {
+    this.isActive = false
+
     const windows = this.parentElement.children
     const currentZ = this.style.zIndex
 
@@ -214,7 +214,7 @@ class RlPwdWindow extends window.HTMLElement {
       }
 
       if (windows[key].style.zIndex === windows.length) {
-        windows[key].focus()
+        windows[key].bringToFront()
       }
     })
 

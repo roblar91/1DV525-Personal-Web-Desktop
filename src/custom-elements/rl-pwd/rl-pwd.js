@@ -10,8 +10,8 @@ class RlPwd extends window.HTMLElement {
     super()
     this.attachShadow({ mode: 'open' })
     this.windowOffset = {
-      dX: 50,
-      dY: 50
+      dX: 40,
+      dY: 40
     }
     this.apps = []
     this.runningApps = []
@@ -75,13 +75,28 @@ class RlPwd extends window.HTMLElement {
     }
   }
 
-  toggleVisibility (window) {
+  toggleMinimize (window) {
     if (!window.isVisible()) {
       window.bringToFront()
     } else if (!window.isInFront()) {
       window.bringToFront()
     } else {
       window.minimize()
+
+      // Focus the next window
+      const windows = this.mainElement.children
+      let maxZ = 0
+      let nextFocusTarget
+      for (let i = 0; i < windows.length; i++) {
+        if (windows[i].style.zIndex > maxZ && windows[i].isVisible()) {
+          maxZ = windows[i].style.zIndex
+          nextFocusTarget = windows[i]
+        }
+      }
+
+      if (nextFocusTarget) {
+        nextFocusTarget.bringToFront()
+      }
     }
   }
 
@@ -119,7 +134,7 @@ class RlPwd extends window.HTMLElement {
     this.runningApps.push(app)
 
     taskbarHandleElement.addEventListener('click', event => {
-      this.toggleVisibility(windowElement)
+      this.toggleMinimize(windowElement)
     })
   }
 
@@ -182,7 +197,6 @@ class RlPwd extends window.HTMLElement {
 
     window.setLeftPixels(offsetX)
     window.setTopPixels(offsetY)
-    console.log(window.offsetHeight)
   }
 }
 
