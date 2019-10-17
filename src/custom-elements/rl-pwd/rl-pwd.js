@@ -126,6 +126,9 @@ class RlPwd extends window.HTMLElement {
   runApp (element) {
     const windowElement = this.createWindow(element)
     const taskbarHandleElement = this.createTaskbarHandle(element)
+    windowElement.setTaskbarHandle(taskbarHandleElement)
+    windowElement.bringToFront()
+
     const app = {
       window: windowElement,
       taskbarHandle: taskbarHandleElement

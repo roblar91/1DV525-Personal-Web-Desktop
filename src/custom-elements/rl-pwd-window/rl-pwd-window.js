@@ -12,7 +12,6 @@ class RlPwdWindow extends window.HTMLElement {
 
     this.isMoving = false
     this.isResizing = false
-    this.isActive = false
   }
 
   connectedCallback () {
@@ -39,8 +38,6 @@ class RlPwdWindow extends window.HTMLElement {
     this.parentElement.addEventListener('mouseup', this.mouseupHandler)
     this.parentElement.addEventListener('mouseleave', this.mouseleaveHandler)
     this.parentElement.addEventListener('mousemove', this.mousemoveHandler)
-
-    this.bringToFront()
   }
 
   mousedown (event) {
@@ -185,25 +182,27 @@ class RlPwdWindow extends window.HTMLElement {
 
   bringToFront () {
     this.style.visibility = 'visible'
-    this.isActive = true
 
     const windows = this.parentElement.children
     const currentZ = this.style.zIndex
 
-    if (!this.isInFront()) {
-      Object.keys(windows).forEach(key => {
-        if (windows[key].style.zIndex >= currentZ) {
-          windows[key].style.zIndex -= 1
-        }
-      })
-    }
+    Object.keys(windows).forEach(key => {
+      windows[key].classList.remove('active-window')
+      windows[key].taskbarHandle.classList.remove('active-window')
+      if (windows[key].style.zIndex >= currentZ) {
+        windows[key].style.zIndex -= 1
+      }
+    })
 
+    this.classList.add('active-window')
+    this.taskbarHandle.classList.add('active-window')
     this.style.zIndex = windows.length
     this.focus()
   }
 
   sendToBack () {
-    this.isActive = false
+    this.classList.remove('active-window')
+    this.taskbarHandle.classList.remove('active-window')
 
     const windows = this.parentElement.children
     const currentZ = this.style.zIndex
@@ -272,6 +271,10 @@ class RlPwdWindow extends window.HTMLElement {
     if (prefferedHeight) {
       this.style.height = prefferedHeight
     }
+  }
+
+  setTaskbarHandle (element) {
+    this.taskbarHandle = element
   }
 }
 

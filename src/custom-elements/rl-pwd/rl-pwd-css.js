@@ -128,6 +128,7 @@ main {
     box-sizing: content-box;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
+    opacity: 0.7;
 }
 
 rl-clock {
@@ -138,6 +139,13 @@ rl-clock {
     font-size: 0.8rem;
 }
 
+rl-pwd-window {
+    opacity: 0.7;
+}
+
+.active-window {
+    opacity: 1;
+}
 `
 
 export default rlPwdCss
