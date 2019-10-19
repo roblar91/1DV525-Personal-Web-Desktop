@@ -157,6 +157,8 @@ class RlPwdWindow extends window.HTMLElement {
 
     this.prevClientX = event.clientX
     this.prevClientY = event.clientY
+
+    this.repositionInsideParent()
   }
 
   toggleEnlarge () {
