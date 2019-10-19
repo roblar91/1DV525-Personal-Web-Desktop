@@ -4,6 +4,7 @@ import '../rl-clock/rl-clock.js'
 import '../rl-pwd-window/rl-pwd-window.js'
 import '../rl-quiz/rl-quiz.js'
 import '../rl-memory/rl-memory.js'
+import '../rl-chat/rl-chat.js'
 
 class RlPwd extends window.HTMLElement {
   constructor () {
@@ -48,6 +49,7 @@ class RlPwd extends window.HTMLElement {
 
     this.registerApp('rl-quiz', 'Quiz', '/resources/rl-quiz/icon.png')
     this.registerApp('rl-memory', 'Memory', '/resources/rl-memory/icon.png')
+    this.registerApp('rl-chat', 'Chat', '/resources/rl-chat/icon.png')
     this.registerApp('rl-pwd', 'PWD', '')
   }
 
