@@ -107,19 +107,25 @@ class RlPwdWindow extends window.HTMLElement {
   moveWindow (event) {
     // Calculate how much the pointer has moved since last event and move window accordingly
     const dX = event.clientX - this.prevClientX
-
-    // Make sure the window does not go outside their parent element
-    let newPosX = Math.min(dX + this.offsetLeft, this.parentElement.offsetWidth - this.offsetWidth)
-    newPosX = Math.max(newPosX, 0)
-
-    this.setLeftPixels(newPosX)
+    this.setLeftPixels(this.offsetLeft + dX)
     this.prevClientX = event.clientX
 
     const dY = event.clientY - this.prevClientY
-    let newPosY = Math.min(dY + this.offsetTop, this.parentElement.offsetHeight - this.offsetHeight)
-    newPosY = Math.max(newPosY, 0)
-    this.setTopPixels(newPosY)
+    this.setTopPixels(this.offsetTop + dY)
     this.prevClientY = event.clientY
+
+    this.repositionInsideParent()
+  }
+
+  repositionInsideParent () {
+    // Make sure the window does not go outside their parent element
+    let newX = Math.min(this.offsetLeft, this.parentElement.clientWidth - this.offsetWidth)
+    newX = Math.max(0, newX)
+    this.setLeftPixels(newX)
+
+    let newY = Math.min(this.offsetTop, this.parentElement.clientHeight - this.offsetHeight)
+    newY = Math.max(0, newY)
+    this.setTopPixels(newY)
   }
 
   resizeWindow (event) {

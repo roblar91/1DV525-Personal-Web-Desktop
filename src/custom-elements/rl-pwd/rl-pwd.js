@@ -94,6 +94,7 @@ class RlPwd extends window.HTMLElement {
 
   resize (event) {
     this.updateTaskbar()
+    this.updateWindowPositions()
   }
 
   hideMainMenu () {
@@ -193,7 +194,7 @@ class RlPwd extends window.HTMLElement {
     windowElement.setTaskbarHandle(taskbarHandleElement)
     windowElement.bringToFront()
     this.updateTaskbar()
-    this.positionWindowAutomatically(windowElement)
+    this.setWindowOffset(windowElement)
 
     const app = {
       window: windowElement,
@@ -235,7 +236,7 @@ class RlPwd extends window.HTMLElement {
     return taskbarHandle
   }
 
-  positionWindowAutomatically (window) {
+  setWindowOffset (window) {
     let offsetX = this.windowOffset.dX
     let offsetY = this.windowOffset.dY
     let currentVerticalLoop = 1
@@ -288,6 +289,13 @@ class RlPwd extends window.HTMLElement {
 
       this.showOverflowButton()
     }
+  }
+
+  updateWindowPositions () {
+    const windows = this.mainElement.children
+    Object.keys(windows).forEach(key => {
+      windows[key].repositionInsideParent()
+    })
   }
 
   isTaskbarOverflowing () {
