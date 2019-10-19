@@ -20,6 +20,8 @@ main {
     display: flex;
     width: 100%;
     flex: 1;
+    overflow: hidden;
+    position: relative;
 }
 
 #taskbar {

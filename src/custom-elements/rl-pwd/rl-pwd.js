@@ -48,6 +48,7 @@ class RlPwd extends window.HTMLElement {
 
     this.registerApp('rl-quiz', 'Quiz', '/resources/rl-quiz/icon.png')
     this.registerApp('rl-memory', 'Memory', '/resources/rl-memory/icon.png')
+    this.registerApp('rl-pwd', 'PWD', '')
   }
 
   mouseclick (event) {
@@ -244,7 +245,9 @@ class RlPwd extends window.HTMLElement {
     // Make sure the newly created window is not placed on an occupied position
     for (let i = 0; i < windows.length; i++) {
       Object.keys(windows).some(key => {
-        if (windows[key].offsetTop === offsetY && windows[key].offsetLeft === offsetX) {
+        if (windows[key].isVisible() &&
+            windows[key].offsetTop === offsetY &&
+            windows[key].offsetLeft === offsetX) {
           offsetX += this.windowOffset.dX
           offsetY += this.windowOffset.dY
           return true
@@ -270,6 +273,7 @@ class RlPwd extends window.HTMLElement {
   }
 
   updateTaskbar () {
+    this.hideOverflowContainer()
     this.hideOverflowButton()
 
     while (this.overflowContainer.lastElementChild) {

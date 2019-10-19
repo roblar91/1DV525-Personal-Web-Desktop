@@ -109,15 +109,15 @@ class RlPwdWindow extends window.HTMLElement {
     const dX = event.clientX - this.prevClientX
 
     // Make sure the window does not go outside their parent element
-    let newPosX = Math.min(dX + this.offsetLeft, this.parentElement.offsetWidth + this.parentElement.offsetLeft - this.offsetWidth)
-    newPosX = Math.max(newPosX, this.parentElement.offsetLeft)
+    let newPosX = Math.min(dX + this.offsetLeft, this.parentElement.offsetWidth - this.offsetWidth)
+    newPosX = Math.max(newPosX, 0)
 
     this.setLeftPixels(newPosX)
     this.prevClientX = event.clientX
 
     const dY = event.clientY - this.prevClientY
-    let newPosY = Math.min(dY + this.offsetTop, this.parentElement.offsetHeight + this.parentElement.offsetTop - this.offsetHeight)
-    newPosY = Math.max(newPosY, this.parentElement.offsetTop)
+    let newPosY = Math.min(dY + this.offsetTop, this.parentElement.offsetHeight - this.offsetHeight)
+    newPosY = Math.max(newPosY, 0)
     this.setTopPixels(newPosY)
     this.prevClientY = event.clientY
   }
