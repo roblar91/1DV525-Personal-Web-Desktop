@@ -42,6 +42,7 @@ class RlPwdWindow extends window.HTMLElement {
 
   mousedown (event) {
     this.bringToFront()
+    console.log(this)
 
     // Get the original target (probably does not work in Edge)
     switch (event.composedPath()[0]) {

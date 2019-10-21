@@ -9,9 +9,18 @@ class RlChat extends window.HTMLElement {
 
   connectedCallback () {
     this.shadowRoot.innerHTML = /* html */ `
-      <style> ${css} </style>
-      ${html}
-      `
+    <style> ${css} </style>
+    ${html}
+    `
+
+    const socket = new window.WebSocket('ws://vhost3.lnu.se:20080/socket/')
+    socket.addEventListener('open', event => {
+      // Connected!
+    })
+
+    socket.addEventListener('message', event => {
+      console.log(event.data)
+    })
   }
 }
 
