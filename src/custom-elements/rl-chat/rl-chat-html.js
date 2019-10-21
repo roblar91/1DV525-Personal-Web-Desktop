@@ -4,11 +4,6 @@ const html = /* html */ `
     <div id="channels"></div>
     <div id="chat">
         <div id="messages">
-            <div class="message"></div>
-            <div class="message"></div>
-            <div class="message"></div>
-            <div class="message"></div>
-            <div class="message"></div>
         </div>
         <form id="chat-form">
             <input id="chat-input-text" type="text">

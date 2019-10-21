@@ -13,14 +13,34 @@ class RlChat extends window.HTMLElement {
     ${html}
     `
 
+    this.messages = this.shadowRoot.getElementById('messages')
+
     const socket = new window.WebSocket('ws://vhost3.lnu.se:20080/socket/')
     socket.addEventListener('open', event => {
       // Connected!
     })
 
     socket.addEventListener('message', event => {
-      console.log(event.data)
+      const jsonData = JSON.parse(event.data)
+      console.log(jsonData)
+      if (jsonData.type === 'message') {
+        this.printMessage(jsonData.username, jsonData.channel, jsonData.data)
+      }
     })
+  }
+
+  printMessage (sender, channel, message) {
+    const messageElement = document.createElement('div')
+    messageElement.classList.add('message')
+    this.messages.appendChild(messageElement)
+
+    const nameElement = document.createElement('div')
+    nameElement.textContent = sender
+    messageElement.appendChild(nameElement)
+
+    const dataElement = document.createElement('div')
+    dataElement.textContent = message
+    messageElement.appendChild(dataElement)
   }
 }
 

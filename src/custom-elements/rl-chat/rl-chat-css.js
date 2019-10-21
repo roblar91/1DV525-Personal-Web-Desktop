@@ -40,11 +40,21 @@ main {
 }
 
 .message {
-    flex: 1;
-    height: 5rem;
+    flex: 0 1;
     background-color: purple;
-    min-height: 5rem;
     margin: 0.5rem 0.5rem 0;
+    display: flex;
+    flex-direction: row;
+}
+
+.message .username {
+    flex: 1 1 2rem;
+    height: 3rem;
+}
+
+.message .data {
+    flex: 1 1 2rem;
+    height: 3rem;
 }
 
 #chat-form {
