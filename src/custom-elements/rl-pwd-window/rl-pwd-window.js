@@ -176,8 +176,8 @@ class RlPwdWindow extends window.HTMLElement {
         height: this.offsetHeight
       }
 
-      this.setTopPixels(this.parentElement.offsetTop)
-      this.setLeftPixels(this.parentElement.offsetLeft)
+      this.setTopPixels(0)
+      this.setLeftPixels(0)
       this.setWidthPixels(this.parentElement.clientWidth)
       this.setHeightPixels(this.parentElement.clientHeight)
     }
