@@ -16,7 +16,7 @@ main {
     flex: 1 1;
     flex-direction: row;
     background-color: blue;
-    overflow-y: hidden;
+    overflow: hidden;
 }
 
 #channels {
@@ -36,31 +36,53 @@ main {
     flex: 1;
     background-color: white;
     flex-direction: column;
+    overflow-x: hidden;
     overflow-y: scroll;
 }
 
 .message {
+    position: relative;
     flex: 0 1;
-    background-color: purple;
+    background-color: yellow;
     margin: 0.5rem 0.5rem 0;
     display: flex;
     flex-direction: row;
+    min-height: min-content;
+    padding: 1rem;
+    scroll-margin-bottom: 1rem;
+    border-radius: 0.2rem;
 }
 
-.message .username {
-    flex: 1 1 2rem;
-    height: 3rem;
+.message .sender {
+    position: absolute;
+    top: -0.2em;
+    left: -0.2rem;
+    padding: 0 0.2rem;
+    overflow: hidden;
+    border-radius: 0.2rem;
+    background-color: skyblue;
 }
 
 .message .data {
-    flex: 1 1 2rem;
-    height: 3rem;
+    flex: 1;
+    min-height: 3rem;
+    word-break: break-word;
 }
 
 #chat-form {
+    display: flex;
+    flex-direction: row;
     padding: 0.5rem;
     flex: 0;
     height: 2rem;
+}
+
+#chat-input-text {
+    flex: 1 1;
+}
+
+#chat-input-submit {
+    flex: 0;
 }
 `
 

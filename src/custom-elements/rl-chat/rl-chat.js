@@ -15,12 +15,26 @@ class RlChat extends window.HTMLElement {
 
     this.messages = this.shadowRoot.getElementById('messages')
 
-    const socket = new window.WebSocket('ws://vhost3.lnu.se:20080/socket/')
-    socket.addEventListener('open', event => {
+    this.loadFromStorage()
+    this.askForUsername()
+    // this.connect()
+    // this.setupEventListeners()
+  }
+
+  connect () {
+    this.socket = new window.WebSocket('ws://vhost3.lnu.se:20080/socket/')
+  }
+
+  setupEventListeners () {
+    this.socket.addEventListener('open', event => {
       // Connected!
     })
 
-    socket.addEventListener('message', event => {
+    this.socket.addEventListener('close', event => {
+      // Connection lost
+    })
+
+    this.socket.addEventListener('message', event => {
       const jsonData = JSON.parse(event.data)
       console.log(jsonData)
       if (jsonData.type === 'message') {
@@ -29,16 +43,26 @@ class RlChat extends window.HTMLElement {
     })
   }
 
+  loadFromStorage () {
+
+  }
+
+  askForUsername () {
+
+  }
+
   printMessage (sender, channel, message) {
     const messageElement = document.createElement('div')
     messageElement.classList.add('message')
     this.messages.appendChild(messageElement)
 
     const nameElement = document.createElement('div')
+    nameElement.classList.add('sender')
     nameElement.textContent = sender
     messageElement.appendChild(nameElement)
 
     const dataElement = document.createElement('div')
+    dataElement.classList.add('data')
     dataElement.textContent = message
     messageElement.appendChild(dataElement)
   }
