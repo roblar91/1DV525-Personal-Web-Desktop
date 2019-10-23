@@ -254,16 +254,16 @@ class RlPwdWindow extends window.HTMLElement {
   setContent (element) {
     this.main.appendChild(element)
 
-    // Bug: this sets the windows size, not the actual content size
-    // Setting the content size does not work with current css rules
     const prefferedWidth = element.getAttribute('data-preffered-width')
     if (prefferedWidth) {
       this.style.width = prefferedWidth
+      this.setWidthPixels(this.offsetWidth * 2 - this.clientWidth)
     }
 
     const prefferedHeight = element.getAttribute('data-preffered-height')
     if (prefferedHeight) {
       this.style.height = prefferedHeight
+      this.setHeightPixels(this.offsetHeight * 2 - this.clientHeight)
     }
   }
 
