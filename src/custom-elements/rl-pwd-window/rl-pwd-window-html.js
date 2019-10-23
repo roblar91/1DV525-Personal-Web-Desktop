@@ -11,4 +11,5 @@ const RlPwdWindowHtml = /* html */ `
 <main></main>
 `
 
+/** The basic HTML intended to be inserted into 'rl-pwd-window' */
 export default RlPwdWindowHtml
