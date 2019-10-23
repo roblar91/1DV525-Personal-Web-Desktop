@@ -1,14 +1,21 @@
 import css from './rl-pwd-window-css.js'
 import html from './rl-pwd-window-html.js'
 
+/**
+ * HTML element representing a window. Meant to be used as a
+ * container for other HTML elements.
+ *
+ * @class RlPwdWindow
+ * @extends {window.HTMLElement}
+ */
 class RlPwdWindow extends window.HTMLElement {
   constructor () {
     super()
     this.attachShadow({ mode: 'open' })
-    this.mousedownHandler = this.mousedown.bind(this)
-    this.mouseupHandler = this.mouseup.bind(this)
-    this.mouseleaveHandler = this.mouseleave.bind(this)
-    this.mousemoveHandler = this.mousemove.bind(this)
+    this.mousedownHandler = this._mousedown.bind(this)
+    this.mouseupHandler = this._mouseup.bind(this)
+    this.mouseleaveHandler = this._mouseleave.bind(this)
+    this.mousemoveHandler = this._mousemove.bind(this)
 
     this.isMoving = false
     this.isResizing = false
@@ -40,19 +47,19 @@ class RlPwdWindow extends window.HTMLElement {
     this.parentElement.addEventListener('mousemove', this.mousemoveHandler)
   }
 
-  mousedown (event) {
+  _mousedown (event) {
     this.bringToFront()
 
     // Get the original target (probably does not work in Edge)
     switch (event.composedPath()[0]) {
       case this.buttonMinimize:
-        this.minimizeWindow()
+        this._minimizeWindow()
         break
       case this.buttonEnlarge:
         this.toggleEnlarge()
         break
       case this.buttonClose:
-        this.closeWindow()
+        this._closeWindow()
         break
       case this.header:
       case this.windowIcon:
@@ -86,25 +93,25 @@ class RlPwdWindow extends window.HTMLElement {
     }
   }
 
-  mouseup (event) {
+  _mouseup (event) {
     this.isMoving = false
     this.isResizing = false
   }
 
-  mouseleave (event) {
+  _mouseleave (event) {
     this.isMoving = false
     this.isResizing = false
   }
 
-  mousemove (event) {
+  _mousemove (event) {
     if (this.isMoving) {
-      this.moveWindow(event)
+      this._moveWindow(event)
     } else if (this.isResizing) {
-      this.resizeWindow(event)
+      this._resizeWindow(event)
     }
   }
 
-  moveWindow (event) {
+  _moveWindow (event) {
     // Calculate how much the pointer has moved since last event and move window accordingly
     const dX = event.clientX - this.prevClientX
     this.setLeftPixels(this.offsetLeft + dX)
@@ -117,18 +124,7 @@ class RlPwdWindow extends window.HTMLElement {
     this.repositionInsideParent()
   }
 
-  repositionInsideParent () {
-    // Make sure the window does not go outside their parent element
-    let newX = Math.min(this.offsetLeft, this.parentElement.clientWidth - this.offsetWidth)
-    newX = Math.max(0, newX)
-    this.setLeftPixels(newX)
-
-    let newY = Math.min(this.offsetTop, this.parentElement.clientHeight - this.offsetHeight)
-    newY = Math.max(0, newY)
-    this.setTopPixels(newY)
-  }
-
-  resizeWindow (event) {
+  _resizeWindow (event) {
     this.previousPosition = null
 
     // Calculate how much the pointer has moved since last event
@@ -161,6 +157,35 @@ class RlPwdWindow extends window.HTMLElement {
     this.repositionInsideParent()
   }
 
+  _closeWindow () {
+    this.dispatchEvent(new window.CustomEvent('closewindow', { bubble: true, composed: true }))
+  }
+
+  _minimizeWindow () {
+    this.dispatchEvent(new window.CustomEvent('minimizewindow', { bubble: true, composed: true }))
+  }
+
+  /**
+   * Repositions the window so that it does not go outside its parent element
+   *
+   * @memberof RlPwdWindow
+   */
+  repositionInsideParent () {
+    let newX = Math.min(this.offsetLeft, this.parentElement.clientWidth - this.offsetWidth)
+    newX = Math.max(0, newX)
+    this.setLeftPixels(newX)
+
+    let newY = Math.min(this.offsetTop, this.parentElement.clientHeight - this.offsetHeight)
+    newY = Math.max(0, newY)
+    this.setTopPixels(newY)
+  }
+
+  /**
+   * Adjusts the size and position of the window to cover the entire size of its parent container.
+   * A subsequent call will return the window to it's previous size and position.
+   *
+   * @memberof RlPwdWindow
+   */
   toggleEnlarge () {
     if (this.previousPosition) {
       this.setTopPixels(this.previousPosition.top)
@@ -183,12 +208,24 @@ class RlPwdWindow extends window.HTMLElement {
     }
   }
 
+  /**
+   * Sets the windows visibility to 'hidden' and removes the 'active-window' class
+   * from both the window and it's taskbar handle.
+   *
+   * @memberof RlPwdWindow
+   */
   hide () {
     this.style.visibility = 'hidden'
     this.header.classList.remove('active-window')
     this.taskbarHandle.classList.remove('active-window')
   }
 
+  /**
+   * Brings this window to the front. 'active-window' class is added to this
+   * window and it's taskbar handle, and removed from all other windows.
+   *
+   * @memberof RlPwdWindow
+   */
   bringToFront () {
     this.style.visibility = 'visible'
 
@@ -210,47 +247,53 @@ class RlPwdWindow extends window.HTMLElement {
     this.focus()
   }
 
+  /**
+   * Returns true if this window is in front of all other windows belonging to it's parent.
+   *
+   * @returns {boolean}
+   * @memberof RlPwdWindow
+   */
   isInFront () {
     // The foremost window should have a z-index equal to the number of windows
     return parseInt(this.style.zIndex, 10) === this.parentElement.children.length
   }
 
+  /**
+   * Returns true if the visibility of this window is not 'hidden'.
+   *
+   * @returns {boolean}
+   * @memberof RlPwdWindow
+   */
   isVisible () {
     return this.style.visibility !== 'hidden'
   }
 
-  closeWindow () {
-    this.dispatchEvent(new window.CustomEvent('closewindow', { bubble: true, composed: true }))
-  }
-
-  minimizeWindow () {
-    this.dispatchEvent(new window.CustomEvent('minimizewindow', { bubble: true, composed: true }))
-  }
-
-  setLeftPixels (integer) {
-    this.style.left = integer + 'px'
-  }
-
-  setTopPixels (integer) {
-    this.style.top = integer + 'px'
-  }
-
-  setWidthPixels (integer) {
-    this.style.width = integer + 'px'
-  }
-
-  setHeightPixels (integer) {
-    this.style.height = integer + 'px'
-  }
-
+  /**
+   * Sets the icon to be associated with this window.
+   *
+   * @param {string} url
+   * @memberof RlPwdWindow
+   */
   setIcon (url) {
     this.windowIcon.setAttribute('src', url)
   }
 
+  /**
+   * Sets the title to be associated with this window.
+   *
+   * @param {string} title
+   * @memberof RlPwdWindow
+   */
   setTitle (title) {
     this.windowTitle.textContent = title
   }
 
+  /**
+   * Sets the HTML element that should be the main content of this window.
+   *
+   * @param {HTMLElement} element
+   * @memberof RlPwdWindow
+   */
   setContent (element) {
     this.main.appendChild(element)
 
@@ -267,8 +310,54 @@ class RlPwdWindow extends window.HTMLElement {
     }
   }
 
+  /**
+   * Sets the taskbar handle to be associated with this window.
+   *
+   * @param {HTMLElement} element
+   * @memberof RlPwdWindow
+   */
   setTaskbarHandle (element) {
     this.taskbarHandle = element
+  }
+
+  /**
+   * Sets the distance between this window and the left side of it's container.
+   *
+   * @param {number} integer The number of pixels
+   * @memberof RlPwdWindow
+   */
+  setLeftPixels (integer) {
+    this.style.left = integer + 'px'
+  }
+
+  /**
+   * Sets the distance between this window and the top side of it's container.
+   *
+   * @param {number} integer The number of pixels
+   * @memberof RlPwdWindow
+   */
+  setTopPixels (integer) {
+    this.style.top = integer + 'px'
+  }
+
+  /**
+   * Sets the total width this window.
+   *
+   * @param {number} integer The number of pixels
+   * @memberof RlPwdWindow
+   */
+  setWidthPixels (integer) {
+    this.style.width = integer + 'px'
+  }
+
+  /**
+   * Sets the total height of this window.
+   *
+   * @param {number} integer The number of pixels
+   * @memberof RlPwdWindow
+   */
+  setHeightPixels (integer) {
+    this.style.height = integer + 'px'
   }
 }
 
