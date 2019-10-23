@@ -4,6 +4,18 @@ const html = /* html */ `
     <div id="channels"></div>
     <div id="chat">
         <div id="messages">
+        </div>
+        <form id="chat-form">
+            <input id="chat-input-text" type="text">
+            <input id="chat-input-submit" type="submit" value="Send">
+        </form>
+    </div>
+</main>
+`
+
+export default html
+
+/*
             <div class="message">
                 <div class="sender">
                     Ola
@@ -45,13 +57,4 @@ const html = /* html */ `
                     Hejsan där
                 </div>
             </div>
-        </div>
-        <form id="chat-form">
-            <input id="chat-input-text" type="text">
-            <input id="chat-input-submit" type="submit" value="Send">
-        </form>
-    </div>
-</main>
-`
-
-export default html
+*/

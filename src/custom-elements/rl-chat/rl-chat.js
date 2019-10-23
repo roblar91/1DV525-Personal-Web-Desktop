@@ -1,6 +1,9 @@
 import css from './rl-chat-css.js'
 import html from './rl-chat-html.js'
 
+const SERVER_URL = 'ws://vhost3.lnu.se:20080/socket/'
+const KEY = 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
+
 class RlChat extends window.HTMLElement {
   constructor () {
     super()
@@ -14,15 +17,25 @@ class RlChat extends window.HTMLElement {
     `
 
     this.messages = this.shadowRoot.getElementById('messages')
+    this.chatForm = this.shadowRoot.getElementById('chat-form')
+    this.chatInputText = this.shadowRoot.getElementById('chat-input-text')
 
     this.loadFromStorage()
     this.askForUsername()
-    // this.connect()
-    // this.setupEventListeners()
+    this.connect()
+    this.setupEventListeners()
+  }
+
+  loadFromStorage () {
+
+  }
+
+  askForUsername () {
+    this.username = 'k'
   }
 
   connect () {
-    this.socket = new window.WebSocket('ws://vhost3.lnu.se:20080/socket/')
+    this.socket = new window.WebSocket(SERVER_URL)
   }
 
   setupEventListeners () {
@@ -41,14 +54,13 @@ class RlChat extends window.HTMLElement {
         this.printMessage(jsonData.username, jsonData.channel, jsonData.data)
       }
     })
-  }
 
-  loadFromStorage () {
+    this.chatForm.addEventListener('submit', event => {
+      event.preventDefault()
 
-  }
-
-  askForUsername () {
-
+      this.sendMessage('', this.chatInputText.value)
+      this.chatInputText.value = ''
+    })
   }
 
   printMessage (sender, channel, message) {
@@ -65,6 +77,18 @@ class RlChat extends window.HTMLElement {
     dataElement.classList.add('data')
     dataElement.textContent = message
     messageElement.appendChild(dataElement)
+  }
+
+  sendMessage (channel, message) {
+    const data = {
+      username: this.username,
+      type: 'message',
+      channel: channel,
+      data: message,
+      key: KEY
+    }
+
+    this.socket.send(JSON.stringify(data))
   }
 }
 

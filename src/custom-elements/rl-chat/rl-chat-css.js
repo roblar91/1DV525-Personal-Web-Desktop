@@ -65,7 +65,6 @@ main {
 
 .message .data {
     flex: 1;
-    min-height: 3rem;
     word-break: break-word;
 }
 
