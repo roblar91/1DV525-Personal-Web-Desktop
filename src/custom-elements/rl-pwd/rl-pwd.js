@@ -53,11 +53,6 @@ class RlPwd extends window.HTMLElement {
 
     // Resize event is only ever sent to the window
     window.addEventListener('resize', this.resizeHandler)
-
-    this.registerApp('rl-quiz', 'Quiz', '/resources/rl-quiz/icon.png')
-    this.registerApp('rl-memory', 'Memory', '/resources/rl-memory/icon.png')
-    this.registerApp('rl-chat', 'Chat', '/resources/rl-chat/icon.png')
-    this.registerApp('rl-pwd', 'PWD', '')
   }
 
   _mouseclick (event) {
