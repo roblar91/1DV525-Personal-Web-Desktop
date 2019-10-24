@@ -20,4 +20,5 @@ const RlPwdHtml = /* html */ `
 </div>
 `
 
+/** The basic HTML intended to be inserted into 'rl-pwd' */
 export default RlPwdHtml

@@ -6,6 +6,13 @@ import '../rl-quiz/rl-quiz.js'
 import '../rl-memory/rl-memory.js'
 import '../rl-chat/rl-chat.js'
 
+/**
+ *
+ *
+ * @class RlPwd
+ * @extends window.HTMLElement
+ * @requires RlPwdWindow
+ */
 class RlPwd extends window.HTMLElement {
   constructor () {
     super()
@@ -16,10 +23,10 @@ class RlPwd extends window.HTMLElement {
     }
     this.apps = []
     this.runningApps = []
-    this.mouseclickHandler = this.mouseclick.bind(this)
-    this.closewindowHandler = this.closewindow.bind(this)
-    this.minimizewindowHandler = this.minimizewindow.bind(this)
-    this.resizeHandler = this.resize.bind(this)
+    this.mouseclickHandler = this._mouseclick.bind(this)
+    this.closewindowHandler = this._closewindow.bind(this)
+    this.minimizewindowHandler = this._minimizewindow.bind(this)
+    this.resizeHandler = this._resize.bind(this)
   }
 
   connectedCallback () {
@@ -36,9 +43,9 @@ class RlPwd extends window.HTMLElement {
     this.runningAppContainer = this.shadowRoot.querySelector('#running-app-container')
     this.overflowContainer = this.shadowRoot.querySelector('#overflow-container')
     this.overflowButton = this.shadowRoot.querySelector('#overflow-button')
-    this.hideMainMenu()
-    this.hideOverflowContainer()
-    this.hideOverflowButton()
+    this._hideMainMenu()
+    this._hideOverflowContainer()
+    this._hideOverflowButton()
 
     this.addEventListener('click', this.mouseclickHandler)
     this.addEventListener('closewindow', this.closewindowHandler)
@@ -53,24 +60,24 @@ class RlPwd extends window.HTMLElement {
     this.registerApp('rl-pwd', 'PWD', '')
   }
 
-  mouseclick (event) {
+  _mouseclick (event) {
     // Get the original target (probably does not work in Edge)
     switch (event.composedPath()[0]) {
       case this.mainMenuButton:
-        this.toggleMainMenu()
-        this.hideOverflowContainer()
+        this._toggleMainMenu()
+        this._hideOverflowContainer()
         break
       case this.overflowButton:
-        this.toggleOverflowContainer()
-        this.hideMainMenu()
+        this._toggleOverflowContainer()
+        this._hideMainMenu()
         break
       default:
-        this.hideMainMenu()
-        this.hideOverflowContainer()
+        this._hideMainMenu()
+        this._hideOverflowContainer()
     }
   }
 
-  closewindow (event) {
+  _closewindow (event) {
     const originalTarget = event.composedPath()[0]
 
     this.runningApps.forEach((app, index) => {
@@ -85,72 +92,72 @@ class RlPwd extends window.HTMLElement {
       }
     })
 
-    this.updateTaskbar()
-    this.focusForemostWindow()
+    this._updateTaskbar()
+    this._focusForemostWindow()
   }
 
-  minimizewindow (event) {
+  _minimizewindow (event) {
     event.composedPath()[0].hide()
-    this.focusForemostWindow()
+    this._focusForemostWindow()
   }
 
-  resize (event) {
-    this.updateTaskbar()
-    this.updateWindowPositions()
+  _resize (event) {
+    this._updateTaskbar()
+    this._updateWindowPositions()
   }
 
-  hideMainMenu () {
+  _hideMainMenu () {
     this.mainMenu.style.display = 'none'
   }
 
-  showMainMenu () {
+  _showMainMenu () {
     this.mainMenu.style.display = 'flex'
   }
 
-  hideOverflowContainer () {
+  _hideOverflowContainer () {
     this.overflowContainer.style.display = 'none'
   }
 
-  showOverflowContainer () {
+  _showOverflowContainer () {
     this.overflowContainer.style.display = 'flex'
   }
 
-  hideOverflowButton () {
+  _hideOverflowButton () {
     this.overflowButton.style.visibility = 'hidden'
   }
 
-  showOverflowButton () {
+  _showOverflowButton () {
     this.overflowButton.style.visibility = 'visible'
   }
 
-  toggleMainMenu () {
+  _toggleMainMenu () {
     if (this.mainMenu.style.display === 'none') {
-      this.showMainMenu()
+      this._showMainMenu()
     } else {
-      this.hideMainMenu()
+      this._hideMainMenu()
     }
   }
 
-  toggleOverflowContainer () {
+  _toggleOverflowContainer () {
     if (this.overflowContainer.style.display === 'none') {
-      this.showOverflowContainer()
+      this._showOverflowContainer()
     } else {
-      this.hideOverflowContainer()
+      this._hideOverflowContainer()
     }
   }
 
-  toggleMinimize (window) {
+  _toggleMinimize (window) {
     if (!window.isVisible()) {
       window.bringToFront()
     } else if (!window.isInFront()) {
       window.bringToFront()
     } else {
       window.hide()
-      this.focusForemostWindow()
+      this._focusForemostWindow()
     }
   }
 
-  focusForemostWindow () {
+  _focusForemostWindow () {
     const windows = this.mainElement.children
     let maxZ = 0
     let nextFocusTarget
@@ -167,36 +174,13 @@ class RlPwd extends window.HTMLElement {
     }
   }
 
-  registerApp (elementName, appTitle, iconUrl) {
-    const app = document.createElement('div')
-    app.setAttribute('class', 'main-menu-item')
-    app.setAttribute('data-element-name', elementName)
-    app.setAttribute('data-app-title', appTitle)
-    app.setAttribute('data-icon-url', iconUrl)
-    app.addEventListener('click', event => {
-      this.runApp(app)
-    })
-
-    const icon = document.createElement('img')
-    icon.setAttribute('src', iconUrl)
-    icon.setAttribute('alt', '')
-    app.appendChild(icon)
-
-    const text = document.createElement('p')
-    text.textContent = appTitle
-    app.appendChild(text)
-
-    this.mainMenu.appendChild(app)
-    this.apps.push(app)
-  }
-
-  runApp (element) {
-    const windowElement = this.createWindow(element)
-    const taskbarHandleElement = this.createTaskbarHandle(element)
+  _runApp (element) {
+    const windowElement = this._createWindow(element)
+    const taskbarHandleElement = this._createTaskbarHandle(element)
     windowElement.setTaskbarHandle(taskbarHandleElement)
     windowElement.bringToFront()
-    this.updateTaskbar()
-    this.setWindowOffset(windowElement)
+    this._updateTaskbar()
+    this._setWindowOffset(windowElement)
 
     const app = {
       window: windowElement,
@@ -206,11 +190,11 @@ class RlPwd extends window.HTMLElement {
     this.runningApps.push(app)
 
     taskbarHandleElement.addEventListener('click', event => {
-      this.toggleMinimize(windowElement)
+      this._toggleMinimize(windowElement)
     })
   }
 
-  createWindow (element) {
+  _createWindow (element) {
     const window = document.createElement('rl-pwd-window')
     const app = document.createElement(element.getAttribute('data-element-name'))
     this.mainElement.appendChild(window)
@@ -221,7 +205,7 @@ class RlPwd extends window.HTMLElement {
     return window
   }
 
-  createTaskbarHandle (element) {
+  _createTaskbarHandle (element) {
     const taskbarHandle = document.createElement('div')
     taskbarHandle.setAttribute('class', 'running-app-item')
     this.runningAppContainer.appendChild(taskbarHandle)
@@ -238,7 +222,7 @@ class RlPwd extends window.HTMLElement {
     return taskbarHandle
   }
 
-  setWindowOffset (window) {
+  _setWindowOffset (window) {
     let offsetX = this.windowOffset.dX
     let offsetY = this.windowOffset.dY
     let currentVerticalLoop = 1
@@ -275,32 +259,32 @@ class RlPwd extends window.HTMLElement {
     window.setTopPixels(offsetY)
   }
 
-  updateTaskbar () {
-    this.hideOverflowContainer()
-    this.hideOverflowButton()
+  _updateTaskbar () {
+    this._hideOverflowContainer()
+    this._hideOverflowButton()
 
     while (this.overflowContainer.lastElementChild) {
       const element = this.overflowContainer.lastElementChild
       this.overflowContainer.removeChild(element)
       this.runningAppContainer.appendChild(element)
     }
-    while (this.isTaskbarOverflowing()) {
+    while (this._isTaskbarOverflowing()) {
       const element = this.runningAppContainer.lastElementChild
       this.runningAppContainer.removeChild(element)
       this.overflowContainer.appendChild(element)
 
-      this.showOverflowButton()
+      this._showOverflowButton()
     }
   }
 
-  updateWindowPositions () {
+  _updateWindowPositions () {
     const windows = this.mainElement.children
     Object.keys(windows).forEach(key => {
       windows[key].repositionInsideParent()
     })
   }
 
-  isTaskbarOverflowing () {
+  _isTaskbarOverflowing () {
     if (this.runningAppContainer.children.length === 0) {
       return false
     }
@@ -313,6 +297,38 @@ class RlPwd extends window.HTMLElement {
     this.runningAppContainer.appendChild(element)
 
     return currentWidth !== previousWidth
+  }
+
+  /**
+   * Registers an application so that it can be launched through
+   * the personal web desktop.
+   *
+   * @param {*} elementName The name of the HTML element
+   * @param {*} appTitle The titel of the application
+   * @param {*} iconUrl An URL pointing to the applications icon
+   * @memberof RlPwd
+   */
+  registerApp (elementName, appTitle, iconUrl) {
+    const app = document.createElement('div')
+    app.setAttribute('class', 'main-menu-item')
+    app.setAttribute('data-element-name', elementName)
+    app.setAttribute('data-app-title', appTitle)
+    app.setAttribute('data-icon-url', iconUrl)
+    app.addEventListener('click', event => {
+      this._runApp(app)
+    })
+
+    const icon = document.createElement('img')
+    icon.setAttribute('src', iconUrl)
+    icon.setAttribute('alt', '')
+    app.appendChild(icon)
+
+    const text = document.createElement('p')
+    text.textContent = appTitle
+    app.appendChild(text)
+
+    this.mainMenu.appendChild(app)
+    this.apps.push(app)
   }
 }
 

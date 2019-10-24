@@ -174,4 +174,5 @@ rl-clock {
 }
 `
 
+/** The basic CSS intended to be inserted into 'rl-pwd' */
 export default rlPwdCss

@@ -6,7 +6,7 @@ import html from './rl-pwd-window-html.js'
  * container for other HTML elements.
  *
  * @class RlPwdWindow
- * @extends {window.HTMLElement}
+ * @extends window.HTMLElement
  */
 class RlPwdWindow extends window.HTMLElement {
   constructor () {
