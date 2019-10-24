@@ -9,10 +9,15 @@ const RlPwdHtml = /* html */ `
     <div id="overflow-container">
     </div>
     <div class="align-left">
-        <button id="main-menu-button">Menu</button>
+        <button id="main-menu-button">
+            <img src="/resources/rl-pwd/icon.png" alt="">
+            <p>Menu</p>
+        </button>
         <div id="running-app-container">
         </div>
-        <button id="overflow-button">+</button>
+        <button id="overflow-button">
+            <p>+</p>
+        </button>
     </div>
     <div class="align-right">
         <rl-clock></rl-clock>

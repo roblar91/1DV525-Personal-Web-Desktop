@@ -158,11 +158,11 @@ class RlPwdWindow extends window.HTMLElement {
   }
 
   _closeWindow () {
-    this.dispatchEvent(new window.CustomEvent('closewindow', { bubble: true, composed: true }))
+    this.dispatchEvent(new window.CustomEvent('closewindow', { detail: this, bubble: true, composed: true }))
   }
 
   _minimizeWindow () {
-    this.dispatchEvent(new window.CustomEvent('minimizewindow', { bubble: true, composed: true }))
+    this.dispatchEvent(new window.CustomEvent('minimizewindow', { detail: this, bubble: true, composed: true }))
   }
 
   /**

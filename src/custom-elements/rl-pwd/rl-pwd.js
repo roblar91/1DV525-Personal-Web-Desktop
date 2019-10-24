@@ -23,10 +23,6 @@ class RlPwd extends window.HTMLElement {
     }
     this.apps = []
     this.runningApps = []
-    this.mouseclickHandler = this._mouseclick.bind(this)
-    this.closewindowHandler = this._closewindow.bind(this)
-    this.minimizewindowHandler = this._minimizewindow.bind(this)
-    this.resizeHandler = this._resize.bind(this)
   }
 
   connectedCallback () {
@@ -47,36 +43,46 @@ class RlPwd extends window.HTMLElement {
     this._hideOverflowContainer()
     this._hideOverflowButton()
 
-    this.addEventListener('click', this.mouseclickHandler)
-    this.addEventListener('closewindow', this.closewindowHandler)
-    this.addEventListener('minimizewindow', this.minimizewindowHandler)
+    this._setupEventListeners()
+  }
 
+  _setupEventListeners () {
     // Resize event is only ever sent to the window
-    window.addEventListener('resize', this.resizeHandler)
+    window.addEventListener('resize', event => {
+      this._updateTaskbar()
+      this._updateWindowPositions()
+    })
+
+    this.addEventListener('click', event => {
+      this._hideMainMenu()
+      this._hideOverflowContainer()
+    })
+
+    this.addEventListener('closewindow', event => {
+      this._closewindow(event.detail)
+    })
+
+    this.addEventListener('minimizewindow', event => {
+      event.detail.hide()
+      this._focusForemostWindow()
+    })
+
+    this.mainMenuButton.addEventListener('click', event => {
+      this._toggleMainMenu()
+      this._hideOverflowContainer()
+      event.stopPropagation()
+    })
+
+    this.overflowButton.addEventListener('click', event => {
+      this._toggleOverflowContainer()
+      this._hideMainMenu()
+      event.stopPropagation()
+    })
   }
 
-  _mouseclick (event) {
-    // Get the original target (probably does not work in Edge)
-    switch (event.composedPath()[0]) {
-      case this.mainMenuButton:
-        this._toggleMainMenu()
-        this._hideOverflowContainer()
-        break
-      case this.overflowButton:
-        this._toggleOverflowContainer()
-        this._hideMainMenu()
-        break
-      default:
-        this._hideMainMenu()
-        this._hideOverflowContainer()
-    }
-  }
-
-  _closewindow (event) {
-    const originalTarget = event.composedPath()[0]
-
+  _closewindow (window) {
     this.runningApps.forEach((app, index) => {
-      if (app.window === originalTarget) {
+      if (app.window === window) {
         try {
           this.runningAppContainer.removeChild(app.taskbarHandle)
         } catch {
@@ -89,16 +95,6 @@ class RlPwd extends window.HTMLElement {
 
     this._updateTaskbar()
     this._focusForemostWindow()
-  }
-
-  _minimizewindow (event) {
-    event.composedPath()[0].hide()
-    this._focusForemostWindow()
-  }
-
-  _resize (event) {
-    this._updateTaskbar()
-    this._updateWindowPositions()
   }
 
   _hideMainMenu () {
@@ -201,7 +197,7 @@ class RlPwd extends window.HTMLElement {
   }
 
   _createTaskbarHandle (element) {
-    const taskbarHandle = document.createElement('div')
+    const taskbarHandle = document.createElement('button')
     taskbarHandle.setAttribute('class', 'running-app-item')
     this.runningAppContainer.appendChild(taskbarHandle)
 
@@ -298,13 +294,13 @@ class RlPwd extends window.HTMLElement {
    * Registers an application so that it can be launched through
    * the personal web desktop.
    *
-   * @param {*} elementName The name of the HTML element
-   * @param {*} appTitle The titel of the application
-   * @param {*} iconUrl An URL pointing to the applications icon
+   * @param {string} elementName The name of the HTML element
+   * @param {string} appTitle The titel of the application
+   * @param {string} iconUrl An URL pointing to the applications icon
    * @memberof RlPwd
    */
   registerApp (elementName, appTitle, iconUrl) {
-    const app = document.createElement('div')
+    const app = document.createElement('button')
     app.setAttribute('class', 'main-menu-item')
     app.setAttribute('data-element-name', elementName)
     app.setAttribute('data-app-title', appTitle)

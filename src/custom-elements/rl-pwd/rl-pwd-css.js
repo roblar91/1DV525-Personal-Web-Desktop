@@ -24,6 +24,35 @@ main {
     position: relative;
 }
 
+button {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    color: white;
+    background-color: #1e1f21;
+    border: 0.1rem #9da6a5 inset;
+    box-sizing: content-box;
+    overflow: hidden;
+}
+
+button:hover {
+    color: #1e1f21;
+    background-color: darkgrey;
+}
+
+button:active {
+    background-color: white;
+}
+
+img {
+    display: flex;
+    flex: 0 1;
+    border-radius: 0.2rem;
+    height: 80%;
+    pointer-events: none;
+    margin-right: 0.5rem;
+}
+
 #taskbar {
     display: flex;
     flex-direction: row;
@@ -50,26 +79,10 @@ main {
 }
 
 .main-menu-item {
-    display: flex;
     height: 2rem;
-    color: white;
-    background-color: #1e1f21;
-    align-items: center;
-    justify-content: left;
-    border: 0.1rem solid #9da6a5;
-    overflow: hidden;
     margin-bottom: 0.3rem;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
-}
-
-.main-menu-item img, .running-app-item img {
-    display: flex;
-    flex: 0 1;
-    margin-right: 1rem;
-    border-radius: 0.2rem;
-    height: 80%;
-    pointer-events: none;
 }
 
 #overflow-container {
@@ -90,13 +103,10 @@ main {
 
 #overflow-button {
     height: 80%;
-    width: 2rem;
+    width: 1rem;
     font-size: 1rem;
-    color: white;
-    background-color: #1e1f21;
-    border: 0.1rem #9da6a5 inset;
     margin-left: 0.2rem;
-    box-sizing: content-box;
+    justify-content: center;
 }
 
 .align-left {
@@ -119,20 +129,7 @@ main {
     height: 80%;
     width: 4rem;
     font-size: 0.8rem;
-    color: white;
-    background-color: #1e1f21;
-    border: 0.1rem #9da6a5 inset;
     margin-left: 0.2rem;
-    box-sizing: content-box;
-}
-
-#main-menu-button:hover, .main-menu-item:hover, .running-app-item:hover, #overflow-button:hover {
-    color: #1e1f21;
-    background-color: darkgrey;
-}
-
-#main-menu-button:active, .main-menu-item:active, .running-app-item:active, #overflow-button:active {
-    background-color: white;
 }
 
 #running-app-container {
@@ -144,18 +141,10 @@ main {
 }
 
 .running-app-item {
-    display: flex;
     font-size: 0.8rem;
     margin-left: 0.2rem;
     height: 1.5rem;
     width: 7rem;
-    color: white;
-    background-color: #1e1f21;
-    align-items: center;
-    justify-content: left;
-    border: 0.1rem #9da6a5 inset;
-    overflow: hidden;
-    box-sizing: content-box;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     opacity: 0.5;
