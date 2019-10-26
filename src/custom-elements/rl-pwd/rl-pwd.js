@@ -167,9 +167,9 @@ class RlPwd extends window.HTMLElement {
     }
   }
 
-  _runApp (appMap) {
-    const windowElement = this._createWindow(appMap)
-    const taskbarHandleElement = this._createTaskbarHandle(appMap)
+  _runApp (appContainer) {
+    const windowElement = this._createWindow(appContainer)
+    const taskbarHandleElement = this._createTaskbarHandle(appContainer)
     windowElement.setTaskbarHandle(taskbarHandleElement)
     windowElement.bringToFront()
     this._updateTaskbar()
@@ -187,15 +187,15 @@ class RlPwd extends window.HTMLElement {
     })
   }
 
-  _createWindow (appMap) {
+  _createWindow (appContainer) {
     const window = document.createElement('rl-pwd-window')
     this.mainElement.appendChild(window)
-    window.setIcon(appMap.get('iconUrl'))
-    window.setTitle(appMap.get('appTitle'))
+    window.setIcon(appContainer.iconUrl)
+    window.setTitle(appContainer.appTitle)
 
-    const content = document.createElement(appMap.get('elementName'))
-    if (appMap.has('attributes')) {
-      appMap.get('attributes').forEach((value, key) => {
+    const content = document.createElement(appContainer.elementName)
+    if (appContainer.elementAttributes) {
+      appContainer.elementAttributes.forEach((value, key) => {
         content.setAttribute(key, value)
       })
     }
@@ -204,19 +204,19 @@ class RlPwd extends window.HTMLElement {
     return window
   }
 
-  _createTaskbarHandle (appMap) {
+  _createTaskbarHandle (appContainer) {
     const taskbarHandle = document.createElement('button')
     this.runningAppContainer.appendChild(taskbarHandle)
     taskbarHandle.setAttribute('class', 'running-app-item')
 
     const icon = document.createElement('img')
     taskbarHandle.appendChild(icon)
-    icon.setAttribute('src', appMap.get('iconUrl'))
+    icon.setAttribute('src', appContainer.iconUrl)
     icon.setAttribute('alt', '')
 
     const text = document.createElement('p')
     taskbarHandle.appendChild(text)
-    text.textContent = appMap.get('appTitle')
+    text.textContent = appContainer.appTitle
 
     return taskbarHandle
   }
@@ -305,22 +305,23 @@ class RlPwd extends window.HTMLElement {
    * @param {string} elementName The name of the HTML element
    * @param {string} appTitle The titel of the application
    * @param {string} iconUrl An URL pointing to the applications icon
-   * @param {Map} [attributes] Attributes that should be applied to the HTML element
+   * @param {Map} [elementAttributes] Attributes that should be applied to the HTML element
    * @memberof RlPwd
    */
-  registerApp (elementName, appTitle, iconUrl, attributes) {
-    const appMap = new Map()
-    appMap.set('elementName', elementName)
-    appMap.set('appTitle', appTitle)
-    appMap.set('iconUrl', iconUrl)
-    if (attributes) {
-      appMap.set('attributes', attributes)
+  registerApp (elementName, appTitle, iconUrl, elementAttributes) {
+    const appContainer = {
+      elementName: elementName,
+      appTitle: appTitle,
+      iconUrl: iconUrl
+    }
+    if (elementAttributes) {
+      appContainer.elementAttributes = elementAttributes
     }
 
     const appElement = document.createElement('button')
     appElement.setAttribute('class', 'main-menu-item')
     appElement.addEventListener('click', event => {
-      this._runApp(appMap)
+      this._runApp(appContainer)
     })
     this.mainMenu.appendChild(appElement)
 
