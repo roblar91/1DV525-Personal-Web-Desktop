@@ -4,6 +4,12 @@ import html from './rl-chat-html.js'
 const SERVER_URL = 'ws://vhost3.lnu.se:20080/socket/'
 const KEY = 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
 
+/**
+ * A simple chat web application.
+ *
+ * @class RlChat
+ * @extends {window.HTMLElement}
+ */
 class RlChat extends window.HTMLElement {
   constructor () {
     super()
@@ -20,25 +26,25 @@ class RlChat extends window.HTMLElement {
     this.chatForm = this.shadowRoot.getElementById('chat-form')
     this.chatInputText = this.shadowRoot.getElementById('chat-input-text')
 
-    this.loadFromStorage()
-    this.askForUsername()
-    this.connect()
-    this.setupEventListeners()
+    this._loadFromStorage()
+    this._askForUsername()
+    this._connect()
+    this._setupEventListeners()
   }
 
-  loadFromStorage () {
+  _loadFromStorage () {
 
   }
 
-  askForUsername () {
+  _askForUsername () {
     this.username = 'k'
   }
 
-  connect () {
+  _connect () {
     this.socket = new window.WebSocket(SERVER_URL)
   }
 
-  setupEventListeners () {
+  _setupEventListeners () {
     this.socket.addEventListener('open', event => {
       // Connected!
     })
@@ -51,19 +57,19 @@ class RlChat extends window.HTMLElement {
       const jsonData = JSON.parse(event.data)
       console.log(jsonData)
       if (jsonData.type === 'message') {
-        this.printMessage(jsonData.username, jsonData.channel, jsonData.data)
+        this._printMessage(jsonData.username, jsonData.channel, jsonData.data)
       }
     })
 
     this.chatForm.addEventListener('submit', event => {
       event.preventDefault()
 
-      this.sendMessage('', this.chatInputText.value)
+      this._sendMessage('', this.chatInputText.value)
       this.chatInputText.value = ''
     })
   }
 
-  printMessage (sender, channel, message) {
+  _printMessage (sender, channel, message) {
     const messageElement = document.createElement('div')
     messageElement.classList.add('message')
     this.messages.appendChild(messageElement)
@@ -79,7 +85,7 @@ class RlChat extends window.HTMLElement {
     messageElement.appendChild(dataElement)
   }
 
-  sendMessage (channel, message) {
+  _sendMessage (channel, message) {
     const data = {
       username: this.username,
       type: 'message',

@@ -85,4 +85,5 @@ main {
 }
 `
 
+/** The basic CSS intended to be inserted into 'rl-chat' */
 export default css

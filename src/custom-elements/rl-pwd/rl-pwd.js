@@ -7,7 +7,10 @@ import '../rl-memory/rl-memory.js'
 import '../rl-chat/rl-chat.js'
 
 /**
- *
+ * HTML element that creates a personal web desktop,
+ * capable of launching applications contained in
+ * movable and resizable windows. To use an application
+ * it first needs to be registered using registerApp().
  *
  * @class RlPwd
  * @extends window.HTMLElement

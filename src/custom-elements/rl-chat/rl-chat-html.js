@@ -13,6 +13,7 @@ const html = /* html */ `
 </main>
 `
 
+/** The basic HTML intended to be inserted into 'rl-chat' */
 export default html
 
 /*
