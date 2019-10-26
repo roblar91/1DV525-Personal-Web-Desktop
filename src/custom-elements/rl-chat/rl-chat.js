@@ -30,6 +30,10 @@ class RlChat extends window.HTMLElement {
     this._setupEventListeners()
   }
 
+  disconnectedCallback () {
+    this.socket.close()
+  }
+
   _readAttributes () {
     this.serverUrl = this.getAttribute('src')
     this.key = this.getAttribute('key')
@@ -49,11 +53,11 @@ class RlChat extends window.HTMLElement {
 
   _setupEventListeners () {
     this.socket.addEventListener('open', event => {
-      // Connected!
+      console.log('Chat connected to ' + this.socket.url)
     })
 
     this.socket.addEventListener('close', event => {
-      // Connection lost
+      console.log('Chat closed connection to ' + this.socket.url)
     })
 
     this.socket.addEventListener('message', event => {
@@ -86,6 +90,8 @@ class RlChat extends window.HTMLElement {
     dataElement.classList.add('data')
     dataElement.textContent = message
     messageElement.appendChild(dataElement)
+
+    this._scrollToBottom()
   }
 
   _sendMessage (channel, message) {
@@ -98,6 +104,10 @@ class RlChat extends window.HTMLElement {
     }
 
     this.socket.send(JSON.stringify(data))
+  }
+
+  _scrollToBottom () {
+    this.messages.scrollTop = this.messages.scrollHeight - this.messages.clientHeight
   }
 }
 
