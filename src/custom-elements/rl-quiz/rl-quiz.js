@@ -31,10 +31,6 @@ class RlQuiz extends window.HTMLElement {
     ${html}
     `
 
-    this.setAttribute('src', 'http://vhost3.lnu.se:20080/question/1')
-    this.setAttribute('data-preffered-width', '30rem')
-    this.setAttribute('data-preffered-height', '36rem')
-
     this.usernameElement = this.shadowRoot.querySelector('#username')
     this.timeLeftElement = this.shadowRoot.querySelector('#time-left')
     this.mainOutputElement = this.shadowRoot.querySelector('#main-output')

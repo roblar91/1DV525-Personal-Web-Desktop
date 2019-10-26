@@ -51,8 +51,6 @@ class RlMemory extends window.HTMLElement {
   }
 
   connectedCallback () {
-    this.setAttribute('data-preffered-width', '34rem')
-    this.setAttribute('data-preffered-height', '34rem')
     this.initializeBoard()
 
     this.addEventListener('click', this.clicked)

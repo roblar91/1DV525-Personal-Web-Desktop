@@ -1,9 +1,6 @@
 import css from './rl-chat-css.js'
 import html from './rl-chat-html.js'
 
-const SERVER_URL = 'ws://vhost3.lnu.se:20080/socket/'
-const KEY = 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
-
 /**
  * A simple chat web application.
  *
@@ -26,10 +23,16 @@ class RlChat extends window.HTMLElement {
     this.chatForm = this.shadowRoot.getElementById('chat-form')
     this.chatInputText = this.shadowRoot.getElementById('chat-input-text')
 
+    this._readAttributes()
     this._loadFromStorage()
     this._askForUsername()
     this._connect()
     this._setupEventListeners()
+  }
+
+  _readAttributes () {
+    this.serverUrl = this.getAttribute('src')
+    this.key = this.getAttribute('key')
   }
 
   _loadFromStorage () {
@@ -41,7 +44,7 @@ class RlChat extends window.HTMLElement {
   }
 
   _connect () {
-    this.socket = new window.WebSocket(SERVER_URL)
+    this.socket = new window.WebSocket(this.serverUrl)
   }
 
   _setupEventListeners () {
@@ -91,7 +94,7 @@ class RlChat extends window.HTMLElement {
       type: 'message',
       channel: channel,
       data: message,
-      key: KEY
+      key: this.key
     }
 
     this.socket.send(JSON.stringify(data))
