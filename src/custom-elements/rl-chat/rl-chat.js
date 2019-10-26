@@ -35,6 +35,7 @@ class RlChat extends window.HTMLElement {
   }
 
   disconnectedCallback () {
+    this._saveToStorage()
     this.socket.close()
   }
 
@@ -44,7 +45,21 @@ class RlChat extends window.HTMLElement {
   }
 
   _loadFromStorage () {
+    const saveData = JSON.parse(window.localStorage.getItem('rl-chat'))
 
+    if (saveData) {
+      if (saveData.username) {
+        this.username = saveData.username
+      }
+    }
+  }
+
+  _saveToStorage () {
+    const saveData = {
+      username: this.username
+    }
+
+    window.localStorage.setItem('rl-chat', JSON.stringify(saveData))
   }
 
   _askForUsername () {
@@ -63,6 +78,9 @@ class RlChat extends window.HTMLElement {
       inputText.setAttribute('placeholder', 'Username')
       form.appendChild(inputText)
 
+      const inputInvalid = document.createElement('p')
+      form.appendChild(inputInvalid)
+
       const inputSubmit = document.createElement('input')
       inputSubmit.setAttribute('type', 'submit')
       inputSubmit.value = 'Ok!'
@@ -70,16 +88,36 @@ class RlChat extends window.HTMLElement {
 
       form.addEventListener('submit', event => {
         event.preventDefault()
-        console.log('Username: ', inputText.value)
-        this.username = inputText.value
 
-        while (this.elements.popupContent.firstElementChild) {
-          this.elements.popupContent.removeChild(this.elements.popupContent.firstElementChild)
+        if (this._isValidUsername(inputText.value)) {
+          this.username = inputText.value
+          this.elements.popupContent.innerHTML = ''
+          this.elements.popupOverlay.style.visibility = 'hidden'
+        } else {
+          inputInvalid.textContent = 'A valid username must be 3 to 10 characters and only contain alphanumeric characters or underscores'
         }
-
-        this.elements.popupOverlay.style.visibility = 'hidden'
       })
     }
+  }
+
+  _isValidUsername (username) {
+    const minLength = 3
+    const maxLength = 10
+    const allowedCharacters = /^\w+$/
+
+    if (!username) {
+      return false
+    }
+
+    if (username.length < minLength) {
+      return false
+    }
+
+    if (username.length > maxLength) {
+      return false
+    }
+
+    return username.match(allowedCharacters)
   }
 
   _connect () {
