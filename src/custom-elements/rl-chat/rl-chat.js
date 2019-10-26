@@ -19,9 +19,13 @@ class RlChat extends window.HTMLElement {
     ${html}
     `
 
-    this.messages = this.shadowRoot.getElementById('messages')
-    this.chatForm = this.shadowRoot.getElementById('chat-form')
-    this.chatInputText = this.shadowRoot.getElementById('chat-input-text')
+    this.elements = {
+      messages: this.shadowRoot.getElementById('messages'),
+      chatForm: this.shadowRoot.getElementById('chat-form'),
+      chatInputText: this.shadowRoot.getElementById('chat-input-text'),
+      popupOverlay: this.shadowRoot.getElementById('popup-overlay'),
+      popupContent: this.shadowRoot.getElementById('popup-content')
+    }
 
     this._readAttributes()
     this._loadFromStorage()
@@ -44,7 +48,38 @@ class RlChat extends window.HTMLElement {
   }
 
   _askForUsername () {
-    this.username = 'k'
+    if (!this.username) {
+      this.elements.popupOverlay.style.visibility = 'visible'
+
+      const text = document.createElement('p')
+      text.textContent = 'Enter a username'
+      this.elements.popupContent.appendChild(text)
+
+      const form = document.createElement('form')
+      this.elements.popupContent.appendChild(form)
+
+      const inputText = document.createElement('input')
+      inputText.setAttribute('type', 'text')
+      inputText.setAttribute('placeholder', 'Username')
+      form.appendChild(inputText)
+
+      const inputSubmit = document.createElement('input')
+      inputSubmit.setAttribute('type', 'submit')
+      inputSubmit.value = 'Ok!'
+      form.appendChild(inputSubmit)
+
+      form.addEventListener('submit', event => {
+        event.preventDefault()
+        console.log('Username: ', inputText.value)
+        this.username = inputText.value
+
+        while (this.elements.popupContent.firstElementChild) {
+          this.elements.popupContent.removeChild(this.elements.popupContent.firstElementChild)
+        }
+
+        this.elements.popupOverlay.style.visibility = 'hidden'
+      })
+    }
   }
 
   _connect () {
@@ -68,18 +103,18 @@ class RlChat extends window.HTMLElement {
       }
     })
 
-    this.chatForm.addEventListener('submit', event => {
+    this.elements.chatForm.addEventListener('submit', event => {
       event.preventDefault()
 
-      this._sendMessage('', this.chatInputText.value)
-      this.chatInputText.value = ''
+      this._sendMessage('', this.elements.chatInputText.value)
+      this.elements.chatInputText.value = ''
     })
   }
 
   _printMessage (sender, channel, message) {
     const messageElement = document.createElement('div')
     messageElement.classList.add('message')
-    this.messages.appendChild(messageElement)
+    this.elements.messages.appendChild(messageElement)
 
     const nameElement = document.createElement('div')
     nameElement.classList.add('sender')
@@ -107,7 +142,7 @@ class RlChat extends window.HTMLElement {
   }
 
   _scrollToBottom () {
-    this.messages.scrollTop = this.messages.scrollHeight - this.messages.clientHeight
+    this.elements.messages.scrollTop = this.elements.messages.scrollHeight - this.elements.messages.clientHeight
   }
 }
 

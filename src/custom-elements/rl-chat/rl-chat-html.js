@@ -1,7 +1,13 @@
 const html = /* html */ `
 <header></header>
 <main>
-    <div id="channels"></div>
+    <div id="channel-list">
+        <button id="add-channel-button">
+            <p>Add channel</p>
+        </button>
+        <div id="channels">
+        </div>
+    </div>
     <div id="chat">
         <div id="messages">
         </div>
@@ -11,6 +17,11 @@ const html = /* html */ `
         </form>
     </div>
 </main>
+
+<div id="popup-overlay">
+    <div id="popup-content">
+    </div>
+</div>
 `
 
 /** The basic HTML intended to be inserted into 'rl-chat' */

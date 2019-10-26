@@ -1,5 +1,6 @@
 const css = /* css */ `
 :host {
+    position: relative;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -19,9 +20,20 @@ main {
     overflow: hidden;
 }
 
-#channels {
+#channel-list {
     flex: 0 0 8rem;
     background-color: green;
+    padding: 0.2rem;
+}
+
+#channel-list button {
+    display: flex;
+    height: 1.5rem;
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 0.2rem;
+    align-items: center;
+    justify-content: left;
 }
 
 #chat {
@@ -82,6 +94,23 @@ main {
 
 #chat-input-submit {
     flex: 0;
+}
+
+#popup-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    visibility: hidden;
+}
+
+#popup-content {
+    flex: 0 1;
+    background: rgba(255, 255, 255, 1);
+    padding: 2rem;
 }
 `
 
