@@ -166,7 +166,7 @@ class RlPwdWindow extends window.HTMLElement {
   }
 
   /**
-   * Repositions the window so that it does not go outside its parent element
+   * Repositions and resizes the window so that it does not go outside its parent element
    *
    * @memberof RlPwdWindow
    */
@@ -178,6 +178,12 @@ class RlPwdWindow extends window.HTMLElement {
     let newY = Math.min(this.offsetTop, this.parentElement.clientHeight - this.offsetHeight)
     newY = Math.max(0, newY)
     this.setTopPixels(newY)
+
+    const newWidth = Math.min(this.offsetWidth, this.parentElement.clientWidth)
+    this.setWidthPixels(newWidth)
+
+    const newHeight = Math.min(this.offsetHeight, this.parentElement.clientHeight)
+    this.setHeightPixels(newHeight)
   }
 
   /**
@@ -193,6 +199,7 @@ class RlPwdWindow extends window.HTMLElement {
       this.setWidthPixels(this.previousPosition.width)
       this.setHeightPixels(this.previousPosition.height)
       this.previousPosition = null
+      this.repositionInsideParent()
     } else {
       this.previousPosition = {
         top: this.offsetTop,
@@ -296,18 +303,6 @@ class RlPwdWindow extends window.HTMLElement {
    */
   setContent (element) {
     this.main.appendChild(element)
-
-    const prefferedWidth = element.getAttribute('data-preffered-width')
-    if (prefferedWidth) {
-      this.style.width = prefferedWidth
-      this.setWidthPixels(this.offsetWidth * 2 - this.clientWidth)
-    }
-
-    const prefferedHeight = element.getAttribute('data-preffered-height')
-    if (prefferedHeight) {
-      this.style.height = prefferedHeight
-      this.setHeightPixels(this.offsetHeight * 2 - this.clientHeight)
-    }
   }
 
   /**
@@ -358,6 +353,28 @@ class RlPwdWindow extends window.HTMLElement {
    */
   setHeightPixels (integer) {
     this.style.height = integer + 'px'
+  }
+
+  /**
+   * Sets the width of the content box. The window is resized proportionally.
+   *
+   * @param {string} cssWidth The width in any CSS unit
+   * @memberof RlPwdWindow
+   */
+  setContentWidth (cssWidth) {
+    this.style.width = cssWidth
+    this.setWidthPixels(this.offsetWidth * 2 - this.clientWidth)
+  }
+
+  /**
+   * Sets the height of the content box. The window is resized proportionally.
+   *
+   * @param {string} cssHeight The height in any CSS unit
+   * @memberof RlPwdWindow
+   */
+  setContentHeight (cssHeight) {
+    this.style.height = cssHeight
+    this.setHeightPixels(this.offsetHeight * 2 - this.clientHeight)
   }
 }
 

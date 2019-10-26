@@ -172,6 +172,10 @@ class RlPwd extends window.HTMLElement {
     const taskbarHandleElement = this._createTaskbarHandle(appContainer)
     windowElement.setTaskbarHandle(taskbarHandleElement)
     windowElement.bringToFront()
+    taskbarHandleElement.addEventListener('click', event => {
+      this._toggleMinimize(windowElement)
+    })
+
     this._updateTaskbar()
     this._setWindowOffset(windowElement)
 
@@ -181,10 +185,6 @@ class RlPwd extends window.HTMLElement {
     }
 
     this.runningApps.push(app)
-
-    taskbarHandleElement.addEventListener('click', event => {
-      this._toggleMinimize(windowElement)
-    })
   }
 
   _createWindow (appContainer) {
@@ -199,7 +199,15 @@ class RlPwd extends window.HTMLElement {
         content.setAttribute(key, value)
       })
     }
+
+    if (content.getAttribute('data-preferred-width')) {
+      window.setContentWidth(content.getAttribute('data-preferred-width'))
+    }
+    if (content.getAttribute('data-preferred-height')) {
+      window.setContentHeight(content.getAttribute('data-preferred-height'))
+    }
     window.setContent(content)
+    window.repositionInsideParent()
 
     return window
   }
