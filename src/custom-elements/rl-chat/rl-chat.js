@@ -85,13 +85,12 @@ class RlChat extends window.HTMLElement {
 
     if (saveData) {
       if (saveData.username) {
-        if (this._isValidUsername(saveData.username)) {
-          this.username = saveData.username
-        }
+        this._setUsername(saveData.username)
       }
       if (saveData.channels) {
-        // todo: validate
-        this.channels = saveData.channels
+        saveData.channels.forEach(ch => {
+          this._addChannel(ch)
+        })
         this._updateChannelList()
       }
     }
@@ -133,8 +132,7 @@ class RlChat extends window.HTMLElement {
       form.addEventListener('submit', event => {
         event.preventDefault()
 
-        if (this._isValidUsername(inputText.value)) {
-          this.username = inputText.value
+        if (this._setUsername(inputText.value)) {
           this.elements.popupContent.innerHTML = ''
           this.elements.popupOverlay.style.visibility = 'hidden'
         } else {
@@ -178,15 +176,32 @@ class RlChat extends window.HTMLElement {
 
     form.addEventListener('submit', event => {
       event.preventDefault()
-      this._addChannel(inputText.value)
-      this.elements.popupContent.innerHTML = ''
-      this.elements.popupOverlay.style.visibility = 'hidden'
+
+      if (this._addChannel(inputText.value)) {
+        this.elements.popupContent.innerHTML = ''
+        this.elements.popupOverlay.style.visibility = 'hidden'
+      } else {
+        inputInvalid.textContent = 'A valid channel name must be 1 to 20 characters'
+      }
     })
   }
 
+  _setUsername (name) {
+    if (!this._isValidUsername(name)) {
+      return false
+    }
+
+    this.username = name
+    return true
+  }
+
   _addChannel (name) {
+    if (!this._isValidChannelName(name)) {
+      return false
+    }
     this.channels.push(name)
     this._updateChannelList()
+    return true
   }
 
   _updateChannelList () {
@@ -248,17 +263,34 @@ class RlChat extends window.HTMLElement {
     return username.match(allowedCharacters)
   }
 
+  _isValidChannelName (channelName) {
+    const minLength = 1
+    const maxLength = 20
+
+    if (channelName.length < minLength) {
+      return false
+    }
+
+    if (channelName.length > maxLength) {
+      return false
+    }
+
+    return true
+  }
+
   _connect () {
     this.socket = new window.WebSocket(this.serverUrl)
   }
 
   _printMessage (sender, channel, message) {
+    // Ignore message if it is directed at an unknown channel
+    if (this.channels.indexOf(channel) < 0) {
+      return
+    }
+
     const messageElement = document.createElement('div')
     messageElement.classList.add('message')
     messageElement.setAttribute('channel', channel)
-    if (channel !== this.activeChannel) {
-      messageElement.style.visibility = 'hidden'
-    }
     this.elements.messages.appendChild(messageElement)
 
     const nameElement = document.createElement('div')
@@ -271,7 +303,11 @@ class RlChat extends window.HTMLElement {
     dataElement.textContent = message
     messageElement.appendChild(dataElement)
 
-    this._scrollToBottom()
+    if (channel === this.activeChannel) {
+      this._scrollToBottom()
+    } else {
+      messageElement.style.display = 'none'
+    }
   }
 
   _sendMessage (channel, message) {
