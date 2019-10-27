@@ -12,6 +12,7 @@ class RlChat extends window.HTMLElement {
     super()
     this.attachShadow({ mode: 'open' })
     this.channels = []
+    this.messages = []
     this.activeChannel = ''
   }
 
@@ -56,8 +57,9 @@ class RlChat extends window.HTMLElement {
     this.socket.addEventListener('message', event => {
       const jsonData = JSON.parse(event.data)
       console.log(jsonData)
+
       if (jsonData.type === 'message') {
-        this._printMessage(jsonData.username, jsonData.channel, jsonData.data)
+        this._addMessage(jsonData)
       }
     })
 
@@ -87,11 +89,18 @@ class RlChat extends window.HTMLElement {
       if (saveData.username) {
         this._setUsername(saveData.username)
       }
+
       if (saveData.channels) {
         saveData.channels.forEach(ch => {
           this._addChannel(ch)
         })
         this._updateChannelList()
+      }
+
+      if (saveData.messages) {
+        saveData.messages.forEach(msg => {
+          this._addMessage(msg)
+        })
       }
     }
   }
@@ -99,7 +108,8 @@ class RlChat extends window.HTMLElement {
   _saveToStorage () {
     const saveData = {
       username: this.username,
-      channels: this.channels
+      channels: this.channels,
+      messages: this.messages
     }
 
     window.localStorage.setItem('rl-chat', JSON.stringify(saveData))
@@ -204,6 +214,16 @@ class RlChat extends window.HTMLElement {
     return true
   }
 
+  _addMessage (data) {
+    // Ignore message if it is directed at an unknown channel
+    if (this.channels.indexOf(data.channel) < 0) {
+      return false
+    }
+
+    this.messages.push(data)
+    this._printMessage(data.username, data.channel, data.data)
+  }
+
   _updateChannelList () {
     this.elements.channels.innerHTML = ''
 
@@ -283,11 +303,6 @@ class RlChat extends window.HTMLElement {
   }
 
   _printMessage (sender, channel, message) {
-    // Ignore message if it is directed at an unknown channel
-    if (this.channels.indexOf(channel) < 0) {
-      return
-    }
-
     const messageElement = document.createElement('div')
     messageElement.classList.add('message')
     messageElement.setAttribute('channel', channel)
