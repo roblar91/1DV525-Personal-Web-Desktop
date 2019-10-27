@@ -36,6 +36,7 @@ class RlPwd extends window.HTMLElement {
     `
 
     this.mainElement = this.shadowRoot.querySelector('main')
+    this.windowContainer = this.shadowRoot.querySelector('#window-container')
     this.mainMenu = this.shadowRoot.querySelector('#main-menu')
     this.mainMenuButton = this.shadowRoot.querySelector('#main-menu-button')
     this.runningAppContainer = this.shadowRoot.querySelector('#running-app-container')
@@ -90,7 +91,7 @@ class RlPwd extends window.HTMLElement {
         } catch {
           this.overflowContainer.removeChild(app.taskbarHandle)
         }
-        this.mainElement.removeChild(app.window)
+        this.windowContainer.removeChild(app.window)
         this.runningApps.splice(index, 1)
       }
     })
@@ -151,7 +152,7 @@ class RlPwd extends window.HTMLElement {
   }
 
   _focusForemostWindow () {
-    const windows = this.mainElement.children
+    const windows = this.windowContainer.children
     let maxZ = 0
     let nextFocusTarget
     for (let i = 0; i < windows.length; i++) {
@@ -189,7 +190,7 @@ class RlPwd extends window.HTMLElement {
 
   _createWindow (appContainer) {
     const window = document.createElement('rl-pwd-window')
-    this.mainElement.appendChild(window)
+    this.windowContainer.appendChild(window)
     window.setIcon(appContainer.iconUrl)
     window.setTitle(appContainer.appTitle)
 
@@ -234,7 +235,7 @@ class RlPwd extends window.HTMLElement {
     let offsetY = this.windowOffset.dY
     let currentVerticalLoop = 1
 
-    const windows = this.mainElement.children
+    const windows = this.windowContainer.children
 
     // Make sure the newly created window is not placed on an occupied position
     for (let i = 0; i < windows.length; i++) {
@@ -248,13 +249,13 @@ class RlPwd extends window.HTMLElement {
         }
       })
 
-      if (offsetY + window.offsetHeight > this.mainElement.clientHeight) {
+      if (offsetY + window.offsetHeight > this.windowContainer.clientHeight) {
         currentVerticalLoop++
         offsetX = this.windowOffset.dX * currentVerticalLoop
         offsetY = this.windowOffset.dY
       }
 
-      if (offsetX + window.offsetWidth > this.mainElement.clientWidth) {
+      if (offsetX + window.offsetWidth > this.windowContainer.clientWidth) {
         // Just place the window in top corner
         offsetX = 0
         offsetY = 0
@@ -285,7 +286,7 @@ class RlPwd extends window.HTMLElement {
   }
 
   _updateWindowPositions () {
-    const windows = this.mainElement.children
+    const windows = this.windowContainer.children
     Object.keys(windows).forEach(key => {
       windows[key].repositionInsideParent()
     })

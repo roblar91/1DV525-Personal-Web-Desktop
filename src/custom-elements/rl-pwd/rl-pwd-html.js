@@ -2,12 +2,14 @@ const RlPwdHtml = /* html */ `
 <header>
 </header>
 <main>
-</main>
-<div id="taskbar">
+    <div id="window-container">
+    </div>
     <div id="main-menu">
     </div>
     <div id="overflow-container">
     </div>
+</main>
+<div id="taskbar">
     <div class="align-left">
         <button id="main-menu-button">
             <img src="/resources/rl-pwd/icon.png" alt="">

@@ -19,7 +19,7 @@ const rlPwdCss = /* css */ `
     height: 100%;
 }
 
-main {
+main, #window-container {
     display: flex;
     width: 100%;
     flex: 1;
@@ -78,8 +78,8 @@ p {
     width: 12rem;
     background-color: black;
     position: absolute;
-    bottom: 2.6rem;
-    left: 0.3rem;
+    bottom: 0;
+    left: 0;
     box-sizing: content-box;
     border: 0.3rem ridge #9da6a5;
     padding: 0.5rem 0.5rem 0.2rem 0.5rem;
@@ -99,8 +99,8 @@ p {
     flex: 0 1;
     background-color: black;
     position: absolute;
-    bottom: 2.6rem;
-    right: 0.3rem;
+    bottom: 0;
+    right: 0;
     box-sizing: content-box;
     border: 0.3rem ridge #9da6a5;
     align-items: center;
