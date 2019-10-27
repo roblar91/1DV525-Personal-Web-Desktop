@@ -11,6 +11,8 @@ class RlChat extends window.HTMLElement {
   constructor () {
     super()
     this.attachShadow({ mode: 'open' })
+    this.channels = []
+    this.activeChannel = ''
   }
 
   connectedCallback () {
@@ -24,12 +26,15 @@ class RlChat extends window.HTMLElement {
       chatForm: this.shadowRoot.getElementById('chat-form'),
       chatInputText: this.shadowRoot.getElementById('chat-input-text'),
       popupOverlay: this.shadowRoot.getElementById('popup-overlay'),
-      popupContent: this.shadowRoot.getElementById('popup-content')
+      popupContent: this.shadowRoot.getElementById('popup-content'),
+      addChannelButton: this.shadowRoot.getElementById('add-channel-button'),
+      channels: this.shadowRoot.getElementById('channels')
     }
 
     this._readAttributes()
     this._loadFromStorage()
     this._askForUsername()
+    this._setDefaultChannel()
     this._connect()
     this._setupEventListeners()
   }
@@ -37,6 +42,37 @@ class RlChat extends window.HTMLElement {
   disconnectedCallback () {
     this._saveToStorage()
     this.socket.close()
+  }
+
+  _setupEventListeners () {
+    this.socket.addEventListener('open', event => {
+      console.log('Chat connected to ' + this.socket.url)
+    })
+
+    this.socket.addEventListener('close', event => {
+      console.log('Chat closed connection to ' + this.socket.url)
+    })
+
+    this.socket.addEventListener('message', event => {
+      const jsonData = JSON.parse(event.data)
+      console.log(jsonData)
+      if (jsonData.type === 'message') {
+        this._printMessage(jsonData.username, jsonData.channel, jsonData.data)
+      }
+    })
+
+    this.elements.chatForm.addEventListener('submit', event => {
+      event.preventDefault()
+
+      this._sendMessage(this.activeChannel, this.elements.chatInputText.value)
+      this.elements.chatInputText.value = ''
+    })
+
+    this.elements.addChannelButton.addEventListener('click', event => {
+      event.preventDefault()
+
+      this._askForChannel()
+    })
   }
 
   _readAttributes () {
@@ -49,14 +85,22 @@ class RlChat extends window.HTMLElement {
 
     if (saveData) {
       if (saveData.username) {
-        this.username = saveData.username
+        if (this._isValidUsername(saveData.username)) {
+          this.username = saveData.username
+        }
+      }
+      if (saveData.channels) {
+        // todo: validate
+        this.channels = saveData.channels
+        this._updateChannelList()
       }
     }
   }
 
   _saveToStorage () {
     const saveData = {
-      username: this.username
+      username: this.username,
+      channels: this.channels
     }
 
     window.localStorage.setItem('rl-chat', JSON.stringify(saveData))
@@ -100,6 +144,90 @@ class RlChat extends window.HTMLElement {
     }
   }
 
+  _askForChannel () {
+    this.elements.popupOverlay.style.visibility = 'visible'
+
+    const text = document.createElement('p')
+    text.textContent = 'Enter a channel name'
+    this.elements.popupContent.appendChild(text)
+
+    const form = document.createElement('form')
+    this.elements.popupContent.appendChild(form)
+
+    const inputText = document.createElement('input')
+    inputText.setAttribute('type', 'text')
+    inputText.setAttribute('placeholder', 'Channel')
+    form.appendChild(inputText)
+
+    const inputInvalid = document.createElement('p')
+    form.appendChild(inputInvalid)
+
+    const inputSubmit = document.createElement('input')
+    inputSubmit.setAttribute('type', 'submit')
+    inputSubmit.value = 'Ok!'
+    form.appendChild(inputSubmit)
+
+    const cancelButton = document.createElement('button')
+    cancelButton.textContent = 'Cancel'
+    this.elements.popupContent.appendChild(cancelButton)
+    cancelButton.addEventListener('click', event => {
+      event.preventDefault()
+      this.elements.popupContent.innerHTML = ''
+      this.elements.popupOverlay.style.visibility = 'hidden'
+    })
+
+    form.addEventListener('submit', event => {
+      event.preventDefault()
+      this._addChannel(inputText.value)
+      this.elements.popupContent.innerHTML = ''
+      this.elements.popupOverlay.style.visibility = 'hidden'
+    })
+  }
+
+  _addChannel (name) {
+    this.channels.push(name)
+    this._updateChannelList()
+  }
+
+  _updateChannelList () {
+    this.elements.channels.innerHTML = ''
+
+    this.channels.forEach(ch => {
+      const text = document.createElement('p')
+      text.textContent = ch
+
+      const button = document.createElement('button')
+      button.appendChild(text)
+      button.addEventListener('click', event => {
+        this.activeChannel = ch
+        this._updateChat()
+      })
+
+      this.elements.channels.appendChild(button)
+    })
+  }
+
+  _updateChat () {
+    const messages = this.elements.messages.children
+    Object.keys(messages).forEach(key => {
+      const msg = messages[key]
+      if (msg.getAttribute('channel') === this.activeChannel) {
+        msg.style.display = 'block'
+      } else {
+        msg.style.display = 'none'
+      }
+    })
+  }
+
+  _setDefaultChannel () {
+    if (this.channels.length === 0) {
+      this._addChannel('General')
+    }
+
+    this.activeChannel = this.channels[0]
+    this._updateChat()
+  }
+
   _isValidUsername (username) {
     const minLength = 3
     const maxLength = 10
@@ -124,34 +252,13 @@ class RlChat extends window.HTMLElement {
     this.socket = new window.WebSocket(this.serverUrl)
   }
 
-  _setupEventListeners () {
-    this.socket.addEventListener('open', event => {
-      console.log('Chat connected to ' + this.socket.url)
-    })
-
-    this.socket.addEventListener('close', event => {
-      console.log('Chat closed connection to ' + this.socket.url)
-    })
-
-    this.socket.addEventListener('message', event => {
-      const jsonData = JSON.parse(event.data)
-      console.log(jsonData)
-      if (jsonData.type === 'message') {
-        this._printMessage(jsonData.username, jsonData.channel, jsonData.data)
-      }
-    })
-
-    this.elements.chatForm.addEventListener('submit', event => {
-      event.preventDefault()
-
-      this._sendMessage('', this.elements.chatInputText.value)
-      this.elements.chatInputText.value = ''
-    })
-  }
-
   _printMessage (sender, channel, message) {
     const messageElement = document.createElement('div')
     messageElement.classList.add('message')
+    messageElement.setAttribute('channel', channel)
+    if (channel !== this.activeChannel) {
+      messageElement.style.visibility = 'hidden'
+    }
     this.elements.messages.appendChild(messageElement)
 
     const nameElement = document.createElement('div')
