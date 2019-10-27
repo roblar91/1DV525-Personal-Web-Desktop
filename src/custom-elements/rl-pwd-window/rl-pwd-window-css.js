@@ -1,4 +1,9 @@
 const RlPwdWindowCss = /* css */ `
+:host, button {
+    font-size: 100%;
+    font-family: monospace;
+}
+
 :host {
     user-select: none;
     display: flex;
@@ -63,11 +68,12 @@ header button {
     height: 1.1rem;
     width: 1.1rem;
     padding: 0.2rem;
-    font-size: 0.5rem;
+    font-size: 0.6rem;
     color: white;
     background-color: #1e1f21;
     border: 0.1rem #9da6a5 inset;
     margin-left: 0.2rem;
+    text-align: center;
 }
 
 header button:hover {

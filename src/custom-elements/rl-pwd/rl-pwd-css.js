@@ -1,10 +1,13 @@
 const rlPwdCss = /* css */ `
+:host, button {
+    font-size: 100%;
+    font-family: monospace;
+}
+
 :host {
     user-select: none;
     display: flex;
     flex-direction: column;
-    font-size: 100%;
-    font-family: monospace;
     background:  black;
     background-image: url('/resources/rl-pwd/background.jpg');
     background-repeat: no-repeat;
@@ -33,6 +36,8 @@ button {
     border: 0.1rem #9da6a5 inset;
     box-sizing: content-box;
     overflow: hidden;
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
 }
 
 button:hover {
@@ -45,12 +50,15 @@ button:active {
 }
 
 img {
-    display: flex;
-    flex: 0 1;
     border-radius: 0.2rem;
     height: 80%;
     pointer-events: none;
     margin-right: 0.5rem;
+    min-width: 0;
+}
+
+p {
+    margin: 0;
 }
 
 #taskbar {
