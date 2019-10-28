@@ -28,7 +28,9 @@ class RlChat extends window.HTMLElement {
       chatInputText: this.shadowRoot.getElementById('chat-input-text'),
       popupOverlay: this.shadowRoot.getElementById('popup-overlay'),
       popupContent: this.shadowRoot.getElementById('popup-content'),
+      changeUsernameButton: this.shadowRoot.getElementById('change-username-button'),
       addChannelButton: this.shadowRoot.getElementById('add-channel-button'),
+      removeChannelButton: this.shadowRoot.getElementById('remove-channel-button'),
       channels: this.shadowRoot.getElementById('channels'),
       headerUsername: this.shadowRoot.getElementById('header-username'),
       headerCurrentChannel: this.shadowRoot.getElementById('header-current-channel')
@@ -36,7 +38,11 @@ class RlChat extends window.HTMLElement {
 
     this._readAttributes()
     this._loadFromStorage()
-    this._askForUsername()
+
+    if (!this.username) {
+      this._askForUsername()
+    }
+
     this._loadDefaultChannel()
     this._connect()
     this._setupEventListeners()
@@ -72,10 +78,22 @@ class RlChat extends window.HTMLElement {
       this.elements.chatInputText.value = ''
     })
 
+    this.elements.changeUsernameButton.addEventListener('click', event => {
+      event.preventDefault()
+
+      this._askForUsername()
+    })
+
     this.elements.addChannelButton.addEventListener('click', event => {
       event.preventDefault()
 
       this._askForChannel()
+    })
+
+    this.elements.removeChannelButton.addEventListener('click', event => {
+      event.preventDefault()
+
+      // todo
     })
   }
 
@@ -117,40 +135,38 @@ class RlChat extends window.HTMLElement {
   }
 
   _askForUsername () {
-    if (!this.username) {
-      this.elements.popupOverlay.style.visibility = 'visible'
+    this.elements.popupOverlay.style.visibility = 'visible'
 
-      const text = document.createElement('p')
-      text.textContent = 'Enter a username'
-      this.elements.popupContent.appendChild(text)
+    const text = document.createElement('p')
+    text.textContent = 'Enter a username'
+    this.elements.popupContent.appendChild(text)
 
-      const form = document.createElement('form')
-      this.elements.popupContent.appendChild(form)
+    const form = document.createElement('form')
+    this.elements.popupContent.appendChild(form)
 
-      const inputText = document.createElement('input')
-      inputText.setAttribute('type', 'text')
-      inputText.setAttribute('placeholder', 'Username')
-      form.appendChild(inputText)
+    const inputText = document.createElement('input')
+    inputText.setAttribute('type', 'text')
+    inputText.setAttribute('placeholder', 'Username')
+    form.appendChild(inputText)
 
-      const inputInvalid = document.createElement('p')
-      form.appendChild(inputInvalid)
+    const inputInvalid = document.createElement('p')
+    form.appendChild(inputInvalid)
 
-      const inputSubmit = document.createElement('input')
-      inputSubmit.setAttribute('type', 'submit')
-      inputSubmit.value = 'Ok!'
-      form.appendChild(inputSubmit)
+    const inputSubmit = document.createElement('input')
+    inputSubmit.setAttribute('type', 'submit')
+    inputSubmit.value = 'Ok!'
+    form.appendChild(inputSubmit)
 
-      form.addEventListener('submit', event => {
-        event.preventDefault()
+    form.addEventListener('submit', event => {
+      event.preventDefault()
 
-        if (this._setUsername(inputText.value)) {
-          this.elements.popupContent.innerHTML = ''
-          this.elements.popupOverlay.style.visibility = 'hidden'
-        } else {
-          inputInvalid.textContent = 'A valid username must be 3 to 10 characters and only contain alphanumeric characters or underscores'
-        }
-      })
-    }
+      if (this._setUsername(inputText.value)) {
+        this.elements.popupContent.innerHTML = ''
+        this.elements.popupOverlay.style.visibility = 'hidden'
+      } else {
+        inputInvalid.textContent = 'A valid username must be 3 to 10 characters and only contain alphanumeric characters or underscores'
+      }
+    })
   }
 
   _askForChannel () {

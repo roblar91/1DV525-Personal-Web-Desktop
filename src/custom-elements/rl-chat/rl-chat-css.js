@@ -48,12 +48,25 @@ main {
     padding: 0.2rem;
 }
 
-#channel-list button {
+#add-remove-channel {
+    display: flex;
+    flex-direction: row;
+    height: 1.5rem;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+#add-remove-channel button {
+    flex: 0 1;
+    height: 100%;
+}
+
+#channels button {
     display: flex;
     height: 1.5rem;
     width: 100%;
     overflow: hidden;
-    margin-bottom: 0.2rem;
+    margin-top: 0.2rem;
     align-items: center;
     justify-content: left;
     border: double 0.2rem black;

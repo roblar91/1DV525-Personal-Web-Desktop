@@ -1,6 +1,9 @@
 const html = /* html */ `
 <header>
     <div class="align-left">
+        <button id="change-username-button" title="Change username">
+            E
+        </button>
         <div id="header-username"></div>
     </div>
     <div class="align-right">
@@ -9,9 +12,14 @@ const html = /* html */ `
 </header>
 <main>
     <div id="channel-list">
-        <button id="add-channel-button">
-            Add channel
-        </button>
+        <div id="add-remove-channel">
+            <button id="add-channel-button" title="Add channel">
+                +
+            </button>
+            <button id="remove-channel-button" title="Remove channel">
+                -
+            </button>
+        </div>
         <div id="channels">
         </div>
     </div>
@@ -33,47 +41,3 @@ const html = /* html */ `
 
 /** The basic HTML intended to be inserted into 'rl-chat' */
 export default html
-
-/*
-            <div class="message">
-                <div class="sender">
-                    Ola
-                </div>
-                <div class="data">
-                    Hejsan från Ola
-                </div>
-            </div>
-            <div class="message">
-                <div class="sender">
-                    Robin
-                </div>
-                <div class="data">
-                The examination will be done as an oral hearing where you get a couple of theoretical questions from this part (Lecture 1 to 10) and also show your practical assignment. You can´t book a time for oral hearing before you are ready with the assignment and have done a release on GitHub.
-
-                You can choose between a campus or distance exam.
-                </div>
-            </div>
-            <div class="message">
-                <div class="sender">
-                    APAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-                </div>
-                <div class="data">
-                    MUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
-                </div>
-            </div>
-            <div class="message">
-                <div class="sender">
-                    Knc
-                </div>
-                <div class="data">
-                </div>
-            </div>
-            <div class="message">
-                <div class="sender">
-                    Knc
-                </div>
-                <div class="data">
-                    Hejsan där
-                </div>
-            </div>
-*/
