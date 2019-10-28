@@ -1,9 +1,16 @@
 const html = /* html */ `
-<header></header>
+<header>
+    <div class="align-left">
+        <div id="header-username"></div>
+    </div>
+    <div class="align-right">
+        <div id="header-current-channel"></div>
+    </div>
+</header>
 <main>
     <div id="channel-list">
         <button id="add-channel-button">
-            <p>Add channel</p>
+            Add channel
         </button>
         <div id="channels">
         </div>

@@ -29,13 +29,15 @@ class RlChat extends window.HTMLElement {
       popupOverlay: this.shadowRoot.getElementById('popup-overlay'),
       popupContent: this.shadowRoot.getElementById('popup-content'),
       addChannelButton: this.shadowRoot.getElementById('add-channel-button'),
-      channels: this.shadowRoot.getElementById('channels')
+      channels: this.shadowRoot.getElementById('channels'),
+      headerUsername: this.shadowRoot.getElementById('header-username'),
+      headerCurrentChannel: this.shadowRoot.getElementById('header-current-channel')
     }
 
     this._readAttributes()
     this._loadFromStorage()
     this._askForUsername()
-    this._setDefaultChannel()
+    this._loadDefaultChannel()
     this._connect()
     this._setupEventListeners()
   }
@@ -94,7 +96,6 @@ class RlChat extends window.HTMLElement {
         saveData.channels.forEach(ch => {
           this._addChannel(ch)
         })
-        this._updateChannelList()
       }
 
       if (saveData.messages) {
@@ -202,15 +203,34 @@ class RlChat extends window.HTMLElement {
     }
 
     this.username = name
+    this.elements.headerUsername.textContent = name
     return true
+  }
+
+  _setCurrentChannel (name) {
+    this.activeChannel = name
+    this.elements.headerCurrentChannel.textContent = name
+
+    Object.keys(this.elements.channels.children).forEach(key => {
+      const element = this.elements.channels.children[key]
+
+      if (element.textContent === name) {
+        element.classList.add('active-channel')
+      } else {
+        element.classList.remove('active-channel')
+      }
+    })
+
+    this._updateChat()
   }
 
   _addChannel (name) {
     if (!this._isValidChannelName(name)) {
       return false
     }
+
     this.channels.push(name)
-    this._updateChannelList()
+    this._createChannelElement(name)
     return true
   }
 
@@ -221,25 +241,7 @@ class RlChat extends window.HTMLElement {
     }
 
     this.messages.push(data)
-    this._printMessage(data.username, data.channel, data.data)
-  }
-
-  _updateChannelList () {
-    this.elements.channels.innerHTML = ''
-
-    this.channels.forEach(ch => {
-      const text = document.createElement('p')
-      text.textContent = ch
-
-      const button = document.createElement('button')
-      button.appendChild(text)
-      button.addEventListener('click', event => {
-        this.activeChannel = ch
-        this._updateChat()
-      })
-
-      this.elements.channels.appendChild(button)
-    })
+    this._createMessageElement(data.username, data.channel, data.data)
   }
 
   _updateChat () {
@@ -254,13 +256,12 @@ class RlChat extends window.HTMLElement {
     })
   }
 
-  _setDefaultChannel () {
+  _loadDefaultChannel () {
     if (this.channels.length === 0) {
       this._addChannel('General')
     }
 
-    this.activeChannel = this.channels[0]
-    this._updateChat()
+    this._setCurrentChannel(this.channels[0])
   }
 
   _isValidUsername (username) {
@@ -302,7 +303,7 @@ class RlChat extends window.HTMLElement {
     this.socket = new window.WebSocket(this.serverUrl)
   }
 
-  _printMessage (sender, channel, message) {
+  _createMessageElement (sender, channel, message) {
     const messageElement = document.createElement('div')
     messageElement.classList.add('message')
     messageElement.setAttribute('channel', channel)
@@ -323,6 +324,16 @@ class RlChat extends window.HTMLElement {
     } else {
       messageElement.style.display = 'none'
     }
+  }
+
+  _createChannelElement (name) {
+    const button = document.createElement('button')
+    button.textContent = name
+    button.addEventListener('click', event => {
+      this._setCurrentChannel(name)
+    })
+
+    this.elements.channels.appendChild(button)
   }
 
   _sendMessage (channel, message) {

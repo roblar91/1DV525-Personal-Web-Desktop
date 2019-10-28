@@ -8,8 +8,30 @@ const css = /* css */ `
 }
 
 header {
+    display: flex;
+    flex-direction: row;
     flex: 0 0 2rem;
     background-color: yellow;
+    align-items: center;
+    justify-content: left;
+}
+
+.align-left {
+    display: flex;
+    flex: 1;
+    height: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+}
+
+.align-right {
+    display: flex;
+    flex: 1;
+    height: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: right;
 }
 
 main {
@@ -34,6 +56,11 @@ main {
     margin-bottom: 0.2rem;
     align-items: center;
     justify-content: left;
+    border: double 0.2rem black;
+}
+
+.active-channel {
+    border: solid 0.2rem yellow !important;
 }
 
 #chat {
