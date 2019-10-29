@@ -1,4 +1,10 @@
 const css = /* css */ `
+
+:host, button, form {
+    font-size: 100%;
+    font-family: serif;
+}
+
 :host {
     position: relative;
     display: flex;
@@ -11,9 +17,29 @@ header {
     display: flex;
     flex-direction: row;
     flex: 0 0 2rem;
-    background-color: yellow;
+    background-color: darkgrey;
     align-items: center;
     justify-content: left;
+    font-size: 1.2rem;
+}
+
+#change-username-button {
+    margin-left: 0.3rem;
+    margin-right: 0.3rem;
+}
+
+button {
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    border: 0.1rem solid lightgrey;
+    flex: 0 1;
+    height: min-content;
+    border-radius: 0.4rem;
+}
+
+img {
+    display: block;
 }
 
 .align-left {
@@ -38,13 +64,13 @@ main {
     display: flex;
     flex: 1 1;
     flex-direction: row;
-    background-color: blue;
+    background-color: white;
     overflow: hidden;
 }
 
 #channel-list {
     flex: 0 0 8rem;
-    background-color: green;
+    background-color: lightgrey;
     padding: 0.2rem;
 }
 
@@ -56,11 +82,6 @@ main {
     justify-content: space-evenly;
 }
 
-#add-remove-channel button {
-    flex: 0 1;
-    height: 100%;
-}
-
 #channels button {
     display: flex;
     height: 1.5rem;
@@ -69,11 +90,14 @@ main {
     margin-top: 0.2rem;
     align-items: center;
     justify-content: left;
-    border: double 0.2rem black;
+    border: none;
 }
 
 .active-channel {
-    border: solid 0.2rem yellow !important;
+    border: solid 0.1rem black !important;
+    color: white !important;
+    background-color: black !important;
+    padding: 0.5rem !important;
 }
 
 #chat {
@@ -93,29 +117,24 @@ main {
 }
 
 .message {
-    position: relative;
+    display: flex;
+    flex-direction: column;
     flex: 0 1;
     background-color: yellow;
     margin: 0.5rem 0.5rem 0;
-    display: flex;
-    flex-direction: row;
     min-height: min-content;
-    padding: 1rem;
+    padding: 0.5rem 1rem 0.5rem;
     scroll-margin-bottom: 1rem;
     border-radius: 0.2rem;
 }
 
 .message .sender {
-    position: absolute;
-    top: -0.2em;
-    left: -0.2rem;
-    padding: 0 0.2rem;
     overflow: hidden;
-    border-radius: 0.2rem;
-    background-color: skyblue;
+    border-bottom: 0.1rem black solid;
 }
 
 .message .data {
+    margin-top: 0.5rem;
     flex: 1;
     word-break: break-word;
 }

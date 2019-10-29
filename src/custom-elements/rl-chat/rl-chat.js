@@ -32,8 +32,7 @@ class RlChat extends window.HTMLElement {
       addChannelButton: this.shadowRoot.getElementById('add-channel-button'),
       removeChannelButton: this.shadowRoot.getElementById('remove-channel-button'),
       channels: this.shadowRoot.getElementById('channels'),
-      headerUsername: this.shadowRoot.getElementById('header-username'),
-      headerCurrentChannel: this.shadowRoot.getElementById('header-current-channel')
+      headerUsername: this.shadowRoot.getElementById('header-username')
     }
 
     this._readAttributes()
@@ -225,7 +224,6 @@ class RlChat extends window.HTMLElement {
 
   _setCurrentChannel (name) {
     this.activeChannel = name
-    this.elements.headerCurrentChannel.textContent = name
 
     Object.keys(this.elements.channels.children).forEach(key => {
       const element = this.elements.channels.children[key]
