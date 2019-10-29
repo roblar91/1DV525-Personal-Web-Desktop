@@ -245,6 +245,7 @@ class RlChat extends window.HTMLElement {
 
     this.channels.push(name)
     this._createChannelElement(name)
+    this._saveToStorage()
     return true
   }
 
@@ -256,6 +257,8 @@ class RlChat extends window.HTMLElement {
 
     this.messages.push(data)
     this._createMessageElement(data.username, data.channel, data.data)
+    this._saveToStorage()
+    return true
   }
 
   _updateChat () {
