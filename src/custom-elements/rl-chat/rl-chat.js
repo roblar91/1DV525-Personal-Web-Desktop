@@ -39,7 +39,7 @@ class RlChat extends window.HTMLElement {
     this._loadFromStorage()
 
     if (!this.username) {
-      this._askForUsername()
+      this._newUsernamePopup()
     }
 
     this._loadDefaultChannel()
@@ -80,19 +80,19 @@ class RlChat extends window.HTMLElement {
     this.elements.changeUsernameButton.addEventListener('click', event => {
       event.preventDefault()
 
-      this._askForUsername()
+      this._newUsernamePopup()
     })
 
     this.elements.addChannelButton.addEventListener('click', event => {
       event.preventDefault()
 
-      this._askForChannel()
+      this._newChannelPopup()
     })
 
     this.elements.removeChannelButton.addEventListener('click', event => {
       event.preventDefault()
 
-      // todo
+      this._deleteChannelPopup()
     })
   }
 
@@ -133,7 +133,12 @@ class RlChat extends window.HTMLElement {
     window.localStorage.setItem('rl-chat', JSON.stringify(saveData))
   }
 
-  _askForUsername () {
+  _closePopup () {
+    this.elements.popupContent.innerHTML = ''
+    this.elements.popupOverlay.style.visibility = 'hidden'
+  }
+
+  _newUsernamePopup () {
     this.elements.popupOverlay.style.visibility = 'visible'
 
     const text = document.createElement('p')
@@ -160,15 +165,14 @@ class RlChat extends window.HTMLElement {
       event.preventDefault()
 
       if (this._setUsername(inputText.value)) {
-        this.elements.popupContent.innerHTML = ''
-        this.elements.popupOverlay.style.visibility = 'hidden'
+        this._closePopup()
       } else {
         inputInvalid.textContent = 'A valid username must be 3 to 10 characters and only contain alphanumeric characters or underscores'
       }
     })
   }
 
-  _askForChannel () {
+  _newChannelPopup () {
     this.elements.popupOverlay.style.visibility = 'visible'
 
     const text = document.createElement('p')
@@ -196,19 +200,61 @@ class RlChat extends window.HTMLElement {
     this.elements.popupContent.appendChild(cancelButton)
     cancelButton.addEventListener('click', event => {
       event.preventDefault()
-      this.elements.popupContent.innerHTML = ''
-      this.elements.popupOverlay.style.visibility = 'hidden'
+      this._closePopup()
     })
 
     form.addEventListener('submit', event => {
       event.preventDefault()
 
       if (this._addChannel(inputText.value)) {
-        this.elements.popupContent.innerHTML = ''
-        this.elements.popupOverlay.style.visibility = 'hidden'
+        this._closePopup()
       } else {
         inputInvalid.textContent = 'A valid channel name must be 1 to 20 characters'
       }
+    })
+  }
+
+  _deleteChannelPopup () {
+    this.elements.popupOverlay.style.visibility = 'visible'
+
+    const text = document.createElement('p')
+    text.textContent = 'Select a channel to delete'
+    this.elements.popupContent.appendChild(text)
+
+    const form = document.createElement('form')
+    this.elements.popupContent.appendChild(form)
+
+    const select = document.createElement('select')
+    select.setAttribute('name', 'delete-target')
+    form.appendChild(select)
+
+    this.channels.forEach(ch => {
+      const option = document.createElement('option')
+      option.setAttribute('value', ch)
+      option.textContent = ch
+      select.appendChild(option)
+    })
+
+    const inputSubmit = document.createElement('input')
+    inputSubmit.setAttribute('type', 'submit')
+    inputSubmit.value = 'Delete'
+    form.appendChild(inputSubmit)
+
+    const cancelButton = document.createElement('button')
+    cancelButton.textContent = 'Cancel'
+    this.elements.popupContent.appendChild(cancelButton)
+    cancelButton.addEventListener('click', event => {
+      event.preventDefault()
+      this._closePopup()
+    })
+
+    form.addEventListener('submit', event => {
+      event.preventDefault()
+
+      const deleteTarget = select.options[select.selectedIndex].value
+      this._deleteChannel(deleteTarget)
+
+      this._closePopup()
     })
   }
 
@@ -247,6 +293,43 @@ class RlChat extends window.HTMLElement {
     this._createChannelElement(name)
     this._saveToStorage()
     return true
+  }
+
+  _deleteChannel (name) {
+    const index = this.channels.indexOf(name)
+    this.channels.splice(index, 1)
+
+    for (let i = this.messages.length - 1; i >= 0; i--) {
+      if (this.messages[i].channel === name) {
+        this.messages.splice(i, 1)
+      }
+    }
+
+    // Remove channel element
+    let remove = []
+    Object.keys(this.elements.channels.children).forEach(key => {
+      const ch = this.elements.channels.children[key]
+      if (ch.textContent === name) {
+        remove.push(ch)
+      }
+    })
+    remove.forEach(element => {
+      this.elements.channels.removeChild(element)
+    })
+
+    // Remove message elements belonging to removed channel
+    remove = []
+    Object.keys(this.elements.messages.children).forEach(key => {
+      const msg = this.elements.messages.children[key]
+      if (msg.getAttribute('channel') === name) {
+        remove.push(msg)
+      }
+    })
+    remove.forEach(element => {
+      this.elements.messages.removeChild(element)
+    })
+
+    this._saveToStorage()
   }
 
   _addMessage (data) {
