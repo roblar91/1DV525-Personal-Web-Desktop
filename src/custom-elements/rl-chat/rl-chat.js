@@ -37,6 +37,15 @@ class RlChat extends window.HTMLElement {
       headerUsername: this.shadowRoot.getElementById('header-username')
     }
 
+    this.constants = {
+      nameLengthMin: 3,
+      nameLengthMax: 10,
+      nameRegex: /^\w+$/,
+      nameRegexDescription: 'alphanumeric characters and underscore',
+      channelNameLengthMin: 1,
+      channelNameLengthMax: 30
+    }
+
     this._readAttributes()
     this._loadFromStorage()
 
@@ -174,7 +183,9 @@ class RlChat extends window.HTMLElement {
       if (this._setUsername(inputText.value)) {
         this._closePopup()
       } else {
-        inputInvalid.textContent = 'A valid username must be 3 to 10 characters and only contain alphanumeric characters or underscores'
+        inputInvalid.textContent = `
+        A valid username must be ${this.constants.nameLengthMin} to ${this.constants.nameLengthMax} characters and only contain ${this.constants.nameRegexDescription}
+        `
       }
     })
   }
@@ -216,7 +227,9 @@ class RlChat extends window.HTMLElement {
       if (this._addChannel(inputText.value)) {
         this._closePopup()
       } else {
-        inputInvalid.textContent = 'A valid channel name must be 1 to 20 characters'
+        inputInvalid.textContent = `
+        A valid channel name must be ${this.constants.channelNameLengthMin} to ${this.constants.channelNameLengthMax} characters and not be a duplicate
+        `
       }
     })
   }
@@ -288,6 +301,7 @@ class RlChat extends window.HTMLElement {
     })
 
     this._updateChat()
+    this._scrollToBottom()
   }
 
   _addChannel (name) {
@@ -295,7 +309,16 @@ class RlChat extends window.HTMLElement {
       return null
     }
 
-    // todo: check duplicate
+    let duplicate = false
+    this.channels.forEach(ch => {
+      if (ch.getName() === name) {
+        duplicate = true
+      }
+    })
+
+    if (duplicate) {
+      return null
+    }
 
     const newChannel = new ChatChannel(name)
     this.channels.push(newChannel)
@@ -363,34 +386,27 @@ class RlChat extends window.HTMLElement {
   }
 
   _isValidUsername (username) {
-    const minLength = 3
-    const maxLength = 10
-    const allowedCharacters = /^\w+$/
-
     if (!username) {
       return false
     }
 
-    if (username.length < minLength) {
+    if (username.length < this.constants.nameLengthMin) {
       return false
     }
 
-    if (username.length > maxLength) {
+    if (username.length > this.constants.nameLengthMax) {
       return false
     }
 
-    return username.match(allowedCharacters)
+    return username.match(this.constants.nameRegex)
   }
 
   _isValidChannelName (channelName) {
-    const minLength = 1
-    const maxLength = 20
-
-    if (channelName.length < minLength) {
+    if (channelName.length < this.constants.channelNameLengthMin) {
       return false
     }
 
-    if (channelName.length > maxLength) {
+    if (channelName.length > this.channels.channelNameLengthMax) {
       return false
     }
 

@@ -1,6 +1,6 @@
 const css = /* css */ `
 
-:host, button, form {
+:host, button, form, chat-channel, chat-message {
     font-size: 100%;
     font-family: serif;
 }
@@ -82,9 +82,9 @@ main {
     justify-content: space-evenly;
 }
 
-#channels button {
+chat-channel {
     display: flex;
-    height: 1.5rem;
+    flex: 0 1 1.5rem;
     width: 100%;
     overflow: hidden;
     margin-top: 0.2rem;
@@ -97,7 +97,8 @@ main {
     border: solid 0.1rem black !important;
     color: white !important;
     background-color: black !important;
-    padding: 0.5rem !important;
+    padding: 0.2rem !important;
+    font-size: 1.1rem !important;
 }
 
 #chat {
@@ -113,30 +114,18 @@ main {
     background-color: white;
     flex-direction: column;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
-.message {
+chat-message {
     display: flex;
     flex-direction: column;
     flex: 0 1;
-    background-color: yellow;
     margin: 0.5rem 0.5rem 0;
     min-height: min-content;
     padding: 0.5rem 1rem 0.5rem;
     scroll-margin-bottom: 1rem;
     border-radius: 0.2rem;
-}
-
-.message .sender {
-    overflow: hidden;
-    border-bottom: 0.1rem black solid;
-}
-
-.message .data {
-    margin-top: 0.5rem;
-    flex: 1;
-    word-break: break-word;
 }
 
 #chat-form {

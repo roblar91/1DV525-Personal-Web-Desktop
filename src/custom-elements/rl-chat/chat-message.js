@@ -1,6 +1,23 @@
 const _css = /* css */ `
 :host {
-    display: flex;
+  display: flex;
+  flex-direction: column;
+  background-color: lightgrey;
+  color: black;
+}
+
+#bar {
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  border-bottom: 0.1rem solid;
+  font-size: 0.8rem;
+}
+
+#message {
+  margin-top: 0.5rem;
+  flex: 1;
+  word-break: break-word;
 }
 `
 
@@ -31,8 +48,10 @@ export class ChatMessage extends window.HTMLElement {
   connectedCallback () {
     this.shadowRoot.innerHTML = /* html */ `
     <style>${_css}</style>
-    <div id="sender">${this.sender}</div>
-    <div id="timestamp">${this.timestamp}</div>
+    <div id="bar">
+      <div id="sender">${this.sender}</div>
+      <div id="timestamp">${this.timestamp}</div>
+    </div>
     <div id="message">${this.message}</div>
     `
   }
