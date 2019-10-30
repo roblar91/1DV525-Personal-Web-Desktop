@@ -1,5 +1,7 @@
 import css from './rl-chat-css.js'
 import html from './rl-chat-html.js'
+import { ChatMessage } from './chat-message.js'
+import { ChatChannel } from './chat-channel.js'
 
 /**
  * A simple chat web application.
@@ -66,14 +68,14 @@ class RlChat extends window.HTMLElement {
       console.log(jsonData)
 
       if (jsonData.type === 'message') {
-        this._addMessage(jsonData)
+        this._addMessage(jsonData.channel, jsonData.username, jsonData.data, '')
       }
     })
 
     this.elements.chatForm.addEventListener('submit', event => {
       event.preventDefault()
 
-      this._sendMessage(this.activeChannel, this.elements.chatInputText.value)
+      this._sendMessage(this.activeChannel.getName(), this.elements.chatInputText.value)
       this.elements.chatInputText.value = ''
     })
 
@@ -111,23 +113,28 @@ class RlChat extends window.HTMLElement {
 
       if (saveData.channels) {
         saveData.channels.forEach(ch => {
-          this._addChannel(ch)
-        })
-      }
-
-      if (saveData.messages) {
-        saveData.messages.forEach(msg => {
-          this._addMessage(msg)
+          this._loadChannel(ch)
         })
       }
     }
   }
 
+  _loadChannel (channelData) {
+    this._addChannel(channelData.name)
+    channelData.messages.forEach(msg => {
+      this._addMessage(channelData.name, msg.sender, msg.message, msg.timestamp)
+    })
+  }
+
   _saveToStorage () {
+    const channelData = []
+    this.channels.forEach(ch => {
+      channelData.push(ch.getDataAsJSON())
+    })
+
     const saveData = {
       username: this.username,
-      channels: this.channels,
-      messages: this.messages
+      channels: channelData
     }
 
     window.localStorage.setItem('rl-chat', JSON.stringify(saveData))
@@ -230,8 +237,8 @@ class RlChat extends window.HTMLElement {
 
     this.channels.forEach(ch => {
       const option = document.createElement('option')
-      option.setAttribute('value', ch)
-      option.textContent = ch
+      option.setAttribute('value', ch.getName())
+      option.textContent = ch.getName()
       select.appendChild(option)
     })
 
@@ -251,8 +258,8 @@ class RlChat extends window.HTMLElement {
     form.addEventListener('submit', event => {
       event.preventDefault()
 
-      const deleteTarget = select.options[select.selectedIndex].value
-      this._deleteChannel(deleteTarget)
+      const deleteTargetName = select.options[select.selectedIndex].value
+      this._deleteChannel(deleteTargetName)
 
       this._closePopup()
     })
@@ -265,19 +272,18 @@ class RlChat extends window.HTMLElement {
 
     this.username = name
     this.elements.headerUsername.textContent = name
+    this._saveToStorage()
     return true
   }
 
-  _setCurrentChannel (name) {
-    this.activeChannel = name
+  _setCurrentChannel (channel) {
+    this.activeChannel = channel
 
-    Object.keys(this.elements.channels.children).forEach(key => {
-      const element = this.elements.channels.children[key]
-
-      if (element.textContent === name) {
-        element.classList.add('active-channel')
+    this.channels.forEach(ch => {
+      if (ch === channel) {
+        ch.classList.add('active-channel')
       } else {
-        element.classList.remove('active-channel')
+        ch.classList.remove('active-channel')
       }
     })
 
@@ -286,72 +292,64 @@ class RlChat extends window.HTMLElement {
 
   _addChannel (name) {
     if (!this._isValidChannelName(name)) {
-      return false
+      return null
     }
 
-    this.channels.push(name)
-    this._createChannelElement(name)
+    // todo: check duplicate
+
+    const newChannel = new ChatChannel(name)
+    this.channels.push(newChannel)
+    this.elements.channels.appendChild(newChannel)
+
+    newChannel.addEventListener('click', event => {
+      this._setCurrentChannel(newChannel)
+    })
+
     this._saveToStorage()
-    return true
+    return newChannel
   }
 
-  _deleteChannel (name) {
-    const index = this.channels.indexOf(name)
-    this.channels.splice(index, 1)
-
-    for (let i = this.messages.length - 1; i >= 0; i--) {
-      if (this.messages[i].channel === name) {
-        this.messages.splice(i, 1)
-      }
-    }
-
-    // Remove channel element
-    let remove = []
-    Object.keys(this.elements.channels.children).forEach(key => {
-      const ch = this.elements.channels.children[key]
-      if (ch.textContent === name) {
-        remove.push(ch)
+  _deleteChannel (deleteTargetName) {
+    let deleteIndex
+    this.channels.forEach((ch, index) => {
+      if (ch.getName() === deleteTargetName) {
+        deleteIndex = index
+        ch.deleteAllMessages()
+        ch.parentElement.removeChild(ch)
       }
     })
-    remove.forEach(element => {
-      this.elements.channels.removeChild(element)
-    })
 
-    // Remove message elements belonging to removed channel
-    remove = []
-    Object.keys(this.elements.messages.children).forEach(key => {
-      const msg = this.elements.messages.children[key]
-      if (msg.getAttribute('channel') === name) {
-        remove.push(msg)
-      }
-    })
-    remove.forEach(element => {
-      this.elements.messages.removeChild(element)
-    })
-
+    this.channels.splice(deleteIndex, 1)
     this._saveToStorage()
   }
 
-  _addMessage (data) {
-    // Ignore message if it is directed at an unknown channel
-    if (this.channels.indexOf(data.channel) < 0) {
-      return false
-    }
+  _addMessage (channel, sender, message, timestamp) {
+    this.channels.forEach(ch => {
+      if (ch.getName() === channel) {
+        const newMessage = new ChatMessage(sender, message, timestamp)
+        ch.addMessage(newMessage)
+        this.elements.messages.appendChild(newMessage)
 
-    this.messages.push(data)
-    this._createMessageElement(data.username, data.channel, data.data)
-    this._saveToStorage()
-    return true
+        if (ch === this.activeChannel) {
+          this._scrollToBottom()
+        } else {
+          newMessage.setHidden(true)
+        }
+
+        this._saveToStorage()
+        return newMessage
+      }
+    })
+
+    return null
   }
 
   _updateChat () {
-    const messages = this.elements.messages.children
-    Object.keys(messages).forEach(key => {
-      const msg = messages[key]
-      if (msg.getAttribute('channel') === this.activeChannel) {
-        msg.style.display = 'block'
+    this.channels.forEach(ch => {
+      if (ch === this.activeChannel) {
+        ch.setMessagesHidden(false)
       } else {
-        msg.style.display = 'none'
+        ch.setMessagesHidden(true)
       }
     })
   }
@@ -401,39 +399,6 @@ class RlChat extends window.HTMLElement {
 
   _connect () {
     this.socket = new window.WebSocket(this.serverUrl)
-  }
-
-  _createMessageElement (sender, channel, message) {
-    const messageElement = document.createElement('div')
-    messageElement.classList.add('message')
-    messageElement.setAttribute('channel', channel)
-    this.elements.messages.appendChild(messageElement)
-
-    const nameElement = document.createElement('div')
-    nameElement.classList.add('sender')
-    nameElement.textContent = sender
-    messageElement.appendChild(nameElement)
-
-    const dataElement = document.createElement('div')
-    dataElement.classList.add('data')
-    dataElement.textContent = message
-    messageElement.appendChild(dataElement)
-
-    if (channel === this.activeChannel) {
-      this._scrollToBottom()
-    } else {
-      messageElement.style.display = 'none'
-    }
-  }
-
-  _createChannelElement (name) {
-    const button = document.createElement('button')
-    button.textContent = name
-    button.addEventListener('click', event => {
-      this._setCurrentChannel(name)
-    })
-
-    this.elements.channels.appendChild(button)
   }
 
   _sendMessage (channel, message) {
