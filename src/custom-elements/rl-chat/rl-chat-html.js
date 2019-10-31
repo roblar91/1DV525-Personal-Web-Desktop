@@ -2,7 +2,7 @@ const html = /* html */ `
 <header>
     <div class="align-left">
         <button id="change-username-button" title="Change username">
-            <img src="/resources/rl-chat/edit.png" alt="">
+            <img src="./resources/rl-chat/edit.png" alt="">
         </button>
         <div id="header-username"></div>
     </div>
@@ -14,10 +14,10 @@ const html = /* html */ `
         <div id="channel-bar">
             <p>Channels</p>
             <button id="add-channel-button" title="Add channel">
-                <img src="/resources/rl-chat/plus.png" alt="">
+                <img src="./resources/rl-chat/plus.png" alt="">
             </button>
             <button id="remove-channel-button" title="Remove channel">
-                <img src="/resources/rl-chat/minus.png" alt="">
+                <img src="./resources/rl-chat/minus.png" alt="">
             </button>
         </div>
         <div id="channels">

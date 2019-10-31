@@ -9,7 +9,7 @@ const rlPwdCss = /* css */ `
     display: flex;
     flex-direction: column;
     background:  black;
-    background-image: url('/resources/rl-pwd/background.jpg');
+    background-image: url('./resources/rl-pwd/background.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;

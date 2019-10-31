@@ -12,7 +12,7 @@ const RlPwdHtml = /* html */ `
 <div id="taskbar">
     <div class="align-left">
         <button id="main-menu-button">
-            <img src="/resources/rl-pwd/icon.png" alt="">
+            <img src="./resources/rl-pwd/icon.png" alt="">
             <p>Menu</p>
         </button>
         <div id="running-app-container">

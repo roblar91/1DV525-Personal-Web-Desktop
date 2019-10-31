@@ -1,15 +1,15 @@
 import './game-card.js'
 
-const cardBack = '/resources/rl-memory/0.png'
+const cardBack = './resources/rl-memory/0.png'
 const cardFronts = []
-cardFronts.push('/resources/rl-memory/1.png')
-cardFronts.push('/resources/rl-memory/3.png')
-cardFronts.push('/resources/rl-memory/2.png')
-cardFronts.push('/resources/rl-memory/4.png')
-cardFronts.push('/resources/rl-memory/5.png')
-cardFronts.push('/resources/rl-memory/6.png')
-cardFronts.push('/resources/rl-memory/7.png')
-cardFronts.push('/resources/rl-memory/8.png')
+cardFronts.push('./resources/rl-memory/1.png')
+cardFronts.push('./resources/rl-memory/3.png')
+cardFronts.push('./resources/rl-memory/2.png')
+cardFronts.push('./resources/rl-memory/4.png')
+cardFronts.push('./resources/rl-memory/5.png')
+cardFronts.push('./resources/rl-memory/6.png')
+cardFronts.push('./resources/rl-memory/7.png')
+cardFronts.push('./resources/rl-memory/8.png')
 
 const boardStyleHtml = /* css */ `
 :host {
