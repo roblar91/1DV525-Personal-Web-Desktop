@@ -18,13 +18,31 @@ const _boardCss = /* css */ `
   flex-direction: column;
   background-color: white;
   align-items: center;
-  justify-content: center;
+  justify-content: top;
   white-space: nowrap;
 }
 
-header p {
-  display: inline;
-  margin-right: 2em;
+header {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  height: 2rem;
+  background-color: lightgrey;
+  margin-bottom: 1rem;
+}
+
+.header-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+p {
+  margin: 0;
 }
 
 game-card {
@@ -49,18 +67,47 @@ class RlMemory extends window.HTMLElement {
   connectedCallback () {
     this.shadowRoot.innerHTML = /* html */ `
     <style>${_boardCss}</style>
+
     <header>
-      <p>Hits: <span id="hits"></span></p>
-      <p>Misses: <span id="misses"></span></p>
-      <button id="resetbutton">Reset</button>
+      <div class="header-section">
+        <p>Hits: <span id="hits"></span></p>
+        <p>Misses: <span id="misses"></span></p>
+      </div>
+
+      <div class="header-section">
+      <label for="columns">Columns</label>
+        <select id="columns">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4" selected="selected">4</option>
+        </select>
+      </div>
+
+      <div class="header-section">
+      <label for="rows">Rows</label>
+        <select id="rows">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4" selected="selected">4</option>
+        </select>
+      </div>
+
+      <div class="header-section">
+        <button id="resetbutton">Reset</button>
+      </div>
     </header>
+
     <main>
     </main>
     `
 
     this.elements = {
       resetbutton: this.shadowRoot.querySelector('#resetbutton'),
-      main: this.shadowRoot.querySelector('main')
+      main: this.shadowRoot.querySelector('main'),
+      selectColumns: this.shadowRoot.querySelector('#columns'),
+      selectRows: this.shadowRoot.querySelector('#rows')
     }
 
     this.elements.resetbutton.addEventListener('click', event => {
@@ -68,16 +115,6 @@ class RlMemory extends window.HTMLElement {
     })
 
     this._initializeBoard()
-  }
-
-  static get observedAttributes () {
-    return ['grid-x', 'grid-y']
-  }
-
-  attributeChangedCallback (name, oldValue, newValue) {
-    if (name === 'grid-x' || name === 'grid-y') {
-      this._initializeBoard()
-    }
   }
 
   _cardClicked (card) {
@@ -123,8 +160,6 @@ class RlMemory extends window.HTMLElement {
 
   _initializeBoard () {
     // Clear the board
-    console.log(this.elements.main)
-    console.log(this.elements.main.firstElementChild)
     while (this.elements.main.firstElementChild) {
       this.elements.main.removeChild(this.elements.main.firstElementChild)
     }
@@ -135,9 +170,8 @@ class RlMemory extends window.HTMLElement {
     this.secondSelectedCard = null
     this._updateText()
 
-    // Set default grid size if no attributes are set
-    this.gridX = this.getAttribute('grid-x') ? this.getAttribute('grid-x') : 4
-    this.gridY = this.getAttribute('grid-y') ? this.getAttribute('grid-y') : 4
+    this.gridX = this.elements.selectColumns.options[this.elements.selectColumns.selectedIndex].value
+    this.gridY = this.elements.selectRows.options[this.elements.selectRows.selectedIndex].value
 
     // Make sure we create an even amount of cards
     this.cardsTotal = this.gridX * this.gridY

@@ -30,6 +30,14 @@ class GameCard extends window.HTMLElement {
     this._updateImage()
   }
 
+  _updateImage () {
+    if (this.revealed) {
+      this.shadowRoot.querySelector('img').setAttribute('src', this.frontUrl)
+    } else {
+      this.shadowRoot.querySelector('img').setAttribute('src', this.backUrl)
+    }
+  }
+
   /**
    * Swaps the image being displayed from front to back or vice-versa.
    *
@@ -38,11 +46,7 @@ class GameCard extends window.HTMLElement {
   flip () {
     this.revealed = !this.revealed
 
-    if (this.revealed) {
-      this.shadowRoot.querySelector('img').setAttribute('src', this.frontUrl)
-    } else {
-      this.shadowRoot.querySelector('img').setAttribute('src', this.backUrl)
-    }
+    this._updateImage()
   }
 
   /**
