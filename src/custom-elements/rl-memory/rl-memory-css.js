@@ -16,6 +16,7 @@ const css = /* css */ `
     height: 2rem;
     background-color: lightgrey;
     margin-bottom: 1rem;
+    padding: 0.2rem;
   }
   
   .header-section {

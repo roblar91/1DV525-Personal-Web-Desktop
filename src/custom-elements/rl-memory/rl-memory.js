@@ -36,18 +36,17 @@ class RlMemory extends window.HTMLElement {
       resetbutton: this.shadowRoot.querySelector('#resetbutton'),
       main: this.shadowRoot.querySelector('main'),
       selectColumns: this.shadowRoot.querySelector('#columns'),
-      selectRows: this.shadowRoot.querySelector('#rows')
+      selectRows: this.shadowRoot.querySelector('#rows'),
+      selectFlashMode: this.shadowRoot.querySelector('#flash-mode')
     }
 
     this.elements.resetbutton.addEventListener('click', event => {
       this._initializeBoard()
     })
-
-    this._initializeBoard()
   }
 
   _cardClicked (card) {
-    if (card.revealed) {
+    if (card.revealed || this.inputLocked) {
       return
     }
 
@@ -98,9 +97,11 @@ class RlMemory extends window.HTMLElement {
     this.firstSelectedCard = null
     this.secondSelectedCard = null
     this._updateText()
+    this.inputLocked = false
 
     this.gridX = this.elements.selectColumns.options[this.elements.selectColumns.selectedIndex].value
     this.gridY = this.elements.selectRows.options[this.elements.selectRows.selectedIndex].value
+    this.flashMode = this.elements.selectFlashMode.options[this.elements.selectFlashMode.selectedIndex].value
 
     // Make sure we create an even amount of cards
     this.cardsTotal = this.gridX * this.gridY
@@ -131,19 +132,43 @@ class RlMemory extends window.HTMLElement {
       })
     }
 
+    if (this.flashMode === 'on') {
+      // Save one card of each type for use in flash mode
+      this.flashCards = []
+      for (let i = 0; i < this.cardsTotal; i++) {
+        if (i % 2 === 0) {
+          this.flashCards.push(this.cards[i])
+        }
+      }
+    }
+
     this._shuffle(this.cards)
 
+    // Create rows and populate them
     this.rows = []
     for (let i = 0; i < this.gridY; i++) {
       this.rows[i] = document.createElement('div')
+      this.elements.main.appendChild(this.rows[i])
     }
 
     for (let i = 0; i < this.cardsTotal; i++) {
       this.rows[Math.floor(i / this.gridX)].appendChild(this.cards[i])
     }
 
-    for (let i = 0; i < this.rows.length; i++) {
-      this.elements.main.appendChild(this.rows[i])
+    if (this.flashMode === 'on') {
+      // Flash mode displays one card of each type for a small amount of time
+      this.flashCards.forEach(c => {
+        const flashTime = Math.floor(100 + Math.random() * 500)
+
+        c.flip()
+        setTimeout(() => {
+          c.flip()
+        }, flashTime)
+      })
+
+      setTimeout(() => {
+        this.inputLocked = false
+      }, 1000)
     }
   }
 
