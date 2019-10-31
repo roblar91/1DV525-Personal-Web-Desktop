@@ -1,17 +1,17 @@
 import './game-card.js'
 
-const cardBack = './resources/rl-memory/0.png'
-const cardFronts = []
-cardFronts.push('./resources/rl-memory/1.png')
-cardFronts.push('./resources/rl-memory/3.png')
-cardFronts.push('./resources/rl-memory/2.png')
-cardFronts.push('./resources/rl-memory/4.png')
-cardFronts.push('./resources/rl-memory/5.png')
-cardFronts.push('./resources/rl-memory/6.png')
-cardFronts.push('./resources/rl-memory/7.png')
-cardFronts.push('./resources/rl-memory/8.png')
+const _cardBack = './resources/rl-memory/0.png'
+const _cardFronts = []
+_cardFronts.push('./resources/rl-memory/1.png')
+_cardFronts.push('./resources/rl-memory/3.png')
+_cardFronts.push('./resources/rl-memory/2.png')
+_cardFronts.push('./resources/rl-memory/4.png')
+_cardFronts.push('./resources/rl-memory/5.png')
+_cardFronts.push('./resources/rl-memory/6.png')
+_cardFronts.push('./resources/rl-memory/7.png')
+_cardFronts.push('./resources/rl-memory/8.png')
 
-const boardStyleHtml = /* css */ `
+const _boardCss = /* css */ `
 :host {
   display: flex;
   flex: 1;
@@ -32,48 +32,48 @@ game-card {
   height: 6rem;
 }
 `
-const boardHeaderHtml = /* html */ `
-<h1>
-<p>Hits: <span id="hits"></span></p>
-<p>Misses: <span id="misses"></span></p>
-<button id="resetbutton">Reset</button>
-</h1>
-`
 
 class RlMemory extends window.HTMLElement {
   constructor () {
     super()
     this.attachShadow({ mode: 'open' })
-    this.boardStyle = document.createElement('style')
-    this.boardStyle.innerHTML = boardStyleHtml
-    this.boardHeader = document.createElement('header')
-    this.boardHeader.innerHTML = boardHeaderHtml
   }
 
   connectedCallback () {
-    this.initializeBoard()
+    this.shadowRoot.innerHTML = /* html */ `
+    <style>${_boardCss}</style>
+    <header>
+      <p>Hits: <span id="hits"></span></p>
+      <p>Misses: <span id="misses"></span></p>
+      <button id="resetbutton">Reset</button>
+    </header>
+    <main>
+    </main>
+    `
 
-    this.addEventListener('click', this.clicked)
+    this.elements = {
+      resetbutton: this.shadowRoot.querySelector('#resetbutton'),
+      main: this.shadowRoot.querySelector('main')
+    }
+
+    this.elements.resetbutton.addEventListener('click', event => {
+      this._initializeBoard()
+    })
+
+    this._initializeBoard()
   }
 
-  disconnectedCallback () {
-    this.removeEventListener('click', this.clicked)
+  static get observedAttributes () {
+    return ['grid-x', 'grid-y']
   }
 
-  clicked (event) {
-    const originalTarget = event.composedPath()[0]
-    try {
-      if (originalTarget === this.shadowRoot.querySelector('#resetbutton')) {
-        this.initializeBoard()
-      } else if (originalTarget.parentNode.host.nodeName === 'GAME-CARD') {
-        this.cardClicked(originalTarget.parentNode.host)
-      }
-    } catch (e) {
-      // Catch TypeErrors
+  attributeChangedCallback (name, oldValue, newValue) {
+    if (name === 'grid-x' || name === 'grid-y') {
+      this._initializeBoard()
     }
   }
 
-  cardClicked (card) {
+  _cardClicked (card) {
     if (card.revealed) {
       return
     }
@@ -108,37 +108,25 @@ class RlMemory extends window.HTMLElement {
       }, 1000)
     }
 
-    this.updateText()
+    this._updateText()
   }
 
-  static get observedAttributes () {
-    return ['grid-x', 'grid-y']
-  }
-
-  attributeChangedCallback (name, oldValue, newValue) {
-    if (name === 'grid-x' || name === 'grid-y') {
-      this.initializeBoard()
-    }
-  }
-
-  updateText () {
+  _updateText () {
     this.shadowRoot.querySelector('#misses').textContent = this.misses
     this.shadowRoot.querySelector('#hits').textContent = this.hits
   }
 
-  initializeBoard () {
+  _initializeBoard () {
     // Clear the board
-    while (this.shadowRoot.firstChild) {
-      this.shadowRoot.removeChild(this.shadowRoot.firstChild)
+    while (this.elements.main.firstElementChild) {
+      this.elements.main.removeChild(this.elements.main.firstElementChild)
     }
 
-    this.shadowRoot.appendChild(this.boardStyle)
-    this.shadowRoot.appendChild(this.boardHeader)
     this.hits = 0
     this.misses = 0
     this.firstSelectedCard = null
     this.secondSelectedCard = null
-    this.updateText()
+    this._updateText()
 
     // Set default grid size if no attributes are set
     this.gridX = this.getAttribute('grid-x') ? this.getAttribute('grid-x') : 4
@@ -151,19 +139,29 @@ class RlMemory extends window.HTMLElement {
     }
 
     // Make sure we dont create more cards than we have images for
-    if (this.cardsTotal > cardFronts.length * 2) {
-      this.cardsTotal = cardFronts.length * 2
+    if (this.cardsTotal > _cardFronts.length * 2) {
+      this.cardsTotal = _cardFronts.length * 2
     }
 
     // Create an empty deck and populate it
     this.cards = []
     for (let i = 0; i < this.cardsTotal; i++) {
       const card = document.createElement('game-card')
-      card.setImages(cardFronts[Math.floor(i / 2)], cardBack)
+      card.setImages(_cardFronts[Math.floor(i / 2)], _cardBack)
       this.cards.push(card)
+
+      card.addEventListener('click', event => {
+        this._cardClicked(card)
+      })
+
+      card.addEventListener('keydown', event => {
+        if (event.keyCode === 13) {
+          this._cardClicked(card)
+        }
+      })
     }
 
-    this.shuffle(this.cards)
+    this._shuffle(this.cards)
 
     this.rows = []
     for (let i = 0; i < this.gridY; i++) {
@@ -179,7 +177,7 @@ class RlMemory extends window.HTMLElement {
     }
   }
 
-  shuffle (arr) {
+  _shuffle (arr) {
     let remaining = arr.length
 
     while (remaining > 0) {

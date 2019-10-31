@@ -18,6 +18,7 @@ class GameCard extends window.HTMLElement {
     </style>
     `
 
+    this.setAttribute('tabindex', '0')
     this.shadowRoot.appendChild(document.createElement('img'))
     this.revealed = false
     this.updateImage()
