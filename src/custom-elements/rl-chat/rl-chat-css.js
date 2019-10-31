@@ -32,10 +32,13 @@ button {
     margin: 0;
     padding: 0;
     background-color: transparent;
-    border: 0.1rem solid lightgrey;
+    border: 0.1rem outset black;
     flex: 0 1;
     height: min-content;
-    border-radius: 0.4rem;
+}
+
+button:active {
+    border-style: inset;
 }
 
 img {
