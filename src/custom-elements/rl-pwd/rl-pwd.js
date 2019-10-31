@@ -1,10 +1,7 @@
 import css from './rl-pwd-css.js'
 import html from './rl-pwd-html.js'
 import '../rl-clock/rl-clock.js'
-import '../rl-pwd-window/rl-pwd-window.js'
-import '../rl-quiz/rl-quiz.js'
-import '../rl-memory/rl-memory.js'
-import '../rl-chat/rl-chat.js'
+import './rl-pwd-window/rl-pwd-window.js'
 
 /**
  * HTML element that creates a personal web desktop,
@@ -15,6 +12,7 @@ import '../rl-chat/rl-chat.js'
  * @class RlPwd
  * @extends window.HTMLElement
  * @requires RlPwdWindow
+ * @requires RlClock
  */
 class RlPwd extends window.HTMLElement {
   constructor () {

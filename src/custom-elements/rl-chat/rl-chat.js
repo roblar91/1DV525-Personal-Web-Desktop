@@ -4,10 +4,14 @@ import { ChatMessage } from './chat-message.js'
 import { ChatChannel } from './chat-channel.js'
 
 /**
- * A simple chat web application.
+ * A simple chat web application built as a HTML element.
+ * For this element to work the attributes "src" and "key" must be set with
+ * the URL to the server and the key used for authentication.
  *
  * @class RlChat
  * @extends {window.HTMLElement}
+ * @requires ChatMessage
+ * @requires ChatChannel
  */
 class RlChat extends window.HTMLElement {
   constructor () {

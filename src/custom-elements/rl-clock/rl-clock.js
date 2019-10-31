@@ -1,9 +1,16 @@
+/**
+ * A custom HTML element that displays a clock and the date.
+ * The clock updates automatically every second.
+ *
+ * @class RlClock
+ * @extends {window.HTMLElement}
+ */
 class RlClock extends window.HTMLElement {
   connectedCallback () {
-    this.updateTime()
+    this._updateTime()
   }
 
-  updateTime () {
+  _updateTime () {
     const date = new Date()
     let hours = date.getHours()
     let minutes = date.getMinutes()
@@ -20,7 +27,7 @@ class RlClock extends window.HTMLElement {
     <br>
     ${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}
     `
-    setTimeout(() => this.updateTime(), 1000)
+    setTimeout(() => this._updateTime(), 1000)
   }
 }
 

@@ -1,4 +1,7 @@
 import '../custom-elements/rl-pwd/rl-pwd.js'
+import '../custom-elements/rl-quiz/rl-quiz.js'
+import '../custom-elements/rl-memory/rl-memory.js'
+import '../custom-elements/rl-chat/rl-chat.js'
 
 const pwd = document.getElementById('pwd')
 pwd.registerApp('rl-quiz', 'Quiz', './resources/rl-quiz/icon.png', new Map([
