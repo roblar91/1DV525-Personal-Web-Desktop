@@ -33,6 +33,13 @@ game-card {
 }
 `
 
+/**
+ * A simple memory game implemented as a HTML element.
+ *
+ * @class RlMemory
+ * @extends {window.HTMLElement}
+ * @requires GameCard
+ */
 class RlMemory extends window.HTMLElement {
   constructor () {
     super()
