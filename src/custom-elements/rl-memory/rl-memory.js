@@ -84,31 +84,29 @@ class RlMemory extends window.HTMLElement {
     } else if (this.secondSelectedCard === null && card !== this.firstSelectedCard) {
       this.secondSelectedCard = card
       card.flip()
-    } else {
-      return
+
+      if (this.firstSelectedCard.getFront() === this.secondSelectedCard.getFront()) {
+        this.hits++
+
+        setTimeout(() => {
+          this.firstSelectedCard.hide()
+          this.secondSelectedCard.hide()
+          this.firstSelectedCard = null
+          this.secondSelectedCard = null
+        }, 1000)
+      } else {
+        this.misses++
+
+        setTimeout(() => {
+          this.firstSelectedCard.flip()
+          this.secondSelectedCard.flip()
+          this.firstSelectedCard = null
+          this.secondSelectedCard = null
+        }, 1000)
+      }
+
+      this._updateText()
     }
-
-    if (this.firstSelectedCard.getFront() === this.secondSelectedCard.getFront()) {
-      this.hits++
-
-      setTimeout(() => {
-        this.firstSelectedCard.hide()
-        this.secondSelectedCard.hide()
-        this.firstSelectedCard = null
-        this.secondSelectedCard = null
-      }, 1000)
-    } else {
-      this.misses++
-
-      setTimeout(() => {
-        this.firstSelectedCard.flip()
-        this.secondSelectedCard.flip()
-        this.firstSelectedCard = null
-        this.secondSelectedCard = null
-      }, 1000)
-    }
-
-    this._updateText()
   }
 
   _updateText () {
@@ -118,6 +116,8 @@ class RlMemory extends window.HTMLElement {
 
   _initializeBoard () {
     // Clear the board
+    console.log(this.elements.main)
+    console.log(this.elements.main.firstElementChild)
     while (this.elements.main.firstElementChild) {
       this.elements.main.removeChild(this.elements.main.firstElementChild)
     }
@@ -173,7 +173,7 @@ class RlMemory extends window.HTMLElement {
     }
 
     for (let i = 0; i < this.rows.length; i++) {
-      this.shadowRoot.appendChild(this.rows[i])
+      this.elements.main.appendChild(this.rows[i])
     }
   }
 
