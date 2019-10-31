@@ -1,5 +1,5 @@
-import css from './rl-chat-css.js'
-import html from './rl-chat-html.js'
+import _css from './rl-chat-css.js'
+import _html from './rl-chat-html.js'
 import { ChatMessage } from './chat-message.js'
 import { ChatChannel } from './chat-channel.js'
 
@@ -24,8 +24,8 @@ class RlChat extends window.HTMLElement {
 
   connectedCallback () {
     this.shadowRoot.innerHTML = /* html */ `
-    <style> ${css} </style>
-    ${html}
+    <style> ${_css} </style>
+    ${_html}
     `
 
     this.elements = {

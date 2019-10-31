@@ -1,3 +1,5 @@
+import _css from './rl-memory-css.js'
+import _html from './rl-memory-html.js'
 import './game-card.js'
 
 const _cardBack = './resources/rl-memory/0.png'
@@ -10,46 +12,6 @@ _cardFronts.push('./resources/rl-memory/5.png')
 _cardFronts.push('./resources/rl-memory/6.png')
 _cardFronts.push('./resources/rl-memory/7.png')
 _cardFronts.push('./resources/rl-memory/8.png')
-
-const _boardCss = /* css */ `
-:host {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  background-color: white;
-  align-items: center;
-  justify-content: top;
-  white-space: nowrap;
-}
-
-header {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  height: 2rem;
-  background-color: lightgrey;
-  margin-bottom: 1rem;
-}
-
-.header-section {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-}
-
-p {
-  margin: 0;
-}
-
-game-card {
-  width: 6rem;
-  height: 6rem;
-}
-`
 
 /**
  * A simple memory game implemented as a HTML element.
@@ -66,41 +28,8 @@ class RlMemory extends window.HTMLElement {
 
   connectedCallback () {
     this.shadowRoot.innerHTML = /* html */ `
-    <style>${_boardCss}</style>
-
-    <header>
-      <div class="header-section">
-        <p>Hits: <span id="hits"></span></p>
-        <p>Misses: <span id="misses"></span></p>
-      </div>
-
-      <div class="header-section">
-      <label for="columns">Columns</label>
-        <select id="columns">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4" selected="selected">4</option>
-        </select>
-      </div>
-
-      <div class="header-section">
-      <label for="rows">Rows</label>
-        <select id="rows">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4" selected="selected">4</option>
-        </select>
-      </div>
-
-      <div class="header-section">
-        <button id="resetbutton">Reset</button>
-      </div>
-    </header>
-
-    <main>
-    </main>
+    <style>${_css}</style>
+    ${_html}
     `
 
     this.elements = {
