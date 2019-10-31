@@ -11,7 +11,8 @@ const html = /* html */ `
 </header>
 <main>
     <div id="channel-list">
-        <div id="add-remove-channel">
+        <div id="channel-bar">
+            <p>Channels</p>
             <button id="add-channel-button" title="Add channel">
                 <img src="/resources/rl-chat/plus.png" alt="">
             </button>
@@ -26,7 +27,7 @@ const html = /* html */ `
         <div id="messages">
         </div>
         <form id="chat-form">
-            <input id="chat-input-text" type="text">
+            <input id="chat-input-text" type="text" autocomplete="off">
             <input id="chat-input-submit" type="submit" value="Send">
         </form>
     </div>

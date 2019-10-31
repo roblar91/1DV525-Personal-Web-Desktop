@@ -157,25 +157,22 @@ class RlChat extends window.HTMLElement {
   _newUsernamePopup () {
     this.elements.popupOverlay.style.visibility = 'visible'
 
-    const text = document.createElement('p')
-    text.textContent = 'Enter a username'
-    this.elements.popupContent.appendChild(text)
-
-    const form = document.createElement('form')
-    this.elements.popupContent.appendChild(form)
-
-    const inputText = document.createElement('input')
-    inputText.setAttribute('type', 'text')
-    inputText.setAttribute('placeholder', 'Username')
-    form.appendChild(inputText)
-
-    const inputInvalid = document.createElement('p')
-    form.appendChild(inputInvalid)
-
-    const inputSubmit = document.createElement('input')
-    inputSubmit.setAttribute('type', 'submit')
-    inputSubmit.value = 'Ok!'
-    form.appendChild(inputSubmit)
+    this.elements.popupContent.innerHTML = /* html */ `
+    <p>Enter a username</p>
+    <form id="popup-form">
+      <input id="popup-input-text" type="text" autocomplete="off" placeholder="Username">
+      <p id="popup-input-invalid" style="display: none">
+        A valid username must be ${this.constants.nameLengthMin} to ${this.constants.nameLengthMax} characters and only contain ${this.constants.nameRegexDescription}
+      </p>
+      <div id="popup-buttons">
+        <input id="popup-submit" type="submit" value="Ok!">
+      </div>
+    </form>
+    `
+    const inputText = this.elements.popupContent.querySelector('#popup-input-text')
+    const inputInvalid = this.elements.popupContent.querySelector('#popup-input-invalid')
+    const form = this.elements.popupContent.querySelector('#popup-form')
+    inputText.focus()
 
     form.addEventListener('submit', event => {
       event.preventDefault()
@@ -183,9 +180,7 @@ class RlChat extends window.HTMLElement {
       if (this._setUsername(inputText.value)) {
         this._closePopup()
       } else {
-        inputInvalid.textContent = `
-        A valid username must be ${this.constants.nameLengthMin} to ${this.constants.nameLengthMax} characters and only contain ${this.constants.nameRegexDescription}
-        `
+        inputInvalid.style.display = 'block'
       }
     })
   }
@@ -193,30 +188,26 @@ class RlChat extends window.HTMLElement {
   _newChannelPopup () {
     this.elements.popupOverlay.style.visibility = 'visible'
 
-    const text = document.createElement('p')
-    text.textContent = 'Enter a channel name'
-    this.elements.popupContent.appendChild(text)
+    this.elements.popupContent.innerHTML = /* html */ `
+    <p>Enter a channel name</p>
+    <form id="popup-form">
+      <input id="popup-input-text" type="text" autocomplete="off" placeholder="Channel">
+      <p id="popup-input-invalid" style="display: none">
+        A valid channel name must be ${this.constants.channelNameLengthMin} to ${this.constants.channelNameLengthMax} characters and not be a duplicate
+      </p>
+      <div id="popup-buttons">
+        <input id="popup-submit" type="submit" value="Ok!">
+        <button id="popup-cancel">Cancel</button>
+      </div>
+    </form>
+    `
+    const inputText = this.elements.popupContent.querySelector('#popup-input-text')
+    const inputInvalid = this.elements.popupContent.querySelector('#popup-input-invalid')
+    const form = this.elements.popupContent.querySelector('#popup-form')
+    const cancel = this.elements.popupContent.querySelector('#popup-cancel')
+    inputText.focus()
 
-    const form = document.createElement('form')
-    this.elements.popupContent.appendChild(form)
-
-    const inputText = document.createElement('input')
-    inputText.setAttribute('type', 'text')
-    inputText.setAttribute('placeholder', 'Channel')
-    form.appendChild(inputText)
-
-    const inputInvalid = document.createElement('p')
-    form.appendChild(inputInvalid)
-
-    const inputSubmit = document.createElement('input')
-    inputSubmit.setAttribute('type', 'submit')
-    inputSubmit.value = 'Ok!'
-    form.appendChild(inputSubmit)
-
-    const cancelButton = document.createElement('button')
-    cancelButton.textContent = 'Cancel'
-    this.elements.popupContent.appendChild(cancelButton)
-    cancelButton.addEventListener('click', event => {
+    cancel.addEventListener('click', event => {
       event.preventDefault()
       this._closePopup()
     })
@@ -227,9 +218,7 @@ class RlChat extends window.HTMLElement {
       if (this._addChannel(inputText.value)) {
         this._closePopup()
       } else {
-        inputInvalid.textContent = `
-        A valid channel name must be ${this.constants.channelNameLengthMin} to ${this.constants.channelNameLengthMax} characters and not be a duplicate
-        `
+        inputInvalid.style.display = 'block'
       }
     })
   }
@@ -237,16 +226,21 @@ class RlChat extends window.HTMLElement {
   _deleteChannelPopup () {
     this.elements.popupOverlay.style.visibility = 'visible'
 
-    const text = document.createElement('p')
-    text.textContent = 'Select a channel to delete'
-    this.elements.popupContent.appendChild(text)
+    this.elements.popupContent.innerHTML = /* html */ `
+    <p>Select a channel to delete</p>
+    <form id="popup-form">
+      <select id="popup-select" name="delete-target">
+      </select>
+      <div id="popup-buttons">
+        <input id="popup-submit" type="submit" value="Delete">
+        <button id="popup-cancel">Cancel</button>
+      </div>
+    </form>
+    `
 
-    const form = document.createElement('form')
-    this.elements.popupContent.appendChild(form)
-
-    const select = document.createElement('select')
-    select.setAttribute('name', 'delete-target')
-    form.appendChild(select)
+    const form = this.elements.popupContent.querySelector('#popup-form')
+    const select = this.elements.popupContent.querySelector('#popup-select')
+    const cancel = this.elements.popupContent.querySelector('#popup-cancel')
 
     this.channels.forEach(ch => {
       const option = document.createElement('option')
@@ -255,15 +249,7 @@ class RlChat extends window.HTMLElement {
       select.appendChild(option)
     })
 
-    const inputSubmit = document.createElement('input')
-    inputSubmit.setAttribute('type', 'submit')
-    inputSubmit.value = 'Delete'
-    form.appendChild(inputSubmit)
-
-    const cancelButton = document.createElement('button')
-    cancelButton.textContent = 'Cancel'
-    this.elements.popupContent.appendChild(cancelButton)
-    cancelButton.addEventListener('click', event => {
+    cancel.addEventListener('click', event => {
       event.preventDefault()
       this._closePopup()
     })

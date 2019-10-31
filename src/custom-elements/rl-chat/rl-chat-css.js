@@ -74,7 +74,9 @@ main {
     padding: 0.2rem;
 }
 
-#add-remove-channel {
+#channel-bar {
+    font-size: 0.8rem;
+    border-bottom: 0.1rem solid;
     display: flex;
     flex-direction: row;
     height: 1.5rem;
@@ -156,9 +158,29 @@ chat-message {
 }
 
 #popup-content {
+    display: flex;
+    flex-direction: column;
     flex: 0 1;
     background: rgba(255, 255, 255, 1);
     padding: 2rem;
+    min-width: 10rem;
+    justify-content: space-evenly;
+    align-items: space-evenly;
+}
+
+#popup-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: space-evenly;
+}
+
+#popup-buttons {
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: space-evenly;
 }
 `
 
