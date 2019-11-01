@@ -7,6 +7,12 @@
 export class LifeGrid {
   constructor () {
     this._autoExpand = false
+    this._rules = {
+      breedMinNeighbours: 3,
+      breedMaxNeighbours: 3,
+      stayAliveMinNeighbours: 2,
+      stayAliveMaxNeighbours: 3
+    }
   }
 
   /**
@@ -19,6 +25,8 @@ export class LifeGrid {
    */
   setState (arr) {
     this._state = arr
+    this._rowCount = arr.length
+    this._columnCount = arr[0].length
   }
 
   /**
@@ -29,6 +37,89 @@ export class LifeGrid {
    */
   getState () {
     return [...this._state]
+  }
+
+  /**
+   * Returns the number of rows in the current state.
+   *
+   * @returns {number}
+   * @memberof LifeGrid
+   */
+  getRowCount () {
+    return this._rowCount
+  }
+
+  /**
+   * Returns the number of columns in the current state.
+   *
+   * @returns {number}
+   * @memberof LifeGrid
+   */
+  getColumnCount () {
+    return this._columnCount
+  }
+
+  /**
+   * Returns the cell at the specified position. Trying to access a cell
+   * out of index will return a 0.
+   *
+   * @param {number} row Row number, starting at 0
+   * @param {number} column Column number, starting at 0
+   * @returns {number} 1 for a live cell, 0 for a dead cell
+   * @memberof LifeGrid
+   */
+  getCellAt (row, column) {
+    let state
+    try {
+      state = this._state[row][column]
+
+      // JavaScript only throws an error when the outer array is out of range for some reason so we have to check the type
+      if (typeof state === 'undefined') {
+        state = 0
+      }
+    } catch {
+      state = 0
+    }
+
+    return state
+  }
+
+  /**
+   * Returns the sum of all alive neighbours of the cell at the specified position.
+   *
+   * @param {number} row
+   * @param {number} column
+   * @returns {number}
+   * @memberof LifeGrid
+   */
+  getNeighbourCount (row, column) {
+    let count = 0
+
+    // NW
+    count += this.getCellAt(row - 1, column - 1)
+
+    // N
+    count += this.getCellAt(row - 1, column)
+
+    // NE
+    count += this.getCellAt(row - 1, column + 1)
+
+    // W
+    count += this.getCellAt(row, column - 1)
+
+    // E
+    count += this.getCellAt(row, column + 1)
+
+    // SW
+    count += this.getCellAt(row + 1, column - 1)
+
+    // S
+    count += this.getCellAt(row + 1, column)
+
+    // SE
+    count += this.getCellAt(row + 1, column + 1)
+
+    return count
   }
 
   /**
@@ -66,7 +157,41 @@ export class LifeGrid {
    * @memberof LifeGrid
    */
   advanceState () {
-    // todo
+    const newState = []
+
+    // todo: autoexpand
+    if (!this._autoExpand) {
+      for (let rowIndex = 0; rowIndex < this.getRowCount(); rowIndex++) {
+        const row = []
+
+        for (let columnIndex = 0; columnIndex < this.getColumnCount(); columnIndex++) {
+          const aliveNeighbours = this.getNeighbourCount(rowIndex, columnIndex)
+
+          let cell
+
+          if (this.getCellAt(rowIndex, columnIndex) === 1) {
+            // Cell is currently alive
+            if (aliveNeighbours >= this._rules.stayAliveMinNeighbours && aliveNeighbours <= this._rules.stayAliveMaxNeighbours) {
+              cell = 1
+            } else {
+              cell = 0
+            }
+          } else {
+            // Cell is currently dead
+            if (aliveNeighbours >= this._rules.breedMinNeighbours && aliveNeighbours <= this._rules.breedMaxNeighbours) {
+              cell = 1
+            } else {
+              cell = 0
+            }
+          }
+
+          row.push(cell)
+        }
+        newState.push(row)
+      }
+    }
+
+    this.setState(newState)
   }
 
   /**
