@@ -1,5 +1,6 @@
 import _html from './rl-life-html.js'
 import _css from './rl-life-css.js'
+import { LifeGrid } from './LifeGrid.js'
 
 class RlLife extends window.HTMLElement {
   constructor () {
@@ -37,6 +38,14 @@ class RlLife extends window.HTMLElement {
   _setupEventListeners () {
     this.elements.setStateButton.addEventListener('click', event => {
       console.log('set state click')
+      const state = [
+        [0, 0, 1],
+        [0, 0, 0],
+        [0, 1, 0]
+      ]
+      const life = new LifeGrid()
+      life.setState(state)
+      life.printState()
     })
 
     this.elements.nextStateButton.addEventListener('click', event => {
