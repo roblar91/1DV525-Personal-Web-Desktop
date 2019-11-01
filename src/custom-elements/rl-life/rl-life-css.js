@@ -19,24 +19,22 @@ header {
     background-color: #070416;
     color: white;
     height: 2rem;
-    border-bottom: ridge 0.2rem #656370;
     box-sizing: border-box;
-    justify-content: space-evenly;
+    justify-content: left;
 }
 
 .header-section {
+    position: relative;
     display: flex;
     flex: 1;
     flex-direction: row;
-    align-items: center;
     height: 100%;
     border-right: solid 0.1rem #656370;
     box-sizing: border-box;
-    padding: 0.2rem;
     white-space: nowrap;
     font-size: 0.8rem;
     min-width: 0;
-    overflow: hidden;
+    border-bottom: ridge 0.2rem #656370;
 }
 
 button {
@@ -45,8 +43,9 @@ button {
     border: none;
     background: none;
     color: white;
-    padding: 0;
+    padding: 0.4rem;
     text-align: left;
+    overflow: hidden;
 }
 
 button:hover {
@@ -57,9 +56,43 @@ button:active {
     background: #656370;
 }
 
+.menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 2rem;
+    left: 0;
+    box-sizing: border-box;
+    background-color: #231C41;
+    border-left: ridge 0.2rem #656370;
+    border-right: ridge 0.2rem #656370;
+    border-bottom: ridge 0.2rem #656370;
+}
+
+.menu-item {
+    height: 2rem;
+    white-space: nowrap;
+    font-size: 0.8rem;
+    min-width: 0;
+    border-top: solid 0.1rem #656370;
+    box-sizing: border-box;
+}
+
 main {
     width: 100%;
     flex: 1;
+}
+
+#set-state-section:hover #set-state-menu {
+    display: flex;
+}
+
+#auto-play-speed-section:hover #auto-play-speed-menu {
+    display: flex;
+}
+
+#auto-expand-section:hover #auto-expand-menu {
+    display: flex;
 }
 `
 
