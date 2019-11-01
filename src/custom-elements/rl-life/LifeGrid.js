@@ -40,7 +40,24 @@ export class LifeGrid {
    * @memberof LifeGrid
    */
   randomizeState (rows, columns, aliveRatio) {
-    // todo
+    const state = []
+    for (let i = 0; i < rows; i++) {
+      const row = []
+
+      for (let p = 0; p < columns; p++) {
+        let cell = 0
+
+        if (Math.random() < aliveRatio) {
+          cell = 1
+        }
+
+        row.push(cell)
+      }
+
+      state.push(row)
+    }
+
+    this.setState(state)
   }
 
   /**
@@ -55,9 +72,10 @@ export class LifeGrid {
   /**
    * Prints a formatted string representing the current state to the console.
    *
+   * @param {boolean} compact If false extra whitespace will be added to keep a better aspect ratio
    * @memberof LifeGrid
    */
-  printState () {
+  printState (compact) {
     let outString = ''
 
     this._state.forEach(row => {
@@ -66,6 +84,10 @@ export class LifeGrid {
           outString += '#'
         } else {
           outString += '.'
+        }
+
+        if (!compact) {
+          outString += '  '
         }
       })
 

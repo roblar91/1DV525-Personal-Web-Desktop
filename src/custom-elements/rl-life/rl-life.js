@@ -70,6 +70,9 @@ class RlLife extends window.HTMLElement {
 
     this.elements.randomStateButton.addEventListener('click', event => {
       console.log('random state click')
+      const life = new LifeGrid()
+      life.randomizeState(10, 10, 0.3)
+      life.printState(false)
     })
 
     this.elements.loadStateButton.addEventListener('click', event => {
