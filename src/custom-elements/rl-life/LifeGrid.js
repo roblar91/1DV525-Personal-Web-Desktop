@@ -2,9 +2,9 @@
  * A class respresenting an instance of game of life.
  *
  * @export
- * @class LifeGrid
+ * @class LifeGame
  */
-export class LifeGrid {
+export class LifeGame {
   constructor () {
     this._autoExpand = false
     this._rules = {
@@ -21,7 +21,7 @@ export class LifeGrid {
    * either 0 or 1, representing a dead or alive cell respectively.
    *
    * @param {number[][]} arr
-   * @memberof LifeGrid
+   * @memberof LifeGame
    */
   setState (arr) {
     this._state = arr
@@ -33,7 +33,7 @@ export class LifeGrid {
    * Returns a clone of this games current state.
    *
    * @returns {number[][]}
-   * @memberof LifeGrid
+   * @memberof LifeGame
    */
   getState () {
     return [...this._state]
@@ -43,7 +43,7 @@ export class LifeGrid {
    * Returns the number of rows in the current state.
    *
    * @returns {number}
-   * @memberof LifeGrid
+   * @memberof LifeGame
    */
   getRowCount () {
     return this._rowCount
@@ -53,7 +53,7 @@ export class LifeGrid {
    * Returns the number of columns in the current state.
    *
    * @returns {number}
-   * @memberof LifeGrid
+   * @memberof LifeGame
    */
   getColumnCount () {
     return this._columnCount
@@ -66,7 +66,7 @@ export class LifeGrid {
    * @param {number} row Row number, starting at 0
    * @param {number} column Column number, starting at 0
    * @returns {number} 1 for a live cell, 0 for a dead cell
-   * @memberof LifeGrid
+   * @memberof LifeGame
    */
   getCellAt (row, column) {
     let state
@@ -90,7 +90,7 @@ export class LifeGrid {
    * @param {number} row
    * @param {number} column
    * @returns {number}
-   * @memberof LifeGrid
+   * @memberof LifeGame
    */
   getNeighbourCount (row, column) {
     let count = 0
@@ -128,7 +128,7 @@ export class LifeGrid {
    * @param {number} rows
    * @param {number} columns
    * @param {number} aliveRatio The ratio of cells that will be generated alive
-   * @memberof LifeGrid
+   * @memberof LifeGame
    */
   randomizeState (rows, columns, aliveRatio) {
     const state = []
@@ -154,7 +154,7 @@ export class LifeGrid {
   /**
    * Advance the state of this game.
    *
-   * @memberof LifeGrid
+   * @memberof LifeGame
    */
   advanceState () {
     const newState = []
@@ -198,7 +198,7 @@ export class LifeGrid {
    * Prints a formatted string representing the current state to the console.
    *
    * @param {boolean} compact If false extra whitespace will be added to keep a better aspect ratio
-   * @memberof LifeGrid
+   * @memberof LifeGame
    */
   printState (compact) {
     let outString = ''
@@ -227,7 +227,7 @@ export class LifeGrid {
    * would be born out of index.
    *
    * @param {boolean} bool
-   * @memberof LifeGrid
+   * @memberof LifeGame
    */
   setAutoExpand (bool) {
     this._autoExpand = bool
@@ -237,7 +237,7 @@ export class LifeGrid {
    * Returns true if auto expand is enabled.
    *
    * @returns {boolean}
-   * @memberof LifeGrid
+   * @memberof LifeGame
    */
   isAutoExpand () {
     return this._autoExpand

@@ -78,11 +78,6 @@ button:active {
     box-sizing: border-box;
 }
 
-main {
-    width: 100%;
-    flex: 1;
-}
-
 #set-state-section:hover #set-state-menu {
     display: flex;
 }
@@ -93,6 +88,29 @@ main {
 
 #auto-expand-section:hover #auto-expand-menu {
     display: flex;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex: 1;
+}
+
+.cell-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.cell {
+    width: 2rem;
+    height: 2rem;
+    background-color: white;
+    border: 1px grey solid;
+}
+
+.alive {
+    background-color: black !important;
 }
 `
 

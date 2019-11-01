@@ -1,11 +1,12 @@
 import _html from './rl-life-html.js'
 import _css from './rl-life-css.js'
-import { LifeGrid } from './LifeGrid.js'
+import { LifeGame } from './LifeGrid.js'
 
 class RlLife extends window.HTMLElement {
   constructor () {
     super()
     this.attachShadow({ mode: 'open' })
+    this.lifeGame = new LifeGame()
   }
 
   connectedCallback () {
@@ -38,18 +39,12 @@ class RlLife extends window.HTMLElement {
   _setupEventListeners () {
     this.elements.setStateButton.addEventListener('click', event => {
       console.log('set state click')
-      const state = [
-        [0, 0, 1],
-        [0, 0, 0],
-        [0, 1, 0]
-      ]
-      const life = new LifeGrid()
-      life.setState(state)
-      life.printState()
     })
 
     this.elements.nextStateButton.addEventListener('click', event => {
       console.log('next state click')
+      this.lifeGame.advanceState()
+      this._printCurrentState()
     })
 
     this.elements.autoPlayButton.addEventListener('click', event => {
@@ -66,15 +61,13 @@ class RlLife extends window.HTMLElement {
 
     this.elements.consolePrintButton.addEventListener('click', event => {
       console.log('console print click')
+      this.lifeGame.printState(false)
     })
 
     this.elements.randomStateButton.addEventListener('click', event => {
       console.log('random state click')
-      const life = new LifeGrid()
-      life.randomizeState(10, 10, 0.5)
-      life.printState(false)
-      life.advanceState()
-      life.printState(false)
+      this.lifeGame.randomizeState(10, 10, 0.5)
+      this._printCurrentState()
     })
 
     this.elements.loadStateButton.addEventListener('click', event => {
@@ -100,6 +93,27 @@ class RlLife extends window.HTMLElement {
     this.elements.autoExpandFalseButton.addEventListener('click', event => {
       console.log('auto expand false click')
     })
+  }
+
+  _printCurrentState () {
+    this.elements.main.innerHTML = ''
+    for (let rowIndex = 0; rowIndex < this.lifeGame.getRowCount(); rowIndex++) {
+      const row = document.createElement('div')
+      row.classList.add('cell-row')
+
+      for (let columnIndex = 0; columnIndex < this.lifeGame.getColumnCount(); columnIndex++) {
+        const cell = document.createElement('div')
+        cell.classList.add('cell')
+
+        if (this.lifeGame.getCellAt(rowIndex, columnIndex) === 1) {
+          cell.classList.add('alive')
+        }
+
+        row.appendChild(cell)
+      }
+
+      this.elements.main.appendChild(row)
+    }
   }
 }
 
