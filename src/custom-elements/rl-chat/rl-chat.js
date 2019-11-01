@@ -81,7 +81,9 @@ class RlChat extends window.HTMLElement {
       console.log(jsonData)
 
       if (jsonData.type === 'message') {
-        this._addMessage(jsonData.channel, jsonData.username, jsonData.data, '')
+        const date = new Date()
+        const timestamp = `${date.getMonth() + 1}/${date.getDate()} - ${date.getHours()}:${date.getMinutes()}`
+        this._addMessage(jsonData.channel, jsonData.username, jsonData.data, timestamp)
       }
     })
 

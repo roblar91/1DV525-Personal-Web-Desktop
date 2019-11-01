@@ -14,6 +14,10 @@ const _css = /* css */ `
   font-size: 0.8rem;
 }
 
+#sender {
+  flex: 1;
+}
+
 #message {
   margin-top: 0.5rem;
   flex: 1;
