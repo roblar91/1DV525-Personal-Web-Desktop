@@ -1,6 +1,6 @@
 import css from './rl-pwd-css.js'
 import html from './rl-pwd-html.js'
-import '../rl-clock/rl-clock.js'
+import './rl-clock/rl-clock.js'
 import './rl-pwd-window/rl-pwd-window.js'
 
 /**
