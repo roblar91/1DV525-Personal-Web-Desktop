@@ -14,27 +14,35 @@ class GameCard extends window.HTMLElement {
     this.shadowRoot.innerHTML = /* html */ `
     <style>
     :host {
-      display: inline-block;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    img {
-      max-width: 100%;
-      max-height: 100%;
+    div {
+      width: 100%;
+      height: 100%;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
     }
     </style>
     `
 
+    this.div = document.createElement('div')
+    this.shadowRoot.appendChild(this.div)
+
     this.setAttribute('tabindex', '0')
-    this.shadowRoot.appendChild(document.createElement('img'))
     this.revealed = false
+
     this._updateImage()
   }
 
   _updateImage () {
     if (this.revealed) {
-      this.shadowRoot.querySelector('img').setAttribute('src', this.frontUrl)
+      this.div.style.backgroundImage = `url(${this.frontUrl})`
     } else {
-      this.shadowRoot.querySelector('img').setAttribute('src', this.backUrl)
+      this.div.style.backgroundImage = `url(${this.backUrl})`
     }
   }
 
@@ -55,7 +63,17 @@ class GameCard extends window.HTMLElement {
    * @memberof GameCard
    */
   hide () {
-    this.shadowRoot.querySelector('img').style.visibility = 'hidden'
+    this.div.style.visibility = 'hidden'
+  }
+
+  /**
+   * Return true if this card is hidden.
+   *
+   * @returns {boolean}
+   * @memberof GameCard
+   */
+  isHidden () {
+    return this.div.style.visibility === 'hidden'
   }
 
   /**

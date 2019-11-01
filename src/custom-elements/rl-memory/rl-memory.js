@@ -65,6 +65,8 @@ class RlMemory extends window.HTMLElement {
           this.secondSelectedCard.hide()
           this.firstSelectedCard = null
           this.secondSelectedCard = null
+
+          this._checkIfWon()
         }, 1000)
       } else {
         this.misses++
@@ -148,6 +150,7 @@ class RlMemory extends window.HTMLElement {
     this.rows = []
     for (let i = 0; i < this.gridY; i++) {
       this.rows[i] = document.createElement('div')
+      this.rows[i].classList.add('card-row')
       this.elements.main.appendChild(this.rows[i])
     }
 
@@ -182,6 +185,21 @@ class RlMemory extends window.HTMLElement {
       const temp = arr[remaining]
       arr[remaining] = arr[rand]
       arr[rand] = temp
+    }
+  }
+
+  _checkIfWon () {
+    let won = true
+    this.cards.forEach(c => {
+      if (!c.isHidden()) {
+        won = false
+      }
+    })
+
+    if (won) {
+      this.elements.main.innerHTML = /* html */ `
+      <p id="win-message">You won! You are awesome!</p>
+      `
     }
   }
 }

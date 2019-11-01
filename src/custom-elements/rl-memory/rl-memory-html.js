@@ -8,7 +8,6 @@ const html = /* html */ `
     <div class="header-section">
         <label for="columns">Columns</label>
         <select id="columns">
-            <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4" selected="selected">4</option>
@@ -18,7 +17,6 @@ const html = /* html */ `
     <div class="header-section">
         <label for="rows">Rows</label>
         <select id="rows">
-            <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4" selected="selected">4</option>
