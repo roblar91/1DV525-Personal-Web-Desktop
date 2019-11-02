@@ -6,13 +6,28 @@ const _rlLifeHtml = /* html */ `
         </button>
         <div id="set-state-menu" class="menu">
             <div class="menu-item">
+                <button id="load-state-button">
+                    Load
+                </button>
+            </div>
+            <div class="menu-item">
                 <button id="random-state-button">
                     Random
                 </button>
             </div>
             <div class="menu-item">
-                <button id="load-state-button">
-                    Load
+                <button id="glider-button">
+                    Glider
+                </button>
+            </div>
+            <div class="menu-item">
+                <button id="glider-gun-button">
+                    Glider gun
+                </button>
+            </div>
+            <div class="menu-item">
+                <button id="thunderbird-button">
+                    Thunderbird
                 </button>
             </div>
         </div>

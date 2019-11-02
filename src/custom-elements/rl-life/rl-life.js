@@ -1,6 +1,7 @@
 import _html from './rl-life-html.js'
 import _css from './rl-life-css.js'
 import { LifeGame } from './LifeGrid.js'
+import { glider, gliderGun, thunderbird } from './Patterns.js'
 
 class RlLife extends window.HTMLElement {
   constructor () {
@@ -23,8 +24,11 @@ class RlLife extends window.HTMLElement {
       autoPlaySpeedButton: this.shadowRoot.querySelector('#auto-play-speed-button'),
       autoExpandButton: this.shadowRoot.querySelector('#auto-expand-button'),
       consolePrintButton: this.shadowRoot.querySelector('#console-print-button'),
-      randomStateButton: this.shadowRoot.querySelector('#random-state-button'),
       loadStateButton: this.shadowRoot.querySelector('#load-state-button'),
+      randomStateButton: this.shadowRoot.querySelector('#random-state-button'),
+      gliderButton: this.shadowRoot.querySelector('#glider-button'),
+      gliderGunButton: this.shadowRoot.querySelector('#glider-gun-button'),
+      thunderbirdButton: this.shadowRoot.querySelector('#thunderbird-button'),
       speedSlowButton: this.shadowRoot.querySelector('#speed-slow-button'),
       speedAverageButton: this.shadowRoot.querySelector('#speed-average-button'),
       speedFastButton: this.shadowRoot.querySelector('#speed-fast-button'),
@@ -41,10 +45,6 @@ class RlLife extends window.HTMLElement {
   }
 
   _setupEventListeners () {
-    this.elements.setStateButton.addEventListener('click', event => {
-      // do nothing
-    })
-
     this.elements.nextStateButton.addEventListener('click', event => {
       this._nextState()
     })
@@ -53,24 +53,28 @@ class RlLife extends window.HTMLElement {
       this._toggleAutoPlay()
     })
 
-    this.elements.autoPlaySpeedButton.addEventListener('click', event => {
-      // do nothing
-    })
-
-    this.elements.autoExpandButton.addEventListener('click', event => {
-      // do nothing
-    })
-
     this.elements.consolePrintButton.addEventListener('click', event => {
       this.lifeGame.printState(true)
+    })
+
+    this.elements.loadStateButton.addEventListener('click', event => {
+      this._readTextFromFile()
     })
 
     this.elements.randomStateButton.addEventListener('click', event => {
       this._randomizeState()
     })
 
-    this.elements.loadStateButton.addEventListener('click', event => {
-      this._readTextFromFile()
+    this.elements.gliderButton.addEventListener('click', event => {
+      this._loadStateFromText(glider)
+    })
+
+    this.elements.gliderGunButton.addEventListener('click', event => {
+      this._loadStateFromText(gliderGun)
+    })
+
+    this.elements.thunderbirdButton.addEventListener('click', event => {
+      this._loadStateFromText(thunderbird)
     })
 
     this.elements.speedSlowButton.addEventListener('click', event => {
@@ -119,7 +123,6 @@ class RlLife extends window.HTMLElement {
   }
 
   _randomizeState () {
-    // todo: popup with options
     this.lifeGame.randomizeState(10, 10, 0.5)
     this._printCurrentState()
   }
