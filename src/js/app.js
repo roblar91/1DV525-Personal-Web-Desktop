@@ -23,7 +23,7 @@ pwd.registerApp('rl-chat', 'Chat', './resources/rl-chat/icon.png', new Map([
 
 pwd.registerApp('rl-pwd', 'PWD', './resources/rl-pwd/icon.png')
 
-pwd.registerApp('rl-life', 'Life', '', new Map([
+pwd.registerApp('rl-life', 'Life', './resources/rl-life/icon.png', new Map([
   ['data-preferred-width', '56rem'],
   ['data-preferred-height', '40rem']
 ]))
