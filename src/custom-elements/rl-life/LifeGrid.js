@@ -159,36 +159,37 @@ export class LifeGame {
   advanceState () {
     const newState = []
 
-    // todo: autoexpand
-    if (!this._autoExpand) {
-      for (let rowIndex = 0; rowIndex < this.getRowCount(); rowIndex++) {
-        const row = []
+    if (this._autoExpand) {
+      this._expandGrid()
+    }
 
-        for (let columnIndex = 0; columnIndex < this.getColumnCount(); columnIndex++) {
-          const aliveNeighbours = this.getNeighbourCount(rowIndex, columnIndex)
+    for (let rowIndex = 0; rowIndex < this.getRowCount(); rowIndex++) {
+      const row = []
 
-          let cell
+      for (let columnIndex = 0; columnIndex < this.getColumnCount(); columnIndex++) {
+        const aliveNeighbours = this.getNeighbourCount(rowIndex, columnIndex)
 
-          if (this.getCellAt(rowIndex, columnIndex) === 1) {
-            // Cell is currently alive
-            if (aliveNeighbours >= this._rules.stayAliveMinNeighbours && aliveNeighbours <= this._rules.stayAliveMaxNeighbours) {
-              cell = 1
-            } else {
-              cell = 0
-            }
+        let cell
+
+        if (this.getCellAt(rowIndex, columnIndex) === 1) {
+          // Cell is currently alive
+          if (aliveNeighbours >= this._rules.stayAliveMinNeighbours && aliveNeighbours <= this._rules.stayAliveMaxNeighbours) {
+            cell = 1
           } else {
-            // Cell is currently dead
-            if (aliveNeighbours >= this._rules.breedMinNeighbours && aliveNeighbours <= this._rules.breedMaxNeighbours) {
-              cell = 1
-            } else {
-              cell = 0
-            }
+            cell = 0
           }
-
-          row.push(cell)
+        } else {
+          // Cell is currently dead
+          if (aliveNeighbours >= this._rules.breedMinNeighbours && aliveNeighbours <= this._rules.breedMaxNeighbours) {
+            cell = 1
+          } else {
+            cell = 0
+          }
         }
-        newState.push(row)
+
+        row.push(cell)
       }
+      newState.push(row)
     }
 
     this.setState(newState)
@@ -241,5 +242,98 @@ export class LifeGame {
    */
   isAutoExpand () {
     return this._autoExpand
+  }
+
+  /**
+   * Returns a new grid which is a clone of the provided grid but with added padding.
+   * The padding consists of a line of dead cells and it is applied to the specified edge.
+   *
+   * @param {string} edge Valid options are 'top', 'bottom', 'left', 'right', 'all'
+   * @returns {number[][]}
+   * @memberof LifeGame
+   */
+  padGrid (state, edge) {
+    const newState = []
+
+    if (edge === 'top' || edge === 'all') {
+      const emptyRow = []
+
+      for (let i = 0; i < state[0].length; i++) {
+        emptyRow.push(0)
+      }
+
+      newState.push(emptyRow)
+    }
+
+    for (let i = 0; i < state.length; i++) {
+      newState.push(state[i])
+    }
+
+    if (edge === 'bottom' || edge === 'all') {
+      const emptyRow = []
+
+      for (let i = 0; i < state[0].length; i++) {
+        emptyRow.push(0)
+      }
+
+      newState.push(emptyRow)
+    }
+
+    if (edge === 'left' || edge === 'all') {
+      newState.forEach(row => {
+        row.unshift(0)
+      })
+    }
+
+    if (edge === 'right' || edge === 'all') {
+      newState.forEach(row => {
+        row.push(0)
+      })
+    }
+
+    return newState
+  }
+
+  _expandGrid () {
+    // Add a new line of dead cells to any edge where there are live cells
+    let expandTop = false
+    let expandBottom = false
+    let expandLeft = false
+    let expandRight = false
+
+    for (let columnIndex = 0; columnIndex < this.getColumnCount(); columnIndex++) {
+      if (this.getCellAt(0, columnIndex) === 1) {
+        expandTop = true
+      }
+      if (this.getCellAt(this.getRowCount() - 1, columnIndex) === 1) {
+        expandBottom = true
+      }
+    }
+
+    for (let rowIndex = 0; rowIndex < this.getRowCount(); rowIndex++) {
+      if (this.getCellAt(rowIndex, 0) === 1) {
+        expandLeft = true
+      }
+      if (this.getCellAt(rowIndex, this.getColumnCount() - 1) === 1) {
+        expandRight = true
+      }
+    }
+
+    let newState = this.getState()
+
+    if (expandTop) {
+      newState = this.padGrid(newState, 'top')
+    }
+    if (expandBottom) {
+      newState = this.padGrid(newState, 'bottom')
+    }
+    if (expandLeft) {
+      newState = this.padGrid(newState, 'left')
+    }
+    if (expandRight) {
+      newState = this.padGrid(newState, 'right')
+    }
+
+    this.setState(newState)
   }
 }

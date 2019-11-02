@@ -156,9 +156,6 @@ class RlLife extends window.HTMLElement {
       }
     })
 
-    console.log(rawRows)
-    console.log(filteredRows)
-
     const state = []
     for (let rowIndex = 0; rowIndex < filteredRows.length; rowIndex++) {
       const row = []
@@ -189,31 +186,11 @@ class RlLife extends window.HTMLElement {
   }
 
   _padState (state, padding) {
-    const newState = []
-
-    for (let rowIndex = 0; rowIndex < state.length + padding * 2; rowIndex++) {
-      const row = []
-
-      for (let columnIndex = 0; columnIndex < state[0].length + padding * 2; columnIndex++) {
-        let cell
-
-        try {
-          if (state[rowIndex - padding][columnIndex - padding] === 1) {
-            cell = 1
-          } else {
-            cell = 0
-          }
-        } catch {
-          cell = 0
-        }
-
-        row.push(cell)
-      }
-
-      newState.push(row)
+    for (let i = 0; i < padding; i++) {
+      state = this.lifeGame.padGrid(state, 'all')
     }
 
-    return newState
+    return state
   }
 
   _setAutoPlaySpeed (speed) {
@@ -244,6 +221,8 @@ class RlLife extends window.HTMLElement {
       this.elements.autoExpandTrueButton.classList.remove('active')
       this.elements.autoExpandFalseButton.classList.add('active')
     }
+
+    this.lifeGame.setAutoExpand(bool)
   }
 
   _printCurrentState () {
