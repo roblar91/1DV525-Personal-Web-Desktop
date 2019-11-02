@@ -148,16 +148,16 @@ class RlLife extends window.HTMLElement {
     let columns = 0
 
     rawRows.forEach(r => {
-      if (r.length > 0) {
-        if (r[0] === '.' || r[0] === 'O') {
-          r = r.trim()
-          filteredRows.push(r)
-          if (r.length > columns) {
-            columns = r.length
-          }
+      if (r[0] !== '!') {
+        filteredRows.push(r)
+        if (r.length > columns) {
+          columns = r.length
         }
       }
     })
+
+    console.log(rawRows)
+    console.log(filteredRows)
 
     const state = []
     for (let rowIndex = 0; rowIndex < filteredRows.length; rowIndex++) {
