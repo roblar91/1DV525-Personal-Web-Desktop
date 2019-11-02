@@ -206,7 +206,7 @@ export class LifeGame {
     this._state.forEach(row => {
       row.forEach(cell => {
         if (cell === 1) {
-          outString += '#'
+          outString += 'O'
         } else {
           outString += '.'
         }

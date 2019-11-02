@@ -62,7 +62,7 @@ class RlLife extends window.HTMLElement {
     })
 
     this.elements.consolePrintButton.addEventListener('click', event => {
-      this.lifeGame.printState(false)
+      this.lifeGame.printState(true)
     })
 
     this.elements.randomStateButton.addEventListener('click', event => {
@@ -70,7 +70,7 @@ class RlLife extends window.HTMLElement {
     })
 
     this.elements.loadStateButton.addEventListener('click', event => {
-      this._loadState()
+      this._readTextFromFile()
     })
 
     this.elements.speedSlowButton.addEventListener('click', event => {
@@ -124,8 +124,96 @@ class RlLife extends window.HTMLElement {
     this._printCurrentState()
   }
 
-  _loadState () {
+  _readTextFromFile () {
+    const input = document.createElement('input')
+    input.type = 'file'
 
+    input.addEventListener('change', event => {
+      const file = event.target.files[0]
+      const reader = new window.FileReader()
+
+      reader.readAsText(file, 'UTF-8')
+      reader.addEventListener('load', event => {
+        this._loadStateFromText(event.target.result)
+      })
+    })
+
+    input.click()
+  }
+
+  _loadStateFromText (text) {
+    const padding = 5
+    const rawRows = text.split('\n')
+    const filteredRows = []
+    let columns = 0
+
+    rawRows.forEach(r => {
+      if (r.length > 0) {
+        if (r[0] === '.' || r[0] === 'O') {
+          r = r.trim()
+          filteredRows.push(r)
+          if (r.length > columns) {
+            columns = r.length
+          }
+        }
+      }
+    })
+
+    const state = []
+    for (let rowIndex = 0; rowIndex < filteredRows.length; rowIndex++) {
+      const row = []
+
+      for (let columnIndex = 0; columnIndex < columns; columnIndex++) {
+        let cell
+
+        try {
+          if (filteredRows[rowIndex][columnIndex] === 'O') {
+            cell = 1
+          } else {
+            cell = 0
+          }
+        } catch {
+          cell = 0
+        }
+
+        row.push(cell)
+      }
+
+      state.push(row)
+    }
+
+    const paddedState = this._padState(state, padding)
+
+    this.lifeGame.setState(paddedState)
+    this._printCurrentState()
+  }
+
+  _padState (state, padding) {
+    const newState = []
+
+    for (let rowIndex = 0; rowIndex < state.length + padding * 2; rowIndex++) {
+      const row = []
+
+      for (let columnIndex = 0; columnIndex < state[0].length + padding * 2; columnIndex++) {
+        let cell
+
+        try {
+          if (state[rowIndex - padding][columnIndex - padding] === 1) {
+            cell = 1
+          } else {
+            cell = 0
+          }
+        } catch {
+          cell = 0
+        }
+
+        row.push(cell)
+      }
+
+      newState.push(row)
+    }
+
+    return newState
   }
 
   _setAutoPlaySpeed (speed) {
@@ -139,11 +227,11 @@ class RlLife extends window.HTMLElement {
         this.elements.speedSlowButton.classList.add('active')
         break
       case 'average':
-        this.autoPlaySpeedDelay = 500
+        this.autoPlaySpeedDelay = 200
         this.elements.speedAverageButton.classList.add('active')
         break
       case 'fast':
-        this.autoPlaySpeedDelay = 200
+        this.autoPlaySpeedDelay = 50
         this.elements.speedFastButton.classList.add('active')
     }
   }
