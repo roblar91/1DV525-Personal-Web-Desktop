@@ -6,7 +6,6 @@ class RlLife extends window.HTMLElement {
   constructor () {
     super()
     this.attachShadow({ mode: 'open' })
-    this.lifeGame = new LifeGame()
   }
 
   connectedCallback () {
@@ -33,66 +32,130 @@ class RlLife extends window.HTMLElement {
       autoExpandFalseButton: this.shadowRoot.querySelector('#auto-expand-false-button')
     }
 
+    this.lifeGame = new LifeGame()
+    this.autoPlay = false
+    this._setAutoPlaySpeed('average')
+    this._setAutoExpand(false)
+
     this._setupEventListeners()
   }
 
   _setupEventListeners () {
     this.elements.setStateButton.addEventListener('click', event => {
-      console.log('set state click')
+      // do nothing
     })
 
     this.elements.nextStateButton.addEventListener('click', event => {
-      console.log('next state click')
-      this.lifeGame.advanceState()
-      this._printCurrentState()
+      this._nextState()
     })
 
     this.elements.autoPlayButton.addEventListener('click', event => {
-      console.log('auto play click')
+      this._toggleAutoPlay()
     })
 
     this.elements.autoPlaySpeedButton.addEventListener('click', event => {
-      console.log('auto play speed click')
+      // do nothing
     })
 
     this.elements.autoExpandButton.addEventListener('click', event => {
-      console.log('auto expand click')
+      // do nothing
     })
 
     this.elements.consolePrintButton.addEventListener('click', event => {
-      console.log('console print click')
       this.lifeGame.printState(false)
     })
 
     this.elements.randomStateButton.addEventListener('click', event => {
-      console.log('random state click')
-      this.lifeGame.randomizeState(10, 10, 0.5)
-      this._printCurrentState()
+      this._randomizeState()
     })
 
     this.elements.loadStateButton.addEventListener('click', event => {
-      console.log('load state click')
+      this._loadState()
     })
 
     this.elements.speedSlowButton.addEventListener('click', event => {
-      console.log('speed slow click')
+      this._setAutoPlaySpeed('slow')
     })
 
     this.elements.speedAverageButton.addEventListener('click', event => {
-      console.log('speed average click')
+      this._setAutoPlaySpeed('average')
     })
 
     this.elements.speedFastButton.addEventListener('click', event => {
-      console.log('speed fast click')
+      this._setAutoPlaySpeed('fast')
     })
 
     this.elements.autoExpandTrueButton.addEventListener('click', event => {
-      console.log('auto expand true click')
+      this._setAutoExpand(true)
     })
 
     this.elements.autoExpandFalseButton.addEventListener('click', event => {
-      console.log('auto expand false click')
+      this._setAutoExpand(false)
     })
+  }
+
+  _nextState () {
+    this.lifeGame.advanceState()
+    this._printCurrentState()
+  }
+
+  _toggleAutoPlay () {
+    if (this.autoPlay) {
+      this.autoPlay = false
+      this.elements.autoPlayButton.classList.remove('active')
+    } else {
+      this.autoPlay = true
+      this.elements.autoPlayButton.classList.add('active')
+
+      this._autoplay()
+    }
+  }
+
+  _autoplay () {
+    if (this.autoPlay) {
+      this._nextState()
+      setTimeout(() => this._autoplay(), this.autoPlaySpeedDelay)
+    }
+  }
+
+  _randomizeState () {
+    // todo: popup with options
+    this.lifeGame.randomizeState(10, 10, 0.5)
+    this._printCurrentState()
+  }
+
+  _loadState () {
+
+  }
+
+  _setAutoPlaySpeed (speed) {
+    this.elements.speedSlowButton.classList.remove('active')
+    this.elements.speedAverageButton.classList.remove('active')
+    this.elements.speedFastButton.classList.remove('active')
+
+    switch (speed) {
+      case 'slow':
+        this.autoPlaySpeedDelay = 1000
+        this.elements.speedSlowButton.classList.add('active')
+        break
+      case 'average':
+        this.autoPlaySpeedDelay = 500
+        this.elements.speedAverageButton.classList.add('active')
+        break
+      case 'fast':
+        this.autoPlaySpeedDelay = 200
+        this.elements.speedFastButton.classList.add('active')
+    }
+  }
+
+  _setAutoExpand (bool) {
+    if (bool) {
+      this.elements.autoExpandTrueButton.classList.add('active')
+      this.elements.autoExpandFalseButton.classList.remove('active')
+    } else {
+      this.elements.autoExpandTrueButton.classList.remove('active')
+      this.elements.autoExpandFalseButton.classList.add('active')
+    }
   }
 
   _printCurrentState () {

@@ -74,6 +74,7 @@ button:active {
     white-space: nowrap;
     font-size: 0.8rem;
     min-width: 0;
+    width: 6rem;
     border-top: solid 0.1rem #656370;
     box-sizing: border-box;
 }
@@ -91,26 +92,36 @@ button:active {
 }
 
 main {
+    justify-content: center;
     display: flex;
     flex-direction: column;
     width: 100%;
+    min-height: 0;
     flex: 1;
 }
 
 .cell-row {
+    justify-content: center;
     display: flex;
     flex-direction: row;
+    min-height: 0;
 }
 
 .cell {
     width: 2rem;
     height: 2rem;
+    min-width: 0;
+    min-height: 0;
     background-color: white;
     border: 1px grey solid;
 }
 
 .alive {
     background-color: black !important;
+}
+
+.active {
+    border: 0.2rem ridge yellow !important;
 }
 `
 

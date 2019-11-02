@@ -41,7 +41,7 @@ const _rlLifeHtml = /* html */ `
                 </button>
             </div>
             <div class="menu-item">
-                <button id="speed-average-button">
+                <button id="speed-average-button" class="active">
                     Average
                 </button>
             </div>
@@ -64,7 +64,7 @@ const _rlLifeHtml = /* html */ `
                 </button>
             </div>
             <div class="menu-item">
-                <button id="auto-expand-false-button">
+                <button id="auto-expand-false-button" class="active">
                     False
                 </button>
             </div>
