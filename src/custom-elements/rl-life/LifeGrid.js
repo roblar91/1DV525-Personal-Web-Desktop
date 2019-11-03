@@ -1,4 +1,9 @@
 /**
+ * @author Robin Larsson <robin_rtl@hotmail.com>
+ * Last modified: 2019-11-3
+ */
+
+/**
  * A class respresenting an instance of game of life.
  *
  * @export

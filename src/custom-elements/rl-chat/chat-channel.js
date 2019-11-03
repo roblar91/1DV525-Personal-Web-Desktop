@@ -1,7 +1,7 @@
-const _css = /* css */ `
-:host {
-}
-`
+/**
+ * @author Robin Larsson <robin_rtl@hotmail.com>
+ * Last modified: 2019-11-3
+ */
 
 /**
  * A HTML element representing a chat channel.
@@ -26,7 +26,6 @@ export class ChatChannel extends window.HTMLElement {
 
   connectedCallback () {
     this.shadowRoot.innerHTML = /* html */ `
-    <style>${_css}</style>
     ${this._name}
     `
   }

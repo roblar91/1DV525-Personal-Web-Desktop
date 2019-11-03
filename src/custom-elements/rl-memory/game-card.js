@@ -1,4 +1,9 @@
 /**
+ * @author Robin Larsson <robin_rtl@hotmail.com>
+ * Last modified: 2019-11-3
+ */
+
+/**
  * A HTML element representing a two-faced game card.
  *
  * @class GameCard

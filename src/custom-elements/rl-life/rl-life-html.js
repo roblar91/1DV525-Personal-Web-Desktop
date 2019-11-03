@@ -1,3 +1,8 @@
+/**
+ * @author Robin Larsson <robin_rtl@hotmail.com>
+ * Last modified: 2019-11-3
+ */
+
 const _rlLifeHtml = /* html */ `
 <header>
     <div id="set-state-section" class="header-section">

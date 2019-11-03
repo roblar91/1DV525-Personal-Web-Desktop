@@ -1,3 +1,8 @@
+/**
+ * @author Robin Larsson <robin_rtl@hotmail.com>
+ * Last modified: 2019-11-3
+ */
+
 const css = /* css */ `
 
 :host, button, form, chat-channel, chat-message {

@@ -1,3 +1,8 @@
+/**
+ * @author Robin Larsson <robin_rtl@hotmail.com>
+ * Last modified: 2019-11-3
+ */
+
 import _css from './rl-chat-css.js'
 import _html from './rl-chat-html.js'
 import { ChatMessage } from './chat-message.js'

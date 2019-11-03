@@ -1,3 +1,8 @@
+/**
+ * @author Robin Larsson <robin_rtl@hotmail.com>
+ * Last modified: 2019-11-3
+ */
+
 import css from './rl-quiz-css.js'
 import html from './rl-quiz-html.js'
 

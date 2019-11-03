@@ -1,4 +1,9 @@
 /**
+ * @author Robin Larsson <robin_rtl@hotmail.com>
+ * Last modified: 2019-11-3
+ */
+
+/**
  * A custom HTML element that displays a clock and the date.
  * The clock updates automatically every second.
  *
