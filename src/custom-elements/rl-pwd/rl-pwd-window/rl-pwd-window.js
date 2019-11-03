@@ -12,13 +12,6 @@ class RlPwdWindow extends window.HTMLElement {
   constructor () {
     super()
     this.attachShadow({ mode: 'open' })
-    this.mousedownHandler = this._mousedown.bind(this)
-    this.mouseupHandler = this._mouseup.bind(this)
-    this.mouseleaveHandler = this._mouseleave.bind(this)
-    this.mousemoveHandler = this._mousemove.bind(this)
-
-    this.isMoving = false
-    this.isResizing = false
   }
 
   connectedCallback () {
@@ -39,75 +32,88 @@ class RlPwdWindow extends window.HTMLElement {
     this.buttonClose = this.shadowRoot.querySelector('#button-close')
 
     this.style.zIndex = this.parentElement.children.length
+    this.isMoving = false
+    this.isResizing = false
 
-    this.addEventListener('mousedown', this.mousedownHandler)
+    this._setupEventHandlers()
+  }
+
+  _setupEventHandlers () {
+    // Capture phase
+    this.addEventListener('mousedown', event => {
+      this.bringToFront()
+    }, true)
+
+    // Bubble phase
+    this.addEventListener('mousedown', event => {
+      this._startResize(event)
+    })
+
+    this.header.addEventListener('mousedown', event => {
+      event.stopPropagation()
+      this._startMove(event)
+    })
+
+    this.buttonMinimize.addEventListener('mousedown', event => {
+      event.stopPropagation()
+      this._minimizeWindow()
+    })
+
+    this.buttonEnlarge.addEventListener('mousedown', event => {
+      event.stopPropagation()
+      this.toggleEnlarge()
+    })
+
+    this.buttonClose.addEventListener('mousedown', event => {
+      event.stopPropagation()
+      this._closeWindow()
+    })
+
     // These event handlers are added to the parent in order to improve the move and resize functionality
-    this.parentElement.addEventListener('mouseup', this.mouseupHandler)
-    this.parentElement.addEventListener('mouseleave', this.mouseleaveHandler)
-    this.parentElement.addEventListener('mousemove', this.mousemoveHandler)
+    this.parentElement.addEventListener('mouseup', event => {
+      this.isMoving = false
+      this.isResizing = false
+    })
+
+    this.parentElement.addEventListener('mouseleave', event => {
+      this.isMoving = false
+      this.isResizing = false
+    })
+
+    this.parentElement.addEventListener('mousemove', event => {
+      if (this.isMoving) {
+        this._moveWindow(event)
+      } else if (this.isResizing) {
+        this._resizeWindow(event)
+      }
+    })
   }
 
-  _mousedown (event) {
-    this.bringToFront()
+  _startMove (clickEvent) {
+    this.prevClientX = clickEvent.clientX
+    this.prevClientY = clickEvent.clientY
+    this.isMoving = true
+  }
 
-    // Get the original target (probably does not work in Edge)
-    switch (event.composedPath()[0]) {
-      case this.buttonMinimize:
-        this._minimizeWindow()
-        break
-      case this.buttonEnlarge:
-        this.toggleEnlarge()
-        break
-      case this.buttonClose:
-        this._closeWindow()
-        break
-      case this.header:
-      case this.windowIcon:
-      case this.windowTitle:
-      case this.windowButtons:
-        this.prevClientX = event.clientX
-        this.prevClientY = event.clientY
-        this.isMoving = true
-        break
-      case this:
-        // Border was clicked
-        this.prevClientX = event.clientX
-        this.prevClientY = event.clientY
-        this.isResizing = true
+  _startResize (clickEvent) {
+    // Border was clicked
+    this.prevClientX = clickEvent.clientX
+    this.prevClientY = clickEvent.clientY
+    this.isResizing = true
 
-        // Determine which side was clicked
-        this.sideClicked = []
-        if (event.offsetX < 0) {
-          this.sideClicked.push('left')
-        }
-        if (event.offsetX > this.clientWidth) {
-          this.sideClicked.push('right')
-        }
-        if (event.offsetY < 0) {
-          this.sideClicked.push('top')
-        }
-        if (event.offsetY > this.clientHeight) {
-          this.sideClicked.push('bottom')
-        }
-        break
+    // Determine which side was clicked
+    this.sideClicked = []
+    if (clickEvent.offsetX < 0) {
+      this.sideClicked.push('left')
     }
-  }
-
-  _mouseup (event) {
-    this.isMoving = false
-    this.isResizing = false
-  }
-
-  _mouseleave (event) {
-    this.isMoving = false
-    this.isResizing = false
-  }
-
-  _mousemove (event) {
-    if (this.isMoving) {
-      this._moveWindow(event)
-    } else if (this.isResizing) {
-      this._resizeWindow(event)
+    if (clickEvent.offsetX > this.clientWidth - 1) {
+      this.sideClicked.push('right')
+    }
+    if (clickEvent.offsetY < 0) {
+      this.sideClicked.push('top')
+    }
+    if (clickEvent.offsetY > this.clientHeight - 1) {
+      this.sideClicked.push('bottom')
     }
   }
 
