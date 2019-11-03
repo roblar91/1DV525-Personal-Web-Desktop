@@ -70,7 +70,7 @@ header button {
     padding: 0.2rem;
     font-size: 0.6rem;
     color: white;
-    background-color: #1e1f21;
+    background-color: inherit;
     border: 0.1rem #9da6a5 inset;
     margin-left: 0.2rem;
     text-align: center;
