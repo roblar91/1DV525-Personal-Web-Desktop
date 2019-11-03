@@ -6,7 +6,7 @@
 import _html from './rl-life-html.js'
 import _css from './rl-life-css.js'
 import { LifeGame } from './LifeGrid.js'
-import { glider, gliderGun, thunderbird } from './Patterns.js'
+import _patterns from './Patterns.js'
 
 /**
  * A game of life simulator implemented as a custom HTML element.
@@ -31,6 +31,7 @@ class RlLife extends window.HTMLElement {
       header: this.shadowRoot.querySelector('header'),
       main: this.shadowRoot.querySelector('main'),
       setStateButton: this.shadowRoot.querySelector('#set-state-button'),
+      setStateMenu: this.shadowRoot.querySelector('#set-state-menu'),
       nextStateButton: this.shadowRoot.querySelector('#next-state-button'),
       autoPlayButton: this.shadowRoot.querySelector('#auto-play-button'),
       autoPlaySpeedButton: this.shadowRoot.querySelector('#auto-play-speed-button'),
@@ -53,6 +54,7 @@ class RlLife extends window.HTMLElement {
     this._setAutoPlaySpeed('average')
     this._setAutoExpand(false)
 
+    this._loadPredefinedPatterns()
     this._setupEventListeners()
   }
 
@@ -77,18 +79,6 @@ class RlLife extends window.HTMLElement {
       this._randomizeState()
     })
 
-    this.elements.gliderButton.addEventListener('click', event => {
-      this._loadStateFromText(glider)
-    })
-
-    this.elements.gliderGunButton.addEventListener('click', event => {
-      this._loadStateFromText(gliderGun)
-    })
-
-    this.elements.thunderbirdButton.addEventListener('click', event => {
-      this._loadStateFromText(thunderbird)
-    })
-
     this.elements.speedSlowButton.addEventListener('click', event => {
       this._setAutoPlaySpeed('slow')
     })
@@ -107,6 +97,22 @@ class RlLife extends window.HTMLElement {
 
     this.elements.autoExpandFalseButton.addEventListener('click', event => {
       this._setAutoExpand(false)
+    })
+  }
+
+  _loadPredefinedPatterns () {
+    _patterns.forEach(p => {
+      const menuItem = document.createElement('div')
+      menuItem.classList.add('menu-item')
+      this.elements.setStateMenu.appendChild(menuItem)
+
+      const button = document.createElement('button')
+      button.textContent = p.name
+      menuItem.appendChild(button)
+
+      button.addEventListener('click', event => {
+        this._loadStateFromText(p.pattern)
+      })
     })
   }
 

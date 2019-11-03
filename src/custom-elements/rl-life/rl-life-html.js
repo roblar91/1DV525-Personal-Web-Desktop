@@ -20,21 +20,6 @@ const _rlLifeHtml = /* html */ `
                     Random
                 </button>
             </div>
-            <div class="menu-item">
-                <button id="glider-button">
-                    Glider
-                </button>
-            </div>
-            <div class="menu-item">
-                <button id="glider-gun-button">
-                    Glider gun
-                </button>
-            </div>
-            <div class="menu-item">
-                <button id="thunderbird-button">
-                    Thunderbird
-                </button>
-            </div>
         </div>
     </div>
 

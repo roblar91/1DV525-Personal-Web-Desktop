@@ -3,13 +3,19 @@
  * Last modified: 2019-11-3
  */
 
-export const glider = `
+const patterns = []
+
+const glider = `
 .O
 ..O
 OOO 
 `
+patterns.push({
+  name: 'Glider',
+  pattern: glider
+})
 
-export const gliderGun = `
+const gliderGun = `
 ........................O
 ......................O.O
 ............OO......OO............OO
@@ -20,11 +26,22 @@ OO........O...O.OO....O.O
 ...........O...O
 ............OO
 `
+patterns.push({
+  name: 'Glider gun',
+  pattern: gliderGun
+})
 
-export const thunderbird = `
+const thunderbird = `
 OOO
 
 .O
 .O
 .O
 `
+patterns.push({
+  name: 'Thunderbird',
+  pattern: thunderbird
+})
+
+/** An array containing some predefined patterns to be used in game of life */
+export default patterns
