@@ -1,6 +1,14 @@
 import css from './rl-quiz-css.js'
 import html from './rl-quiz-html.js'
 
+/**
+ * A quiz web application implemented as a custom HTML element.
+ * For this element to work the attributes "src" must be set with
+ * the URL to the server providing the questions.
+ *
+ * @class RlQuiz
+ * @extends {window.HTMLElement}
+ */
 class RlQuiz extends window.HTMLElement {
   constructor () {
     super()

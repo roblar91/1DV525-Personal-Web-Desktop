@@ -3,6 +3,13 @@ import _css from './rl-life-css.js'
 import { LifeGame } from './LifeGrid.js'
 import { glider, gliderGun, thunderbird } from './Patterns.js'
 
+/**
+ * A game of life simulator implemented as a custom HTML element.
+ *
+ * @class RlLife
+ * @requires LifeGrid
+ * @extends {window.HTMLElement}
+ */
 class RlLife extends window.HTMLElement {
   constructor () {
     super()
