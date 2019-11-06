@@ -86,8 +86,7 @@ class RlChat extends window.HTMLElement {
       console.log(jsonData)
 
       if (jsonData.type === 'message') {
-        const date = new Date()
-        const timestamp = `${date.getMonth() + 1}/${date.getDate()} - ${date.getHours()}:${date.getMinutes()}`
+        const timestamp = this._generateTimestamp(new Date())
         this._addMessage(jsonData.channel, jsonData.username, jsonData.data, timestamp)
       }
     })
@@ -116,6 +115,22 @@ class RlChat extends window.HTMLElement {
 
       this._deleteChannelPopup()
     })
+  }
+
+  _generateTimestamp (date) {
+    const month = date.getMonth() + 1
+    const day = date.getDate()
+    let hours = date.getHours()
+    let minutes = date.getMinutes()
+
+    if (hours < 10) {
+      hours = '0' + hours
+    }
+    if (minutes < 10) {
+      minutes = '0' + minutes
+    }
+
+    return `${month}/${day} - ${hours}:${minutes}`
   }
 
   _readAttributes () {
