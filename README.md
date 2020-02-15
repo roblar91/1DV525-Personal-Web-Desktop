@@ -1,9 +1,5 @@
-## Examination assignment 3
-This is the assignment repo for the second assignment in the course. 
+## Personal Web Desktop
+This was a project in the course 1DV525 with the goal of producing a windows-like environment using web technology.
 
-## Installation
-Make sure node.js and npm is installed on your system.
 
-1. `npm install`
-2. `npm start`
-3. Browse to [http://localhost:4000](http://localhost:4000)
+The app can be accessed via https://roblar91.github.io/1DV525-Personal-Web-Desktop/src/, although the quiz and chat apps will not work since they are reliant on servers provided by the school.
